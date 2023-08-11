@@ -16,8 +16,8 @@ import { notoSansJP } from "@/utils/font";
 import styles from './seventhcontent.module.scss';
 
 //Image
-import googleBtn from '../../../public/google_btn.png';
-import googleBtn_focus from '../../../public/google_btn_focus.png';
+import googleBtn from '../../../../public/google_btn.png';
+import googleBtn_focus from '../../../../public/google_btn_focus.png';
 
 const SeventhContent = () => {
     //Googleボタンの画像切り替え

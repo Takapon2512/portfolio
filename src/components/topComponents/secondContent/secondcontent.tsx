@@ -15,7 +15,7 @@ import { notoSansJP } from "@/utils/font";
 import styles from './secondcontent.module.scss';
 
 //Image
-import eStudy01 from '../../../public/e-study_img01.jpg';
+import eStudy01 from '../../../../public/e-study_img01.jpg';
 
 const SecondContent = () => {
 

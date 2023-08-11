@@ -56,4 +56,32 @@
         width: calc(50% - 48px);
     }
 
+    &_searchButtons {
+        display: flex;
+        justify-content: center;
+    }
+
+    &_search, &_reset {
+        width: 160px;
+        background-color: rgb(60, 123, 239);
+        color: rgb(255, 255, 255);
+
+        &:hover {
+            background-color: rgb(60, 139, 255);
+        }
+
+        &:disabled {
+            background-color: rgb(218, 206, 200);
+        }
+    }
+
+    &_reset {
+        background-color: rgb(241, 39, 39);
+        margin-left: 8px;
+        
+        &:hover {
+            background-color: rgb(241, 55, 55);
+        }
+    }
+
 }

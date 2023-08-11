@@ -2,13 +2,13 @@ import React from "react";
 
 //Component
 import Header from "@/components/header/Header";
-import FirstContent from "@/components/firstContent/firstcontent";
-import SecondContent from "@/components/secondContent/secondcontent";
-import ThirdContent from "@/components/thirdContent/thirdcontent";
-import ForthContent from "@/components/forthContent/forthcontent";
-import FifthContent from "@/components/fifthContent/fifthcontent";
-import SixthContent from "@/components/sixthContent/sixthcontent";
-import SeventhContent from "@/components/seventhContent/seventhcontent";
+import FirstContent from "@/components/topComponents/firstContent/firstcontent";
+import SecondContent from "@/components/topComponents/secondContent/secondcontent";
+import ThirdContent from "@/components/topComponents/thirdContent/thirdcontent";
+import ForthContent from "@/components/topComponents/forthContent/forthcontent";
+import FifthContent from "@/components/topComponents/fifthContent/fifthcontent";
+import SixthContent from "@/components/topComponents/sixthContent/sixthcontent";
+import SeventhContent from "@/components/topComponents/seventhContent/seventhcontent";
 import Footer from "@/components/footer/Footer";
 
 const Top = () => {
