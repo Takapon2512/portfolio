@@ -1,0 +1,84 @@
+.text-color {
+    color: rgb(48, 48, 48);
+}
+
+.font-s {
+    font-size: 14px;
+}
+
+.font-m {
+    font-size: 18px;
+}
+
+.font-l {
+    font-size: 20px;
+}
+
+.font-xl {
+    font-size: 48px;
+}
+
+.free {
+    &_firstContents {
+        margin-bottom: 40px;
+    }
+
+    &_memoryTitle {
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        @extend .font-l;
+        @extend .text-color;
+    }
+
+    &_memoryCard {
+        padding: 24px 32px;
+        margin-bottom: 32px;
+        cursor: pointer;     
+    }
+
+    &_memoryCardContainer {
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &_memoryWord {
+        padding-bottom: 36px;
+        font-size: 78px;
+        letter-spacing: 1px;
+        @extend .text-color;
+    }
+
+    &_nextButtons {
+        display: flex;
+        justify-content: center;
+
+        &Icon {
+            font-size: 40px;
+        }
+    }
+
+    &_remembered, &_notRemembered {
+        display: block;
+        width: 180px;
+        background-color: rgb(240, 138, 79);
+        color: rgb(243, 243, 243);
+        @extend .font-m;
+
+        &:hover {
+            background-color: rgb(240, 155, 95);
+        }
+    }
+
+    &_notRemembered {
+        background-color: rgb(60, 123, 239);
+        margin-left: 8px;
+
+        &:hover {
+            background-color: rgb(60, 139, 255);
+        }
+    }
+
+}

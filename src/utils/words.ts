@@ -87,7 +87,7 @@ export const wordList: WordDataType[] = [
         japanese: 'それゆえに',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題"
     },
     {
         id: 12,
@@ -95,7 +95,7 @@ export const wordList: WordDataType[] = [
         japanese: '証拠',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題"
     },
     {
         id: 13,
@@ -103,7 +103,7 @@ export const wordList: WordDataType[] = [
         japanese: '範囲',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題"
     },
     {
         id: 14,
@@ -111,7 +111,7 @@ export const wordList: WordDataType[] = [
         japanese: 'このように',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題"
     },
     {
         id: 15,
@@ -119,7 +119,7 @@ export const wordList: WordDataType[] = [
         japanese: '個々の',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題"
     },
     {
         id: 16,
@@ -127,6 +127,78 @@ export const wordList: WordDataType[] = [
         japanese: '委員会',
         date: '2023/07/28',
         editing: false,
+        register: "出題"
+    },
+    {
+        id: 17,
+        english: 'indeed',
+        japanese: '本当に',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題"
+    },
+    {
+        id: 18,
+        english: 'authority',
+        japanese: '権威、権限',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題"
+    },
+    {
+        id: 19,
+        english: 'union',
+        japanese: '労働組合',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題"
+    },
+    {
+        id: 20,
+        english: 'increase',
+        japanese: '増える',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題"
+    },
+    {
+        id: 21,
+        english: 'issue',
+        japanese: '問題',
+        date: '2023/08/11',
+        editing: false,
         register: "出題しない"
     },
+    {
+        id: 22,
+        english: 'lord',
+        japanese: '貴族',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題しない"
+    },
+    {
+        id: 23,
+        english: 'various',
+        japanese: 'さまざまな',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題しない"
+    },
+    {
+        id: 24,
+        english: 'basis',
+        japanese: '基礎',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題しない"
+    },
+    {
+        id: 25,
+        english: 'despite',
+        japanese: '〜にもかかわらず',
+        date: '2023/08/11',
+        editing: false,
+        register: "出題しない"
+    }
 ];
