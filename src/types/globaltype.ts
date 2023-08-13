@@ -15,5 +15,6 @@ export type WordDataType = {
     japanese: string,
     date: string,
     editing: boolean,
-    register: string
+    register: string,
+    complete: boolean
 };

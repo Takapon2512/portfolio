@@ -65,7 +65,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         }
     ];
     const activeJudge = (link: string) => {
-        if (router.pathname === link) {
+        if (router.pathname.includes(link)) {
             return "active";
         } else {
             return "passive";

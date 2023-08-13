@@ -32,6 +32,7 @@
     }
 
     &_memoryCard {
+        position: relative;
         padding: 24px 32px;
         margin-bottom: 32px;
         cursor: pointer;     
@@ -48,6 +49,7 @@
         padding-bottom: 36px;
         font-size: 78px;
         letter-spacing: 1px;
+        user-select: none;
         @extend .text-color;
     }
 
@@ -60,7 +62,7 @@
         }
     }
 
-    &_remembered, &_notRemembered {
+    &_remembered, &_notRemembered, &_complete {
         display: block;
         width: 180px;
         background-color: rgb(240, 138, 79);
@@ -78,6 +80,24 @@
 
         &:hover {
             background-color: rgb(60, 139, 255);
+        }
+    }
+
+    &_questionCount {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 32px;
+        background-color: #d5d5d5;
+        border-top-left-radius: 4px;
+        user-select: none;
+
+        &Text {
+            @extend .text-color;
         }
     }
 

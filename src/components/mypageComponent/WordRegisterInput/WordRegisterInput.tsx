@@ -40,7 +40,8 @@ const WordRegisterInput = () => {
             japanese: japField,
             date: createDate(),
             editing: false,
-            register: "出題しない"
+            register: "出題しない",
+            complete: false
         };
 
         //words配列に追加の単語を格納

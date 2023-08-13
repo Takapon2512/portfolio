@@ -162,7 +162,7 @@ const SearchWords = () => {
     };
 
     //登録ボタン
-    const registerButton = () => router.push("./free/wordcard");
+    const registerButton = () => router.push("/mypage/free/wordcard");
 
     return (
         <Box className={styles.firstContents}>

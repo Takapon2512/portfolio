@@ -7,7 +7,8 @@ export const wordList: WordDataType[] = [
         japanese: '存在',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 2,
@@ -15,7 +16,8 @@ export const wordList: WordDataType[] = [
         japanese: '政府',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 3,
@@ -23,7 +25,8 @@ export const wordList: WordDataType[] = [
         japanese: '設立する',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 4,
@@ -31,7 +34,8 @@ export const wordList: WordDataType[] = [
         japanese: '～を仮定すれば',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 5,
@@ -39,7 +43,8 @@ export const wordList: WordDataType[] = [
         japanese: 'を述べる',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 6,
@@ -47,7 +52,8 @@ export const wordList: WordDataType[] = [
         japanese: '地方議会',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 7,
@@ -55,7 +61,8 @@ export const wordList: WordDataType[] = [
         japanese: '入手できる',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 8,
@@ -63,7 +70,8 @@ export const wordList: WordDataType[] = [
         japanese: 'のこぎり',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 9,
@@ -71,7 +79,8 @@ export const wordList: WordDataType[] = [
         japanese: '大臣',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 10,
@@ -79,7 +88,8 @@ export const wordList: WordDataType[] = [
         japanese: '手段',
         date: '2023/07/28',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 11,
@@ -87,7 +97,8 @@ export const wordList: WordDataType[] = [
         japanese: 'それゆえに',
         date: '2023/07/28',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 12,
@@ -95,7 +106,8 @@ export const wordList: WordDataType[] = [
         japanese: '証拠',
         date: '2023/07/28',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 13,
@@ -103,7 +115,8 @@ export const wordList: WordDataType[] = [
         japanese: '範囲',
         date: '2023/07/28',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 14,
@@ -111,7 +124,8 @@ export const wordList: WordDataType[] = [
         japanese: 'このように',
         date: '2023/07/28',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 15,
@@ -119,7 +133,8 @@ export const wordList: WordDataType[] = [
         japanese: '個々の',
         date: '2023/07/28',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 16,
@@ -127,7 +142,8 @@ export const wordList: WordDataType[] = [
         japanese: '委員会',
         date: '2023/07/28',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 17,
@@ -135,7 +151,8 @@ export const wordList: WordDataType[] = [
         japanese: '本当に',
         date: '2023/08/11',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 18,
@@ -143,7 +160,8 @@ export const wordList: WordDataType[] = [
         japanese: '権威、権限',
         date: '2023/08/11',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 19,
@@ -151,7 +169,8 @@ export const wordList: WordDataType[] = [
         japanese: '労働組合',
         date: '2023/08/11',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 20,
@@ -159,7 +178,8 @@ export const wordList: WordDataType[] = [
         japanese: '増える',
         date: '2023/08/11',
         editing: false,
-        register: "出題"
+        register: "出題",
+        complete: false
     },
     {
         id: 21,
@@ -167,7 +187,8 @@ export const wordList: WordDataType[] = [
         japanese: '問題',
         date: '2023/08/11',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 22,
@@ -175,7 +196,8 @@ export const wordList: WordDataType[] = [
         japanese: '貴族',
         date: '2023/08/11',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 23,
@@ -183,7 +205,8 @@ export const wordList: WordDataType[] = [
         japanese: 'さまざまな',
         date: '2023/08/11',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 24,
@@ -191,7 +214,8 @@ export const wordList: WordDataType[] = [
         japanese: '基礎',
         date: '2023/08/11',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     },
     {
         id: 25,
@@ -199,6 +223,7 @@ export const wordList: WordDataType[] = [
         japanese: '〜にもかかわらず',
         date: '2023/08/11',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     }
 ];
