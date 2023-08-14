@@ -61,11 +61,16 @@
     &_answerButtons {
         display: flex;
         justify-content: center;
-        margin-top: 16px;
+        margin-top: 24px;
+
+        &Icon {
+            font-size: 40px;
+        }
     }
 
     &_answerButton, &_passButton {
-        width: 160px;
+        display: block;
+        width: 180px;
         background-color: rgb(240, 119, 49);
         color: rgb(255, 255, 255);
 

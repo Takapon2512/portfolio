@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter, NextRouter } from 'next/router';
+
+//recoil
+import { useRecoilState } from 'recoil';
+import { sidebarState } from '@/store/layoutState';
 
 //MUI
 import { 
@@ -12,7 +17,11 @@ import styles from "./test.module.scss";
 import Layout from '@/components/Layout/layout';
 import WordTest from '@/components/freeComponent/WordTest/WordTest';
 
+//type
+import { SidebarType } from '@/types/globaltype';
+
 const Test = () => {
+
   return (
     <Layout>
         <Box className={styles.free}>

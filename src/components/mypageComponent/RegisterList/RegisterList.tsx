@@ -71,7 +71,8 @@ const RegisterList = () => {
         japanese: '',
         date: '',
         editing: false,
-        register: "出題しない"
+        register: "出題しない",
+        complete: false
     });
     const [editWordIndex, setEditWordIndex] = useState<number>(0);
     

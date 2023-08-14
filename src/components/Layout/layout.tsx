@@ -1,5 +1,4 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
@@ -11,12 +10,6 @@ import {
     ListItem
 } from '@mui/material';
 
-//Font
-import { notoSansJP } from '../../utils/font';
-
-//CSS
-import styles from './layout.module.scss';
-
 //Icon
 import HomeIcon from '@mui/icons-material/Home';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -25,54 +18,67 @@ import AlbumIcon from '@mui/icons-material/Album';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+//Font
+import { notoSansJP } from '../../utils/font';
+
+//CSS
+import styles from './layout.module.scss';
+
 //Image
 import noImage from '../../../public/images/noImage.png';
+
+//type
+import { SidebarType } from '@/types/globaltype';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     //useRouter
     const router = useRouter();
 
-    const sidebarData = [
+    const sidebarArr: Array<SidebarType> = [
         {
             title: "ホーム",
             icon: <HomeIcon />,
-            link: "/mypage"
+            link: "/mypage",
+            active: false
         },
         {
             title: "暗記モード",
             icon: <ViewListIcon />,
-            link: "/mypage/memorization"
+            link: "/mypage/memorization",
+            active: false
         },
         {
             title: "フリーモード",
             icon: <FreeBreakfastIcon />,
-            link: "/mypage/free"
+            link: "/mypage/free",
+            active: false
         },
         {
             title: "記録",
             icon: <AlbumIcon />,
-            link: "/mypage/record"
+            link: "/mypage/record",
+            active: false
         },
         {
             title: "設定",
             icon: <SettingsIcon />,
-            link: "/mypage/setting"
+            link: "/mypage/setting",
+            active: false
         },
         {
             title: 'ログアウト',
             icon: <LogoutIcon />,
-            link: '../login'
+            link: '../login',
+            active: false
         }
     ];
-    const activeJudge = (link: string) => {
-        if (router.pathname.includes(link)) {
-            return "active";
-        } else {
-            return "passive";
-        };
+
+    const activeJudge = (value: SidebarType, index: number) => {
+        if (router.pathname.includes(value.link) && index > 0) return true;
+        if (router.pathname === value.link) return true;
+        return false;
     };
 
-    const handleClickMode = (link: string) => window.location.pathname = link;
     return (
         <Box className={styles.layout}>
             <Box className={styles.layout_container}>
@@ -93,14 +99,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         </Box>
                         <List className={styles.layout_sidebarList}>
                             {
-                                sidebarData.map((value, key) => {
+                                sidebarArr.map((value, key) => {
                                     return (
                                         <ListItem
                                         key={key} 
                                         className={styles.layout_sidebarItem} 
-                                        onClick={() => handleClickMode(value.link)}
+                                        onClick={() => router.push(value.link) }
                                         sx={
-                                            activeJudge(value.link) === 'active' 
+                                            activeJudge(value, key)
                                             ? 
                                             { backgroundColor: 'rgb(233, 139, 85)' } : { backgroundColor: 'rgb(240, 119, 49)' }
                                         }

@@ -18,3 +18,10 @@ export type WordDataType = {
     register: string,
     complete: boolean
 };
+
+export type SidebarType = {
+    title: string,
+    icon: React.JSX.Element,
+    link: string,
+    active: boolean
+};

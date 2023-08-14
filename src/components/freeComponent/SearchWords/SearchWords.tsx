@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
 //recoil
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { dbWordsState } from '@/store/mypageState';
 
 //MUI
@@ -111,7 +111,8 @@ const SearchWords = () => {
 
     //一度に表示する単語を10個に制限する
     const sliceArr: Array<WordDataType> = keyWordsArr.filter((word: WordDataType, index: number) => (
-        index >= perPageItemNum * (currentPage - 1) && perPageItemNum * currentPage > index 
+        index >= perPageItemNum * (currentPage - 1) 
+        && perPageItemNum * currentPage > index 
     ));
 
     //ステータスを切り替える
@@ -146,7 +147,7 @@ const SearchWords = () => {
         ));
 
         const firstIndex = newSliceWordsArr[0].id - 1;
-        const lastIndex = newSliceWordsArr[sliceWordsArr.length - 1].id;
+        const lastIndex = newSliceWordsArr[sliceWordsArr.length - 1].id - 1;
 
         if (statusNotAskJudge(sliceArr) === true) {
             const newDBWordsArr: Array<WordDataType> = dbWordsArr.map((word: WordDataType, index: number) => 
@@ -158,11 +159,17 @@ const SearchWords = () => {
                 (word.id - 1 === index && index >= firstIndex && lastIndex >= index) 
                 ? { ...word, register: "出題しない" } : { ...word });
             setDBWords(newDBWordsArr);
-        }
+        };
     };
 
     //登録ボタン
     const registerButton = () => router.push("/mypage/free/wordcard");
+
+    const registerButtonDisabed = () => {
+        const questonArr: Array<WordDataType> = wordsArr.filter((word: WordDataType) => word.register === "出題");
+        if (questonArr.length === 0) return true;
+        return false;
+    };
 
     return (
         <Box className={styles.firstContents}>
@@ -171,7 +178,7 @@ const SearchWords = () => {
             </Typography>
             <Box className={styles.free_searchInputs} component={Paper}>
                 <Box className={styles.free_searchNumber}>
-                    <TextField 
+                    <TextField
                     label="最初の単語番号"
                     type='number'
                     className={styles.free_searchNumMin}
@@ -267,6 +274,7 @@ const SearchWords = () => {
                                 <Button
                                 className={`${notoSansJP.className} ${styles.free_register}`}
                                 onClick={registerButton}
+                                disabled={registerButtonDisabed()}
                                 >
                                     登録
                                 </Button>
