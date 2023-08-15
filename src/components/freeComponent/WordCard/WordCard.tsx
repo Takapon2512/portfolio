@@ -108,7 +108,9 @@ const WordCard = () => {
     }
   };
 
-  const handleToTestPage = () => router.push("/mypage/free/test");
+  const handleToTestPage = () => {
+    router.push("/mypage/free/test")
+  };
 
   return (
     <Box className={styles.free_firstContents}>

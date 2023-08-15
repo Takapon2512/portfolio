@@ -1,9 +1,5 @@
-import React, { useEffect } from 'react';
-import { useRouter, NextRouter } from 'next/router';
-
-//recoil
-import { useRecoilState } from 'recoil';
-import { sidebarState } from '@/store/layoutState';
+import React from 'react';
+import dynamic from 'next/dynamic';
 
 //MUI
 import { 
@@ -15,10 +11,7 @@ import styles from "./test.module.scss";
 
 //Component
 import Layout from '@/components/Layout/layout';
-import WordTest from '@/components/freeComponent/WordTest/WordTest';
-
-//type
-import { SidebarType } from '@/types/globaltype';
+const WordTest = dynamic(() => import("../../../components/freeComponent/WordTest/WordTest"), { ssr: false });
 
 const Test = () => {
 
