@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
 //recoil
@@ -28,6 +28,9 @@ import { WordDataType } from '@/types/globaltype';
 //utils
 import { notoSansJP } from '@/utils/font';
 
+//Components
+import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
+
 const WordTest = () => {
   //router
   const router: NextRouter = useRouter();
@@ -38,8 +41,12 @@ const WordTest = () => {
   //テキストフィールドの監視
   const [answerText, setAnswerText] = useState<string>("");
   //正答数
-  const [correctNum, setCorrectNum] = useState<number>(0);
-  
+  const [correctNum, setCorrectNum] = useState<number>(1);
+  //残り時間の設定を受け取る
+  const [settingTime, setSettingTime] = useState<number>(10);
+  //残り時間を管理
+  const [remainTime, setRemainTime] = useState<number>(settingTime);
+
   //出題状態の単語のみを取得
   const questionWords: Array<WordDataType> = 
   dbWords.filter((word: WordDataType) => word.register.match(/^出題$/));
@@ -49,7 +56,7 @@ const WordTest = () => {
 
   numArr.forEach((item: number, index: number) => {
     //ランダムな数値(0 <= index <= index + 1)を取得する
-    let randomNum = Math.floor(Math.random() * (index + 1));
+    let randomNum: number = Math.floor(Math.random() * (index + 1));
 
     //要素を一時的に保管する
     let tmp: number = numArr[index];
@@ -60,10 +67,11 @@ const WordTest = () => {
   });
 
   const [intNum, setIntNum] = useState<number[]>(numArr);
+  console.log(intNum);
 
   //解答欄の内容を日本語に限定する
   const answerTextDisabled = () => {
-    if (!answerText.match(/^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々]*$/) || answerText === "") return true;
+    if (!answerText.match(/^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々〜]*$/) || answerText === "") return true;
     return false;
   };
 
@@ -78,11 +86,15 @@ const WordTest = () => {
       console.log("不正解");
     }
     setProblemNum(currentNum + 1);
+    setRemainTime(settingTime);
     setAnswerText("");
   };
 
   //パスボタンを押したとき
-  const handlePass = () => setProblemNum(prev => prev + 1);
+  const handlePass = () => {
+    setProblemNum(prev => prev + 1);
+    setRemainTime(settingTime);
+  };
 
   //問題の表示
   const englishDisplay = () => {
@@ -92,24 +104,29 @@ const WordTest = () => {
     return questionWords[intNum[problemNum - 1]].english;
   };
 
-  //Enterキーを押したとき
-  // const handleEnterAnswer = (e: React.KeyboardEvent<HTMLDivElement>) => {
-  //   if (e.key === "Enter" && answerText.match(/^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々]*$/)) {
-  //     const currentNum: number = problemNum;
-  //     if (questionWords[currentNum - 1].japanese === answerText) {
-  //       console.log("正解");
-  //     } else {
-  //       console.log("不正解");
-  //     }
-  //     setProblemNum(currentNum + 1);
-  //     setAnswerText("");
-  //   };
-  // };
-
   const localStorageStore = () => {
     const jsonCorrectNum: string = JSON.stringify(correctNum);
     localStorage.setItem("correct", jsonCorrectNum);
   };
+
+  if (remainTime === 0 && problemNum <= questionWords.length) {
+    const currentNum: number = problemNum;
+    setProblemNum(currentNum + 1);
+    setRemainTime(settingTime);
+    setAnswerText("");
+  };
+
+  useEffect(() => {
+    localStorage.setItem("correct", "0");
+    if (problemNum < questionWords.length + 1) {
+      const timer: NodeJS.Timer = setInterval(() => {
+        setRemainTime(prev => prev > 0 ? prev - 1 : settingTime);
+      }, 1000);
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, []);
 
   return (
     <>
@@ -141,6 +158,13 @@ const WordTest = () => {
                 </Typography>
               </Box>
             ) : (<></>)
+          }
+          {
+            problemNum <= questionWords.length ? (
+              <Box className={styles.free_remainTimer}>
+                <CircularWithValueLabel currentTime={remainTime} initValue={settingTime} />
+              </Box>
+            ) : ( <></> )
           }
         </Paper>
         {

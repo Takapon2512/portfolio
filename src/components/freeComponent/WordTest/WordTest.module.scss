@@ -70,6 +70,12 @@
         }
     }
 
+    &_remainTimer {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+    }
+
     &_answerInput {
         padding: 24px 32px;
         background-color: rgb(255, 255, 255);

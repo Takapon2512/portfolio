@@ -1,4 +1,5 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 
 //MUI
 import { Box } from '@mui/material';
@@ -8,11 +9,12 @@ import styles from "./result.module.scss";
 
 //Component
 import Layout from '@/components/Layout/layout';
-import TestResult from '@/components/freeComponent/TestResult/TestResult';
+const TestResult = dynamic(
+    () => import("../../../components/freeComponent/TestResult/TestResult"),
+    { ssr: false }
+);
 
 const result = () => {
-    const jsonCorrectNum: string = localStorage.getItem("correct") || "";
-    console.log(jsonCorrectNum);
     
     return (
         <Layout>
