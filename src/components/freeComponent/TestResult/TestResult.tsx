@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 //recoil
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { dbWordsState } from '@/store/mypageState';
 
 //MUI
@@ -10,7 +10,6 @@ import{
     Typography,
     Button,
     Paper,
-    TextField,
     styled,
     Table,
     TableBody,
@@ -20,6 +19,10 @@ import{
     TableHead,
     TableRow
 } from "@mui/material";
+
+//MUIIcon
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 //CSS
 import styles from "./TestResult.module.scss";
@@ -54,16 +57,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
     '&:last-child td, &:last-child th': {
         border: 0,
-    },
-    '&:hover': {
-        cursor: "pointer",
-        backgroundColor: "rgb(224, 224, 224)"
     }
 }));
 
 const TestResult = () => {
     const jsonCorrectNum: string = localStorage.getItem("correct") || "";
     const correctNum: number = Number(jsonCorrectNum);
+
+    //現在のページを管理
+    const [currentPage, setCurrentPage] = useState<number>(1);
+
+    //1ページに表示する単語数
+    const perPageItemNum = 10;
 
     //問題の数を求める
     const dbWords = useRecoilValue<WordDataType[]>(dbWordsState);
@@ -72,33 +77,103 @@ const TestResult = () => {
     const questionWordsNum: number = questionWords.length;
     console.log(questionWords);
 
+    //最終ページの番号を求める
+    const lastPage: number = Math.ceil(questionWords.length / perPageItemNum);
+
+    //一度に表示する単語を10個に制限する
+    const sliceArr: Array<WordDataType> = questionWords.filter((word: WordDataType, index: number) => (
+        index >= perPageItemNum * (currentPage - 1) 
+        && perPageItemNum * currentPage > index 
+    ));
+
     return (
         <Box className={styles.free_firstContents}>
             <Typography className={`${notoSansJP.className} ${styles.free_resultTitle}`}>
                 確認テストの結果
             </Typography>
-            <Paper className={styles.free_resultDisplay}>
+            <Box className={styles.free_resultDisplay}>
                 <Typography className={`${notoSansJP.className} ${styles.free_correctRateTitle}`}>
                     あなたの正答率は...
                 </Typography>
                 <Box className={styles.free_resultDisplayContainer}>
                     <CircularResultLabel correct={correctNum} questionNum={questionWordsNum} />
                 </Box>
-            </Paper>
-            <Paper className={styles.free_resultDetail}>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell align='center'>単語番号</StyledTableCell>
-                                <StyledTableCell align='center'>英単語</StyledTableCell>
-                                <StyledTableCell align='center'>日本語</StyledTableCell>
-                                <StyledTableCell align='center'>正誤</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                    </Table>
-                </TableContainer>
-            </Paper>
+                <Box className={styles.free_resultDetail}>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align='center'>単語番号</StyledTableCell>
+                                    <StyledTableCell align='center'>英単語</StyledTableCell>
+                                    <StyledTableCell align='center'>日本語訳</StyledTableCell>
+                                    <StyledTableCell align='center'>あなたの解答</StyledTableCell>
+                                    <StyledTableCell align='center'>正誤</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    sliceArr.map((word, index) => (
+                                        <StyledTableRow
+                                        key={index}
+                                        >
+                                            <StyledTableCell
+                                            className={notoSansJP.className}
+                                            align='center'
+                                            >
+                                                {word.id}
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                            className={notoSansJP.className}
+                                            align='center'
+                                            >
+                                                {word.english}
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                            className={notoSansJP.className}
+                                            align='center'
+                                            >
+                                                {word.japanese}
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                                className={notoSansJP.className}
+                                                align='center'
+                                            >
+                                                {word.yourAnswer}
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                                className={notoSansJP.className}
+                                                align='center'
+                                                sx={
+                                                    word.rightWrong ? 
+                                                    { color: "rgb(48, 48, 48)"} : { color: "rgb(236, 75, 18)"}
+                                                }
+                                            >
+                                                {word.rightWrong ? "正解" : "誤答"}
+                                            </StyledTableCell>                                          
+                                        </StyledTableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+                <Box className={styles.free_pageButtons}>
+                    <Button 
+                    className={styles.free_before}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                    disabled={ currentPage === 1 ? true : false }
+                    >
+                        <NavigateBeforeIcon />
+                    </Button>
+                    <Button 
+                    className={styles.free_next}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    disabled={ currentPage === lastPage ? true : false }
+                    >
+                        <NavigateNextIcon />
+                    </Button>
+                </Box>
+            </Box>
         </Box>
     );
 };

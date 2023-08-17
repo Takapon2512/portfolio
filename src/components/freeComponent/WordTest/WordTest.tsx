@@ -51,23 +51,22 @@ const WordTest = () => {
   const questionWords: Array<WordDataType> = 
   dbWords.filter((word: WordDataType) => word.register.match(/^出題$/));
 
-  //idから問題番号を求める
-  let numArr: Array<number> = questionWords.map((word) => word.id - questionWords[0].id);
+  //問題番号の配列を作成
+  let intNumArr: Array<number> = [...Array(questionWords.length)].map((_, i) => i);
 
-  numArr.forEach((item: number, index: number) => {
+  intNumArr.forEach((item: number, index: number) => {
     //ランダムな数値(0 <= index <= index + 1)を取得する
     let randomNum: number = Math.floor(Math.random() * (index + 1));
 
     //要素を一時的に保管する
-    let tmp: number = numArr[index];
+    let tmp: number = intNumArr[index];
 
     //要素の保管場所を入れ替える
-    numArr[index] = numArr[randomNum];
-    numArr[randomNum] = tmp;
+    intNumArr[index] = intNumArr[randomNum];
+    intNumArr[randomNum] = tmp;
   });
 
-  const [intNum, setIntNum] = useState<number[]>(numArr);
-  console.log(intNum);
+  const [intNum, setIntNum] = useState<number[]>(intNumArr);
 
   //解答欄の内容を日本語に限定する
   const answerTextDisabled = () => {
@@ -80,10 +79,12 @@ const WordTest = () => {
     const currentNum: number = problemNum;
     if (questionWords[intNum[problemNum - 1]].japanese === answerText) {
       console.log("正解");
+      yourAnswerDB(answerText, true);
       setCorrectNum(prev => prev + 1);
       localStorageStore();
     } else {
       console.log("不正解");
+      yourAnswerDB(answerText, false);
     }
     setProblemNum(currentNum + 1);
     setRemainTime(settingTime);
@@ -98,20 +99,35 @@ const WordTest = () => {
 
   //問題の表示
   const englishDisplay = () => {
-    if (problemNum > questionWords.length) {
-      return "お疲れ様でした";
-    };
+    if (problemNum > questionWords.length) return "お疲れ様でした";
     return questionWords[intNum[problemNum - 1]].english;
   };
+
+  //ユーザーの解答状況をDBに記録
+  const yourAnswerDB = (answer: string, rightOrWrong: boolean) => {
+    const prevArr: Array<WordDataType> = [...dbWords];
+    const prevWord: WordDataType = questionWords[intNum[problemNum - 1]];
+    prevArr[prevWord.id - 1] = {
+      ...prevWord,
+      yourAnswer: answer,
+      rightWrong: rightOrWrong
+    };
+    const newArr: Array<WordDataType> = prevArr;
+    setDBWords(newArr);
+    console.log(answer, rightOrWrong);
+  };
+  console.log(questionWords);
 
   const localStorageStore = () => {
     const jsonCorrectNum: string = JSON.stringify(correctNum);
     localStorage.setItem("correct", jsonCorrectNum);
   };
 
+  //制限時間の残りが0になったとき、次の問題に遷移し、解答状況をDBに反映する
   if (remainTime === 0 && problemNum <= questionWords.length) {
     const currentNum: number = problemNum;
     setProblemNum(currentNum + 1);
+    yourAnswerDB("", false);
     setRemainTime(settingTime);
     setAnswerText("");
   };

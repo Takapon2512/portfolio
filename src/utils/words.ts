@@ -8,7 +8,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 2,
@@ -17,7 +19,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 3,
@@ -26,16 +30,20 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 4,
         english: 'given',
-        japanese: '～を仮定すれば',
+        japanese: '〜を仮定すれば',
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 5,
@@ -44,7 +52,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 6,
@@ -53,7 +63,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 7,
@@ -62,7 +74,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 8,
@@ -71,7 +85,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 9,
@@ -80,7 +96,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 10,
@@ -89,7 +107,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 11,
@@ -98,7 +118,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 12,
@@ -107,7 +129,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 13,
@@ -116,7 +140,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 14,
@@ -125,7 +151,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 15,
@@ -134,7 +162,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 16,
@@ -143,7 +173,9 @@ export const wordList: WordDataType[] = [
         date: '2023/07/28',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 17,
@@ -152,7 +184,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 18,
@@ -161,7 +195,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 19,
@@ -170,7 +206,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 20,
@@ -179,7 +217,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 21,
@@ -188,7 +228,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 22,
@@ -197,7 +239,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 23,
@@ -206,7 +250,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 24,
@@ -215,7 +261,9 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     },
     {
         id: 25,
@@ -224,6 +272,8 @@ export const wordList: WordDataType[] = [
         date: '2023/08/11',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false
     }
 ];

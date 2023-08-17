@@ -16,7 +16,9 @@ export type WordDataType = {
     date: string,
     editing: boolean,
     register: string,
-    complete: boolean
+    complete: boolean,
+    yourAnswer: string,
+    rightWrong: boolean
 };
 
 export type SidebarType = {

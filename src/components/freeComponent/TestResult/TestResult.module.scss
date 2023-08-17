@@ -24,6 +24,8 @@
         position: relative;
         padding: 24px 32px;
         margin-bottom: 32px;
+        background-color: #fff;
+        border-radius: 4px;
 
         &Container {
             display: flex;
@@ -46,7 +48,27 @@
         user-select: none;
     }
 
-    &_resultDetail {
-        padding: 24px 32px;
+    &_pageButtons {
+        display: flex;
+        justify-content: center;
+    }
+
+    &_before, &_next {
+        background-color: rgb(184, 184, 184);
+        color: rgb(255, 255, 255);
+        margin-top: 12px;
+
+        &:hover {
+            background-color: rgb(184, 184, 184);    
+        }
+
+        &:disabled {
+            background-color: rgb(218, 206, 200);
+        }
+    }
+
+    &_next {
+        background-color: rgb(184, 184, 184);
+        margin-left: 8px;
     }
 }

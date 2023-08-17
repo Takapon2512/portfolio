@@ -1,15 +1,27 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
+
+//MUI
+import { 
+  Box 
+} from '@mui/material';
+
+//CSS
+import styles from "./index.module.scss";
 
 //Component
 import Layout from '@/components/Layout/layout';
+import WordCard from '@/components/memorizeComponents/WordCard/WordCard';
 
-const index = () => {
+const Memorize = () => {
   return (
     <Layout>
-        <p>暗記モード</p>
+      <Box className={styles.memorize}>
+        <Box className={styles.memorizeContainer}>
+          <WordCard />
+        </Box>
+      </Box>
     </Layout>
   )
 };
 
-export default index;
+export default Memorize;

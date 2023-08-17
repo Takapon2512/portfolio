@@ -276,7 +276,7 @@ const SearchWords = () => {
                                 onClick={registerButton}
                                 disabled={registerButtonDisabed()}
                                 >
-                                    登録
+                                    暗記する
                                 </Button>
                                 {
                                     statusNotAskJudge(sliceArr) ? (

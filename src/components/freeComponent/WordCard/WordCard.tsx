@@ -43,7 +43,7 @@ const WordCard = () => {
 
   //現在の問題番号を管理
   const [problemNum, setProblemNum] = useState<number>(1);
-  //覚えた単語の数を管理
+  //覚えてない単語の数を管理
   const [incompleteCount, setIncompleteCount] = useState<number>(0);
 
   //「覚えた！」ボタンをクリックしたときの処理
