@@ -47,23 +47,21 @@ const WordTest = () => {
   //残り時間を管理
   const [remainTime, setRemainTime] = useState<number>(settingTime);
 
+  //入力を検知
+  const [composing, setComposing] = useState<boolean>(false);
+
   //出題状態の単語のみを取得
   const questionWords: Array<WordDataType> = 
   dbWords.filter((word: WordDataType) => word.register.match(/^出題$/));
 
   //問題番号の配列を作成
-  let intNumArr: Array<number> = [...Array(questionWords.length)].map((_, i) => i);
+  let intNumArr: Array<number> = [...Array(questionWords.length)].map((_, i: number) => i);
 
   intNumArr.forEach((item: number, index: number) => {
-    //ランダムな数値(0 <= index <= index + 1)を取得する
     let randomNum: number = Math.floor(Math.random() * (index + 1));
-
-    //要素を一時的に保管する
-    let tmp: number = intNumArr[index];
-
-    //要素の保管場所を入れ替える
+    let tmpNum: number = intNumArr[index];
     intNumArr[index] = intNumArr[randomNum];
-    intNumArr[randomNum] = tmp;
+    intNumArr[randomNum] = tmpNum;
   });
 
   const [intNum, setIntNum] = useState<number[]>(intNumArr);
@@ -78,12 +76,10 @@ const WordTest = () => {
   const handleAnswer = () => {
     const currentNum: number = problemNum;
     if (questionWords[intNum[problemNum - 1]].japanese === answerText) {
-      console.log("正解");
       yourAnswerDB(answerText, true);
       setCorrectNum(prev => prev + 1);
       localStorageStore();
     } else {
-      console.log("不正解");
       yourAnswerDB(answerText, false);
     }
     setProblemNum(currentNum + 1);
@@ -114,17 +110,20 @@ const WordTest = () => {
     };
     const newArr: Array<WordDataType> = prevArr;
     setDBWords(newArr);
-    console.log(answer, rightOrWrong);
   };
-  console.log(questionWords);
 
   const localStorageStore = () => {
     const jsonCorrectNum: string = JSON.stringify(correctNum);
     localStorage.setItem("correct", jsonCorrectNum);
   };
 
-  //制限時間の残りが0になったとき、次の問題に遷移し、解答状況をDBに反映する
-  if (remainTime === 0 && problemNum <= questionWords.length) {
+  //解答欄でEnterキーを押したとき
+  const onkeyDownEnter = (key: string) => {
+    if (key === "Enter" && composing === false) handleAnswer();
+  };
+
+  //制限時間の残りが-1になったとき、次の問題に遷移し、解答状況をDBに反映する
+  if (remainTime === -1 && problemNum <= questionWords.length) {
     const currentNum: number = problemNum;
     setProblemNum(currentNum + 1);
     yourAnswerDB("", false);
@@ -191,6 +190,9 @@ const WordTest = () => {
               fullWidth
               value={answerText}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnswerText(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => onkeyDownEnter(e.key)}
+              onCompositionStart={() => setComposing(true)}
+              onCompositionEnd={() => setComposing(false)}
               />
               <Box className={styles.free_answerButtons}>
                 <Button

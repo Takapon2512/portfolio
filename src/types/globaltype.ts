@@ -18,7 +18,10 @@ export type WordDataType = {
     register: string,
     complete: boolean,
     yourAnswer: string,
-    rightWrong: boolean
+    rightWrong: boolean,
+    correctAnswer: number,
+    questionNum: number,
+    correctRate: number
 };
 
 export type SidebarType = {

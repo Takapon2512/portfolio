@@ -72,7 +72,12 @@ const RegisterList = () => {
         date: '',
         editing: false,
         register: "出題しない",
-        complete: false
+        complete: false,
+        yourAnswer: "",
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     });
     const [editWordIndex, setEditWordIndex] = useState<number>(0);
     

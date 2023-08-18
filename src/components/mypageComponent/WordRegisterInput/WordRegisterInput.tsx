@@ -33,6 +33,9 @@ const WordRegisterInput = () => {
     const [engField, setEngField] = useState('');
     const [japField, setJapField] = useState('');
 
+    //入力を検知
+    const [composing, setComposing] = useState<boolean>(false);
+
     const handleWordsAdd = () => {
         const registerWord: WordDataType = {
             id: dbWords.length + registerWords.length + 1,
@@ -41,7 +44,12 @@ const WordRegisterInput = () => {
             date: createDate(),
             editing: false,
             register: "出題しない",
-            complete: false
+            complete: false,
+            yourAnswer: "",
+            rightWrong: false,
+            correctAnswer: 0,
+            questionNum: 0,
+            correctRate: 0
         };
 
         //words配列に追加の単語を格納
@@ -65,6 +73,20 @@ const WordRegisterInput = () => {
     const TextFieldLimit = (text: string, regular: RegExp) => {
         if (!text.match(regular)) return true;
         return false;
+    };
+
+    //Enterキーを押したとき
+    const TextFieldEnter = (key: string) => {
+        if (
+            key === "Enter" 
+            && composing === false 
+            && japField !== "" 
+            && engField !== ""
+            && TextFieldLimit(engField, /^[a-zA-Z]*$/) === false 
+            && TextFieldLimit(japField, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々〜]*$/) === false
+            ) {
+                handleWordsAdd();
+        }
     };
 
     //日付の生成
@@ -98,6 +120,9 @@ const WordRegisterInput = () => {
                     fullWidth
                     onChange={eWordTextField}
                     value={engField}
+                    onCompositionStart={() => setComposing(true)}
+                    onCompositionEnd={() => setComposing(false)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => TextFieldEnter(e.key)}
                     />
                 </Box>
                 <Box className={styles.home_RegisterJapanese}>
@@ -108,6 +133,9 @@ const WordRegisterInput = () => {
                     fullWidth
                     onChange={jWordTextField}
                     value={japField}
+                    onCompositionStart={() => setComposing(true)}
+                    onCompositionEnd={() => setComposing(false)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => TextFieldEnter(e.key)}
                     />
                 </Box>
                 <Box className={styles.home_wordRegisterWrapper}>
@@ -120,7 +148,7 @@ const WordRegisterInput = () => {
                         engField.length === 0 || 
                         japField.length === 0 ||
                         TextFieldLimit(engField, /^[a-zA-Z]*$/) ||
-                        TextFieldLimit(japField, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠]*$/)
+                        TextFieldLimit(japField, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々〜]*$/)
                         ? true : false 
                     }
                     >

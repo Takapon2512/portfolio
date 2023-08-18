@@ -10,7 +10,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 2,
@@ -21,7 +24,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 3,
@@ -32,7 +38,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 4,
@@ -43,7 +52,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 5,
@@ -54,7 +66,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 6,
@@ -65,7 +80,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 7,
@@ -76,7 +94,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 8,
@@ -87,7 +108,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 9,
@@ -98,7 +122,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 10,
@@ -109,7 +136,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 11,
@@ -120,7 +150,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 12,
@@ -131,7 +164,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 13,
@@ -142,7 +178,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 14,
@@ -153,7 +192,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 15,
@@ -164,7 +206,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 16,
@@ -175,7 +220,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 17,
@@ -186,7 +234,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 18,
@@ -197,7 +248,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 19,
@@ -208,7 +262,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 20,
@@ -219,7 +276,10 @@ export const wordList: WordDataType[] = [
         register: "出題",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 21,
@@ -230,7 +290,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 22,
@@ -241,7 +304,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 23,
@@ -252,7 +318,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 24,
@@ -263,7 +332,10 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     },
     {
         id: 25,
@@ -274,6 +346,9 @@ export const wordList: WordDataType[] = [
         register: "出題しない",
         complete: false,
         yourAnswer: "",
-        rightWrong: false
+        rightWrong: false,
+        correctAnswer: 0,
+        questionNum: 0,
+        correctRate: 0
     }
 ];

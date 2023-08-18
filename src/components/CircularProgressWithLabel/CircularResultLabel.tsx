@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { 
     Box,
     Typography,
-    CircularProgress 
+    CircularProgress,
+    circularProgressClasses
 } from '@mui/material';
 
 //utils
@@ -20,8 +21,8 @@ const CircularResultLabel = ({ correct, questionNum }: { correct: number, questi
     useEffect(() => {
         if (displayRate <= correctRate) {
             const timer: NodeJS.Timer = setInterval(() => {
-                setDisplayRate((prev) => prev < correctRate ? prev + 2 : correctRate);
-            }, 50);
+                setDisplayRate((prev) => prev < correctRate ? prev + 1 : correctRate);
+            }, 40);
             return () => {
                 clearInterval(timer);
             };
@@ -31,7 +32,29 @@ const CircularResultLabel = ({ correct, questionNum }: { correct: number, questi
     return (
         <>
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <CircularProgress variant='determinate' size={240} thickness={5.6} value={displayRate} />
+            <CircularProgress 
+            variant='determinate'
+            size={240} 
+            thickness={5.6}
+            value={100}
+            sx={{
+                color: (theme) =>
+                    theme.palette.grey[300]
+            }}
+            />
+            <CircularProgress 
+            variant='determinate' 
+            size={240} 
+            thickness={5.6} 
+            value={displayRate} 
+            sx={{
+                position: "absolute",
+                left: "0",
+                [`& .${circularProgressClasses.circle}`]: {
+                    strokeLinecap: 'round',
+                },
+            }}
+            />
             <Box
                 sx={{
                     top: 0,
