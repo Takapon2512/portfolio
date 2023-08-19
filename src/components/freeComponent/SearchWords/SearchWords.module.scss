@@ -141,4 +141,43 @@
         margin-left: 8px;
     }
 
+    &_correctRateButtons {
+        display: flex;
+        align-items: center;
+        margin-bottom: 24px;
+
+        &Container {
+            padding-left: 32px;
+        }
+    }
+
+    &_weakButton, &_normalButton, &_goodButton {
+        border: 1px solid rgb(187, 187, 187);
+        color: rgb(116, 116, 116);
+        font-weight: 300;
+        margin-right: 8px;
+
+        &:hover {
+            background-color: rgb(241, 39, 39);
+            color: #fff;
+            border: 1px solid transparent;
+        }
+    }
+
+    &_normalButton {
+        &:hover {
+            background-color: rgb(240, 119, 49);
+            color: #fff;
+            border: 1px solid transparent;
+        }
+    }
+
+    &_goodButton {
+        &:hover {
+            background-color: rgb(60, 123, 239);
+            color: #fff;
+            border: 1px solid transparent;
+        }
+    }
+
 }

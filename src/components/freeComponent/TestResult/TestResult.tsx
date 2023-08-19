@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 //recoil
 import { useRecoilValue } from 'recoil';
@@ -23,6 +24,8 @@ import{
 //MUIIcon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import QuizIcon from '@mui/icons-material/Quiz';
+import HomeIcon from '@mui/icons-material/Home';
 
 //CSS
 import styles from "./TestResult.module.scss";
@@ -61,8 +64,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const TestResult = () => {
-    const jsonCorrectNum: string = localStorage.getItem("correct") || "";
-    const correctNum: number = Number(jsonCorrectNum);
+    //router
+    const router = useRouter();
 
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -86,6 +89,15 @@ const TestResult = () => {
         && perPageItemNum * currentPage > index 
     ));
 
+    //正解した単語のみ取り出す
+    const correctWords: Array<WordDataType> = questionWords.filter((word: WordDataType, index: number) => 
+        word.rightWrong === true
+    );
+    const correctWordsNum: number = correctWords.length;
+
+    //正答率を求める
+    const correctsRate: number = Math.ceil(correctWords.length / questionWords.length) * 100;
+
     return (
         <Box className={styles.free_firstContents}>
             <Typography className={`${notoSansJP.className} ${styles.free_resultTitle}`}>
@@ -96,7 +108,7 @@ const TestResult = () => {
                     あなたの正答率は...
                 </Typography>
                 <Box className={styles.free_resultDisplayContainer}>
-                    <CircularResultLabel correct={correctNum} questionNum={questionWordsNum} />
+                    <CircularResultLabel correct={correctWordsNum} questionNum={questionWordsNum} />
                 </Box>
                 <Box className={styles.free_resultDetail}>
                     <TableContainer component={Paper}>
@@ -173,6 +185,21 @@ const TestResult = () => {
                         <NavigateNextIcon />
                     </Button>
                 </Box>
+            </Box>
+            <Box className={styles.free_resultButtonWrapper}>
+                <Button 
+                className={styles.free_resultButton}
+                onClick={() => correctsRate !== 100 ? (router.push("/mypage/free/test")) : (router.push("/mypage")) }
+                >
+                    {
+                        correctsRate !== 100 
+                        ? ( <QuizIcon className={styles.free_resultButtonIcon} /> ) 
+                        : ( <HomeIcon className={styles.free_resultButtonIcon} /> )
+                    }
+                    <Typography className={notoSansJP.className}>
+                        { correctsRate !== 100 ? "再テストを行う" : "ホームに戻る" }
+                    </Typography>
+                </Button>
             </Box>
         </Box>
     );

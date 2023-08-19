@@ -42,8 +42,8 @@ const WordTest = () => {
   const [answerText, setAnswerText] = useState<string>("");
   //正答数
   const [correctNum, setCorrectNum] = useState<number>(1);
-  //残り時間の設定を受け取る
-  const [settingTime, setSettingTime] = useState<number>(10);
+  //残り時間の初期設定
+  const settingTime = 10;
   //残り時間を管理
   const [remainTime, setRemainTime] = useState<number>(settingTime);
 
@@ -89,8 +89,11 @@ const WordTest = () => {
 
   //パスボタンを押したとき
   const handlePass = () => {
-    setProblemNum(prev => prev + 1);
+    const currentNum: number = problemNum;
+    setProblemNum(currentNum + 1);
+    yourAnswerDB("", false);
     setRemainTime(settingTime);
+    setAnswerText("");
   };
 
   //問題の表示
@@ -122,17 +125,12 @@ const WordTest = () => {
     if (key === "Enter" && composing === false) handleAnswer();
   };
 
-  //制限時間の残りが-1になったとき、次の問題に遷移し、解答状況をDBに反映する
-  if (remainTime === -1 && problemNum <= questionWords.length) {
-    const currentNum: number = problemNum;
-    setProblemNum(currentNum + 1);
-    yourAnswerDB("", false);
-    setRemainTime(settingTime);
-    setAnswerText("");
-  };
+  console.log(dbWords);
 
   useEffect(() => {
-    localStorage.setItem("correct", "0");
+    //制限時間の残りが-1になったとき、次の問題に遷移し、解答状況をDBに反映する
+    if (remainTime === -1 && problemNum <= questionWords.length) handlePass();
+
     if (problemNum < questionWords.length + 1) {
       const timer: NodeJS.Timer = setInterval(() => {
         setRemainTime(prev => prev > 0 ? prev - 1 : settingTime);
@@ -141,7 +139,7 @@ const WordTest = () => {
         clearInterval(timer);
       };
     }
-  }, []);
+  }, [remainTime]);
 
   return (
     <>

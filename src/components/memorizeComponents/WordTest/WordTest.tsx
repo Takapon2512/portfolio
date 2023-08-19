@@ -48,7 +48,7 @@ const WordTest = () => {
     const [correctNum, setCorrectNum] = useState<number>(1);
 
     //残り時間の設定を受け取る
-    const [settingTime, setSettingTime] = useState<number>(10);
+    const settingTime = 10;
 
     //残り時間を管理
     const [remainTime, setRemainTime] = useState<number>(settingTime);
@@ -141,22 +141,22 @@ const WordTest = () => {
         router.push("/mypage/memorization/result")
     };
 
-    console.log(todayWords.map((word, idx) => word.correctRate));
+    console.log(todayWords);
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        //次の問題に遷移し、解答状況を反映する
-        if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
+    //     //次の問題に遷移し、解答状況を反映する
+    //     if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
 
-        if (problemNum < todayWords.length + 1) {
-          const timer: NodeJS.Timer = setInterval(() => {
-            setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
-          }, 1000);
-          return () => {
-            clearInterval(timer);
-          };
-        };
-    }, [remainTime]);
+    //     if (problemNum < todayWords.length + 1) {
+    //       const timer: NodeJS.Timer = setInterval(() => {
+    //         setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
+    //       }, 1000);
+    //       return () => {
+    //         clearInterval(timer);
+    //       };
+    //     };
+    // }, [remainTime]);
 
     return (
         <Box className={styles.memorize_firstContents}>

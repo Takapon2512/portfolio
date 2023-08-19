@@ -61,6 +61,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
+interface weakButtonType {
+    weak: boolean,
+    normal: boolean,
+    good: boolean
+}
+
 const SearchWords = () => {
     //Router
     const router: NextRouter = useRouter();
@@ -82,6 +88,13 @@ const SearchWords = () => {
     //現在のページ番号を管理
     const [currentPage, setCurrentPage] = useState<number>(1);
 
+    //苦手度ボタンの切り替えを管理
+    const [isActive, setIsActive] = useState<weakButtonType>({
+        weak: true,
+        normal: false,
+        good: false
+    });
+
     //1ページに表示する単語数
     const perPageItemNum = 10;
 
@@ -93,10 +106,27 @@ const SearchWords = () => {
         .filter((word: WordDataType, index: number) => 
         index >= numMin - 1 && numMax - 1 >= index);
 
-    //単語番号で絞った後、キーワードで絞る
-    const keyWordsArr: Array<WordDataType> = numWordsArr
+    //正答率の基準
+    const normalBorder = 60;
+    const goodBorder = 80;
+
+    //単語番号で絞った後、苦手度で絞る
+    const weakWordsArr: Array<WordDataType> = numWordsArr.filter((word: WordDataType, index: number) => {
+        if (isActive.weak) {
+            return word.correctRate < normalBorder;
+        } else if (isActive.normal) {
+            return word.correctRate >= normalBorder && goodBorder > word.correctRate;
+        } else if (isActive.good) {
+            return word.correctRate >= goodBorder;
+        }
+        return word.correctRate >= 0 && 100 >= word.correctRate;
+    });
+
+    //苦手度で絞った後、キーワードで絞る
+    const keyWordsArr: Array<WordDataType> = weakWordsArr
         .filter((word: WordDataType, index: number) => 
         word.english.includes(keyword));
+
 
     //最後のページ番号を求める
     const lastPage: number = Math.ceil(keyWordsArr.length / perPageItemNum); 
@@ -119,21 +149,21 @@ const SearchWords = () => {
     const handleChangeStatus = (word: WordDataType) => {
         const wordsArr: Array<WordDataType> = [...dbWords];
         const prevWord: WordDataType = word;
-        const DBwordsIndex: number = word.id - 1;
+        const dbWordsIndex: number = word.id - 1;
 
         if (word.register === "出題しない") {
             const newWord: WordDataType = {
                 ...prevWord,
                 register: "出題"
             };
-            wordsArr[DBwordsIndex] = newWord;
+            wordsArr[dbWordsIndex] = newWord;
         } else if (word.register === "出題") {
             const newWord: WordDataType = {
                 ...prevWord,
                 register: "出題しない"
             };
-            wordsArr[DBwordsIndex] = newWord;
-        }
+            wordsArr[dbWordsIndex] = newWord;
+        };
 
         setDBWords(wordsArr);
     };
@@ -162,7 +192,7 @@ const SearchWords = () => {
         };
     };
 
-    //登録ボタン
+    //「暗記する」ボタンを押したとき
     const registerButton = () => router.push("/mypage/free/wordcard");
 
     const registerButtonDisabed = () => {
@@ -170,9 +200,28 @@ const SearchWords = () => {
         if (questonArr.length === 0) return true;
         return false;
     };
+    
+    const handleWeakButton = () => {
+        const newObj: weakButtonType = isActive.weak 
+        ? { weak: false, normal: false, good: false } : { weak: true, normal: false, good: false };
+        setIsActive(newObj);
+    };
+
+    const handleNormalButton = () => {
+        const newObj: weakButtonType = isActive.normal
+        ? { weak: false, normal: false, good: false } : { weak: false, normal: true, good: false };
+        setIsActive(newObj);
+    };
+
+    const handleGoodButton = () => {
+        const newObj: weakButtonType = isActive.good
+        ? { weak: false, normal: false, good: false } : { weak: false, normal: false, good: true };
+        setIsActive(newObj);
+    };
 
     return (
-        <Box className={styles.firstContents}>
+        <>        
+        <Box className={styles.free_firstContents}>
             <Typography className={styles.free_searchTitle}>
                 単語を検索する
             </Typography>
@@ -204,6 +253,52 @@ const SearchWords = () => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
                     />
                 </Box>
+                <Box className={styles.free_correctRateButtons}>
+                    <Typography className={notoSansJP.className}>
+                        苦手度で検索：
+                    </Typography>
+                    <Box className={styles.free_correctRateButtonsContainer}>
+                        <Button 
+                        className={`${notoSansJP.className} ${styles.free_weakButton}`}
+                        sx={
+                            isActive.weak ? ({
+                                backgroundColor: "rgb(241, 39, 39)",
+                                color: "#fff !important",
+                                border: "1px solid transparent !important",
+                            }) : ({})
+                        }
+                        onClick={handleWeakButton}
+                        >
+                            苦手
+                        </Button>
+                        <Button 
+                        className={`${notoSansJP.className} ${styles.free_normalButton}`}
+                        sx={
+                            isActive.normal ? ({
+                                backgroundColor: "rgb(240, 119, 49)",
+                                color: "#fff !important",
+                                border: "1px solid transparent !important",
+                            }) : ({})
+                        }
+                        onClick={handleNormalButton}
+                        >
+                            まずまず
+                        </Button>
+                        <Button 
+                        className={`${notoSansJP.className} ${styles.free_goodButton}`}
+                        sx={
+                            isActive.good ? ({
+                                backgroundColor: "rgb(60, 123, 239)",
+                                color: "#fff !important",
+                                border: "1px solid transparent !important",
+                            }) : ({})
+                        }
+                        onClick={handleGoodButton}
+                        >
+                            得意
+                        </Button>
+                    </Box>
+                </Box>
                 {
                     sliceArr.length !== 0 ? (                        
                         <Box className={styles.free_searchList}>
@@ -213,7 +308,8 @@ const SearchWords = () => {
                                         <TableRow>
                                             <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
                                             <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
-                                            <StyledTableCell className={notoSansJP.className} align='center'>日本語</StyledTableCell>
+                                            <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
+                                            <StyledTableCell className={notoSansJP.className} align='center'>正答率</StyledTableCell>
                                             <StyledTableCell className={notoSansJP.className} align='center'>ステータス</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
@@ -241,6 +337,12 @@ const SearchWords = () => {
                                                     align='center'
                                                     >
                                                         {word.japanese}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell
+                                                    className={notoSansJP.className}
+                                                    align='center'
+                                                    >
+                                                        {`${word.correctRate} %`}
                                                     </StyledTableCell>
                                                     <StyledTableCell
                                                     className={notoSansJP.className}
@@ -304,7 +406,9 @@ const SearchWords = () => {
                     )
                 }
             </Box>
+
         </Box>
+        </>
     );
 };
 
