@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
@@ -31,7 +31,6 @@ import noImage from '../../../public/images/noImage.png';
 import { SidebarType } from '@/types/globaltype';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    //useRouter
     const router = useRouter();
 
     const sidebarArr: Array<SidebarType> = [
@@ -99,8 +98,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         </Box>
                         <List className={styles.layout_sidebarList}>
                             {
-                                sidebarArr.map((value, key) => {
-                                    return (
+                                sidebarArr.map((value: SidebarType, key: number) => 
+                                    (
                                         <ListItem
                                         key={key} 
                                         className={styles.layout_sidebarItem} 
@@ -119,7 +118,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                             </Box>
                                         </ListItem>
                                     )
-                                })
+                                )
                             }
                         </List>
                     </Box>

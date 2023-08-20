@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
 //recoil
@@ -102,7 +102,18 @@ const WordCard = () => {
             setEJSwitch(!ejSwitch);
         };
     };
-    console.log(incompleteWords);
+
+    //テストモードに遷移した後に、フリーモードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
+    useEffect(() => {
+        const prevArr: Array<WordDataType> = [...todayWords];
+        const newArr: Array<WordDataType> = prevArr.map((word: WordDataType) => (
+        {
+            ...word,
+            complete: false
+        }
+        ));
+        setTodayWords(newArr);
+    }, []);
 
     return (
         <Box className={styles.memorize_firstContents}>

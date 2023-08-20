@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
 //recoil
@@ -111,6 +111,18 @@ const WordCard = () => {
   const handleToTestPage = () => {
     router.push("/mypage/free/test")
   };
+
+  //テストモードに遷移した後に、フリーモードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
+  useEffect(() => {
+    const prevArr: Array<WordDataType> = [...dbWords];
+    const newArr: Array<WordDataType> = prevArr.map((word: WordDataType) => (
+      {
+        ...word,
+        complete: false
+      }
+    ));
+    setDBWords(newArr);
+  }, []);
 
   return (
     <Box className={styles.free_firstContents}>

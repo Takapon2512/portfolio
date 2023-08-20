@@ -23,6 +23,8 @@ import{
 //MUIIcon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import QuizIcon from '@mui/icons-material/Quiz';
+import HomeIcon from '@mui/icons-material/Home';
 
 //CSS
 import styles from "./TestResult.module.scss";
@@ -35,6 +37,7 @@ import { notoSansJP } from '@/utils/font';
 
 //Components
 import CircularResultLabel from '@/components/CircularProgressWithLabel/CircularResultLabel';
+import { NextRouter, useRouter } from 'next/router';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -61,11 +64,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const TestResult = () => {
-    const jsonCorrectNum: string = localStorage.getItem("correct") || "";
-    const correctNum: number = Number(jsonCorrectNum);
+    //router
+    const router: NextRouter = useRouter();
 
     //出題した問題を取得
     const todayWords = useRecoilValue<WordDataType[]>(dbWordsState);
+    const todayWordsNum: number = todayWords.length;
+
+    //正解した単語のみを取り出す
+    const correctWords: Array<WordDataType> = todayWords.filter((word) => word.rightWrong === true);
+    const correctWordsNum: number = correctWords.length;
+
+    //正答率を算出
+    const correctsRate: number = Math.ceil(correctWordsNum / todayWordsNum * 100);
 
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -93,7 +104,7 @@ const TestResult = () => {
                     あなたの正答率は...
                 </Typography>
                 <Box className={styles.memorize_resultDisplayContainer}>
-                    <CircularResultLabel correct={correctNum} questionNum={todayWords.length} />
+                    <CircularResultLabel correct={correctWordsNum} questionNum={todayWordsNum} />
                 </Box>
                 <Box className={styles.memorize_resultDetail}>
                     <TableContainer component={Paper}>
@@ -170,6 +181,21 @@ const TestResult = () => {
                         <NavigateNextIcon />
                     </Button>
                 </Box>
+            </Box>
+            <Box className={styles.memorize_resultButtonWrapper}>
+                <Button 
+                className={styles.memorize_resultButton}
+                onClick={() => correctsRate < 100 ? (router.push("/mypage/memorization/test")) : (router.push("/mypage")) }
+                >
+                    {
+                        correctsRate < 100 
+                        ? ( <QuizIcon className={styles.memorize_resultButtonIcon} /> ) 
+                        : ( <HomeIcon className={styles.memorize_resultButtonIcon} /> )
+                    }
+                    <Typography className={notoSansJP.className}>
+                        { correctsRate < 100 ? "再テストを行う" : "ホームに戻る" }
+                    </Typography>
+                </Button>
             </Box>
         </Box>
     );

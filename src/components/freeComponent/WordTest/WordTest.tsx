@@ -76,11 +76,10 @@ const WordTest = () => {
   const handleAnswer = () => {
     const currentNum: number = problemNum;
     if (questionWords[intNum[problemNum - 1]].japanese === answerText) {
-      yourAnswerDB(answerText, true);
+      userAnswerSituation(answerText, true);
       setCorrectNum(prev => prev + 1);
-      localStorageStore();
     } else {
-      yourAnswerDB(answerText, false);
+      userAnswerSituation(answerText, false);
     }
     setProblemNum(currentNum + 1);
     setRemainTime(settingTime);
@@ -89,11 +88,10 @@ const WordTest = () => {
 
   //パスボタンを押したとき
   const handlePass = () => {
-    const currentNum: number = problemNum;
-    setProblemNum(currentNum + 1);
-    yourAnswerDB("", false);
-    setRemainTime(settingTime);
+    setProblemNum(prev => prev + 1);
+    userAnswerSituation("", false);
     setAnswerText("");
+    setRemainTime(settingTime);
   };
 
   //問題の表示
@@ -102,10 +100,11 @@ const WordTest = () => {
     return questionWords[intNum[problemNum - 1]].english;
   };
 
-  //ユーザーの解答状況をDBに記録
-  const yourAnswerDB = (answer: string, rightOrWrong: boolean) => {
+  //ユーザーの解答状況を記録
+  const userAnswerSituation = (answer: string, rightOrWrong: boolean) => {
     const prevArr: Array<WordDataType> = [...dbWords];
     const prevWord: WordDataType = questionWords[intNum[problemNum - 1]];
+
     prevArr[prevWord.id - 1] = {
       ...prevWord,
       yourAnswer: answer,
@@ -115,21 +114,14 @@ const WordTest = () => {
     setDBWords(newArr);
   };
 
-  const localStorageStore = () => {
-    const jsonCorrectNum: string = JSON.stringify(correctNum);
-    localStorage.setItem("correct", jsonCorrectNum);
-  };
-
   //解答欄でEnterキーを押したとき
   const onkeyDownEnter = (key: string) => {
     if (key === "Enter" && composing === false) handleAnswer();
   };
 
-  console.log(dbWords);
-
   useEffect(() => {
-    //制限時間の残りが-1になったとき、次の問題に遷移し、解答状況をDBに反映する
-    if (remainTime === -1 && problemNum <= questionWords.length) handlePass();
+    //次の問題に遷移し、解答状況をDBに反映する
+    if (remainTime < 1 && problemNum <= questionWords.length) handlePass();
 
     if (problemNum < questionWords.length + 1) {
       const timer: NodeJS.Timer = setInterval(() => {

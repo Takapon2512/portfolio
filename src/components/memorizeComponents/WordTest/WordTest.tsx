@@ -74,6 +74,12 @@ const WordTest = () => {
         return todayWords[intNum[problemNum - 1]].english;
     };
 
+    //解答欄の内容を日本語に限定する
+    const answerTextDisabled = () => {
+        if (!answerText.match(/^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々〜]*$/) || answerText === "") return true;
+        return false;
+    };
+
     //「解答」ボタンを押したとき
     const handleAnswer = () => {
         const curretNum: number = problemNum;
@@ -91,17 +97,8 @@ const WordTest = () => {
 
     //「パス」ボタンを押したとき
     const handlePass = () => {
-        const prevArr: Array<WordDataType> = [...todayWords];
-        const prevWord: WordDataType = prevArr[intNum[problemNum - 1]];
-        const newWord: WordDataType = {
-            ...prevWord,
-            questionNum: prevWord.questionNum + 1
-        };
-        prevArr[intNum[problemNum - 1]] = newWord;
-        const newArr: Array<WordDataType> = prevArr;
-
-        setTodayWords(newArr);
         setProblemNum(prev => prev + 1);
+        userAnswerSituation("", false);
         setAnswerText("");
         setRemainTime(settingTime);
     };
@@ -137,26 +134,21 @@ const WordTest = () => {
     };
 
     //結果を確認
-    const confirmResult = () => {
-        router.push("/mypage/memorization/result")
-    };
+    const confirmResult = () =>  router.push("/mypage/memorization/result");
 
-    console.log(todayWords);
+    useEffect(() => {
+        //次の問題に遷移し、解答状況を反映する
+        if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
 
-    // useEffect(() => {
-        
-    //     //次の問題に遷移し、解答状況を反映する
-    //     if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
-
-    //     if (problemNum < todayWords.length + 1) {
-    //       const timer: NodeJS.Timer = setInterval(() => {
-    //         setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
-    //       }, 1000);
-    //       return () => {
-    //         clearInterval(timer);
-    //       };
-    //     };
-    // }, [remainTime]);
+        if (problemNum < todayWords.length + 1) {
+          const timer: NodeJS.Timer = setInterval(() => {
+            setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
+          }, 1000);
+          return () => {
+            clearInterval(timer);
+          };
+        };
+    }, [remainTime]);
 
     return (
         <Box className={styles.memorize_firstContents}>
@@ -208,6 +200,7 @@ const WordTest = () => {
                         <Box className={styles.memorize_answerButtons}>
                             <Button 
                             className={styles.memorize_answerButton}
+                            disabled={answerTextDisabled()}
                             onClick={handleAnswer}
                             >
                                 <LightbulbIcon className={styles.memorize_answerButtonsIcon} />

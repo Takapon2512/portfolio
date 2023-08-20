@@ -94,9 +94,11 @@ const TestResult = () => {
         word.rightWrong === true
     );
     const correctWordsNum: number = correctWords.length;
+    console.log(correctWordsNum);
 
     //正答率を求める
-    const correctsRate: number = Math.ceil(correctWords.length / questionWords.length) * 100;
+    const correctsRate: number = Math.ceil(correctWordsNum / questionWordsNum * 100);
+    console.log(correctsRate);
 
     return (
         <Box className={styles.free_firstContents}>
@@ -192,12 +194,12 @@ const TestResult = () => {
                 onClick={() => correctsRate !== 100 ? (router.push("/mypage/free/test")) : (router.push("/mypage")) }
                 >
                     {
-                        correctsRate !== 100 
+                        correctsRate < 100 
                         ? ( <QuizIcon className={styles.free_resultButtonIcon} /> ) 
                         : ( <HomeIcon className={styles.free_resultButtonIcon} /> )
                     }
                     <Typography className={notoSansJP.className}>
-                        { correctsRate !== 100 ? "再テストを行う" : "ホームに戻る" }
+                        { correctsRate < 100 ? "再テストを行う" : "ホームに戻る" }
                     </Typography>
                 </Button>
             </Box>

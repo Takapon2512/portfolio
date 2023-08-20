@@ -14,11 +14,10 @@ import { notoSansJP } from "@/utils/font";
 //CSS
 import styles from './Footer.module.scss';
 
-const Footer = () => {
-    //現在の年数を取得
-    const date = new Date();
-    const year = date.getFullYear();
+//utils
+import { year } from "@/utils/days";
 
+const Footer = () => {
     //リンクテキスト
     const linkTexts: Array<FooterLink> = [
         {
@@ -46,7 +45,7 @@ const Footer = () => {
     type FooterLink = {
         text: string,
         link: string
-    }
+    };
 
     return (
         <>
@@ -54,7 +53,7 @@ const Footer = () => {
             <Box className={styles.footer_container}>
                 <List className={styles.footer_left}>
                     {
-                        linkTexts.map((linkText, index) => (
+                        linkTexts.map((linkText: FooterLink, index: number) => (
                             <ListItem key={index} className={styles.footer_list}>
                                 <Link
                                 href={linkText.link}
