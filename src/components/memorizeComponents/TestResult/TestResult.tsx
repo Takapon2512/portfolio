@@ -85,7 +85,7 @@ const TestResult = () => {
     const perPageItemNum = 10;
 
     //最終ページの番号を求める
-    const lastPage: number = Math.ceil(todayWords.length / perPageItemNum);
+    const lastPage: number = Math.ceil(todayWordsNum / perPageItemNum);
 
     //1ページに表示する単語数を制限する
     const sliceArr: Array<WordDataType> = todayWords.filter((word, index) => (
