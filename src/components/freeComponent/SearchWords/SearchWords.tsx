@@ -22,12 +22,14 @@ import {
     TableRow
 } from '@mui/material';
 
-//MuiIcon
+//MUIIcon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
   
 //CSS
 import styles from './SearchWords.module.scss';
+
+//utils
 import { notoSansJP } from '@/utils/font';
 
 //type
@@ -234,7 +236,7 @@ const SearchWords = () => {
                     value={minText}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinText(e.target.value)}
                     />
-                    <Typography className={styles.free_searchNumberMiddle}>
+                    <Typography className={`${styles.free_searchNumberMiddle} ${notoSansJP.className}`}>
                         ～
                     </Typography>
                     <TextField 

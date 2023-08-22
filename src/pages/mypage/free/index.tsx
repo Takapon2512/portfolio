@@ -15,11 +15,11 @@ import SearchWords from '@/components/freeComponent/SearchWords/SearchWords';
 const Free = () => {
   return (
     <Layout>
-        <Box className={styles.free}>
-          <Box className={styles.free_container}>
-            <SearchWords />
-          </Box>
+      <Box className={styles.free}>
+        <Box className={styles.free_container}>
+          <SearchWords />
         </Box>
+      </Box>
     </Layout>
   );
 };

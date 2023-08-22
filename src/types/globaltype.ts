@@ -30,3 +30,9 @@ export type SidebarType = {
     link: string,
     active: boolean
 };
+
+export type UserInputType = {
+    minText: string,
+    maxText: string,
+    wordText: string
+};
