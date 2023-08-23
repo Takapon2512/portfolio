@@ -38,15 +38,28 @@
     &_time, &_amount {
         display: flex;
         align-items: center;
-    }
-
-    &_time {
         margin-bottom: 16px;
     }
 
     &_timeTitle, &_amountTitle {
-        width: 24%;
+        min-width: 28%;
         @extend .text-color;
+    }
+
+    &_button {
+        width: 120px;
+        background-color: rgb(240, 119, 49);
+        color: #fff;
+
+        &:hover {
+            background-color: rgb(240, 119, 49);
+            color: #fff;
+        }
+
+        &Wrapper {
+            display: flex;
+            justify-content: center;
+        }
     }
 
 }

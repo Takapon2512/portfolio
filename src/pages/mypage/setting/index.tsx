@@ -12,6 +12,7 @@ import styles from './index.module.scss';
 import Layout from '@/components/Layout/layout';
 import User from '@/components/settingComponents/User/User';
 import Question from '@/components/settingComponents/Question/Question';
+import Address from '@/components/settingComponents/Address/Address';
 
 const Setting = () => {
   return (
@@ -19,6 +20,7 @@ const Setting = () => {
       <Box className={styles.setting}>
         <Box className={styles.setting_container}>
           <User />
+          <Address />
           <Question />
         </Box>
       </Box>

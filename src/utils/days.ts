@@ -2,6 +2,10 @@ import dayjs, { Dayjs } from "dayjs";
 
 //現在の年数を取得
 export const year: number = dayjs().year();
+//現在の月数を取得
+export const month: number = dayjs().month() + 1;
+//現在の日数を取得
+export const date: number = dayjs().date();
 
 //月を管理する関数
 export const getMonth = (month: number) => {

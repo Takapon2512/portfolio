@@ -1,7 +1,7 @@
 import React from 'react';
 
 //MUI
-import { Box, Typography, TextField } from '@mui/material';
+import { Box, Typography, TextField, Button } from '@mui/material';
 
 //CSS
 import styles from "./Question.module.scss";
@@ -21,7 +21,9 @@ const Question = () => {
             制限時間
           </Typography>
           <TextField 
+          fullWidth
           type='number'
+          label="5〜15の値を入力してください"
           />
         </Box>
         <Box className={styles.question_amount}>
@@ -29,8 +31,17 @@ const Question = () => {
             取り組む問題数
           </Typography>
           <TextField 
+          fullWidth
           type='number'
+          label="10〜300の値を入力してください"
           />
+        </Box>
+        <Box className={styles.question_buttonWrapper}>
+          <Button
+          className={`${notoSansJP.className} ${styles.question_button}`}
+          >
+            設定する
+          </Button>
         </Box>
       </Box>
     </Box>
