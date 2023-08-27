@@ -1,0 +1,52 @@
+.text-color {
+    color: rgb(48, 48, 48);
+}
+
+.font-s {
+    font-size: 14px;
+}
+
+.font-m {
+    font-size: 18px;
+}
+
+.font-l {
+    font-size: 20px;
+}
+
+.font-xl {
+    font-size: 48px;
+}
+
+.calendar {
+    &_days {
+        border: 1px solid rgb(209, 209, 209);
+    }
+
+    &_dayWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 120px;
+    }
+
+    &_week {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 20px;
+        margin-top: 4px;
+        border-radius: 4px;
+        @extend .font-s;
+    }
+
+    &_day {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        @extend .font-s;
+    }
+}
