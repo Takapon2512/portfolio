@@ -12,7 +12,6 @@ import SeventhContent from "@/components/topComponents/seventhContent/seventhcon
 import Footer from "@/components/footer/Footer";
 
 const Top = () => {
-  
   return (
     <>
     <Header />

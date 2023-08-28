@@ -27,7 +27,7 @@ const Header = () => {
             </Box>
         </header>
         </>
-    )
-}
+    );
+};
 
 export default Header;

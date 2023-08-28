@@ -6,6 +6,45 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  username String
+  password String
+  word_data WordData[]
+  setting_data Setting?
+  created_at DateTime @default(now())
+  deleted_at DateTime?
+}
+
+model WordData {
+  id Int @id @default(autoincrement())
+  english String
+  japanese String
+  created_at DateTime @default(now())
+  deleted_at DateTime?
+  last_time_date DateTime?
+  complete Boolean?
+  user_answer String?
+  right_or_wrong Boolean?
+  correct_count Int?
+  question_count Int?
+  correct_rate Int?
+  user_id Int @unique
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Setting {
+  id Int @id @default(autoincrement())
+  work_on_count Int
+  time_constraint Int
+  created_at DateTime @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+  user_id Int @unique
+  user User @relation(fields: [user_id], references: [id])
 }

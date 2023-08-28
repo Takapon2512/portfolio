@@ -1,12 +1,11 @@
 import { atom } from 'recoil';
-import { wordList } from '@/utils/words';
 
 //Type
 import { WordType, WordDataType } from '@/types/globaltype';
 
 export const dbWordsState = atom<WordDataType[]>({
     key: 'dbWords',
-    default: [...wordList]
+    default: []
 });
 
 export const remainNumState = atom({

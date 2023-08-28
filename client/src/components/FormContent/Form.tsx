@@ -31,6 +31,12 @@ import { LoginType } from "@/types/globaltype";
 //Image
 import googleBtn from '../../../public/google_btn.png';
 
+//lib
+import apiClient from "@/lib/apiClient";
+
+//context
+import { useAuth } from "@/context/auth";
+
 //schema
 const schema = yup.object({
     email: yup
@@ -60,6 +66,9 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
     //useRouter
     const router = useRouter()
 
+    //useAuth
+    const { login } = useAuth();
+
     //テキストフィールドの変化を追跡
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormText((text) => ({...text, email: e.target.value}));
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormText((text) => ({...text, name: e.target.value}));
@@ -71,14 +80,40 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
     });
 
     //ボタンを押したときの処理
-    const onSubmit: SubmitHandler<LoginType> = (data) => {
-        console.log(data)
+    const onSubmit: SubmitHandler<LoginType> = async (data) => {
+        console.log(data);
+
+        if (router.pathname === "/register") {
+            registerAndLogin("/auth/register");
+        } else if (router.pathname === "/login") {
+            registerAndLogin("/auth/login");
+        };
 
         setFormText({
             email: "",
             name: "",
             password: ""
         });
+    };
+
+    const registerAndLogin = async (path: string) => {
+        try {
+            const response = await apiClient.post(path, {
+                name: formText.name,
+                email: formText.email,
+                password: formText.password
+            });
+
+            const token: string = response.data.token;
+            console.log(token);
+
+            login(token);
+
+            router.push("./mypage");
+        } catch (err) {
+            console.error(err);
+            alert("入力内容が正しくありません。");
+        };
     };
 
     const handleFormChange = () => {

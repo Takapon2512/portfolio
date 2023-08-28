@@ -159,6 +159,11 @@ const RegisterList = () => {
         return false;
     };
 
+    //本登録ボタンをクリックしたときの処理
+    const handletoDB = () => {
+        
+    };
+
     useEffect(() => {
         setRemainNum(remain);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -278,6 +283,7 @@ const RegisterList = () => {
                             <>                            
                             <Button
                             className={`${styles.home_registerButton} ${notoSansJP.className}`}
+                            onClick={handletoDB}
                             >
                                 本登録
                             </Button>

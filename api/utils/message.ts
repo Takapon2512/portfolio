@@ -1,0 +1,1 @@
+export const serverErrorMsg: string = "サーバーエラーのため、正常にデータが送信されませんでした。";
