@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+//lib
+import apiClient from '@/lib/apiClient';
+
 //Recoil
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { remainNumState, wordsState } from '@/store/mypageState';
+import { DBState, remainNumState, wordsState } from '@/store/mypageState';
 
 //MUI
 import {
@@ -26,7 +29,7 @@ import { notoSansJP } from '../../../utils/font';
 
 //CSS
 import styles from './RegisterList.module.scss';
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType, WordDataType } from '@/types/globaltype';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -56,11 +59,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const RegisterList = () => {
+const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const [registerWords, setRegisterWords] = 
     useRecoilState<WordDataType[]>(wordsState);
     const setRemainNum = useSetRecoilState<number>(remainNumState);
-
     
     //編集モードの制御（編集モードにできるのは1つの単語のみにする）
     const [editing, setEditing] = useState<boolean>(false);
@@ -69,15 +71,19 @@ const RegisterList = () => {
         id: 0,
         english: '',
         japanese: '',
-        date: '',
+        created_at: new Date(),
         editing: false,
-        register: "出題しない",
+        question_register: "出題しない",
         complete: false,
-        yourAnswer: "",
-        rightWrong: false,
-        correctAnswer: 0,
-        questionNum: 0,
-        correctRate: 0
+        user_answer: "",
+        right_or_wrong: false,
+        correct_count: 0,
+        question_count: 0,
+        correct_rate: 0,
+        deleted_at: null, 
+        last_time_at: null, 
+        user_word_id: 0, 
+        user_id: 0
     });
     const [editWordIndex, setEditWordIndex] = useState<number>(0);
     
@@ -160,10 +166,35 @@ const RegisterList = () => {
     };
 
     //本登録ボタンをクリックしたときの処理
-    const handletoDB = () => {
-        
-    };
+    const handletoDB = async () => {
+        const dbRegisterWords: Array<WordDBType> = registerWords.map((word: WordDataType, index: number) => ({
+            id: 0,
+            english: word.english,
+            japanese: word.japanese,
+            created_at: new Date(),
+            deleted_at: null,
+            last_time_at: null,
+            complete: false,
+            user_answer: "",
+            right_or_wrong: false,
+            correct_count: 0,
+            question_count: 0,
+            correct_rate: 0,
+            user_word_id: dbWords.length + index + 1,
+            user_id: 1
+        }));
 
+        try {
+            const newRegisterWords = await apiClient.post("/posts/db_register", dbRegisterWords);
+            console.log(newRegisterWords);
+
+            setRegisterWords([]);
+        } catch (err) {
+            console.error(err);
+            alert("登録に失敗しました。");
+        };
+    };
+    
     useEffect(() => {
         setRemainNum(remain);
         // eslint-disable-next-line react-hooks/exhaustive-deps

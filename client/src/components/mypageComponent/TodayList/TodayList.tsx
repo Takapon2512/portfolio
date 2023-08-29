@@ -27,10 +27,7 @@ import styles from './TodayList.module.scss';
 import { notoSansJP } from '../../../utils/font';
 
 //Type
-import { WordDataType } from '@/types/globaltype';
-
-//Utils
-import { wordList } from '@/utils/words';
+import { WordDBType } from '@/types/globaltype';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -56,21 +53,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
-const TodayList = () => {
-    //本日分の単語の配列を取得
-    const [todayWords, setTodayWords] = useState<WordDataType[]>([...wordList]);
+const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1)
     //本日分の単語の配列をコピーする
-    const preSplitWords = [...todayWords];
+    const preSplitWords = [...dbWords];
     //フィルタリング後の配列を格納
-    let splitWords: Array<WordDataType> = [];
+    let splitWords: Array<WordDBType> = [];
     //ページあたりのアイテム数
     const perPageItemNum = 10;
     //最終ページを求める
-    const lastPage = Math.ceil(todayWords.length / perPageItemNum)
+    const lastPage = Math.ceil(dbWords.length / perPageItemNum)
 
-    const sliceWords = (array: Array<WordDataType>, num: number) => {
+    const sliceWords = (array: Array<WordDBType>, num: number) => {
         splitWords = preSplitWords.filter((word, index) => (
             index >= num * (currentPage - 1) && num * currentPage > index
         ));
@@ -88,75 +83,85 @@ const TodayList = () => {
 
     return (
         <Box className={styles.home_thirdContents}>
-            <Typography className={styles.home_wordListTitle}>
+            <Typography className={`${styles.home_wordListTitle} ${notoSansJP.className}`}>
                 本日の英単語一覧
             </Typography>
-            <Box className={styles.home_todayWordList}>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
-                                <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
-                                <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
-                                <StyledTableCell className={notoSansJP.className} align='center'>前回学習日</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                splitWords.map((word, index) => (
-                                    <StyledTableRow key={index}>
-                                        <StyledTableCell
-                                        align='center'
-                                        className={notoSansJP.className}
-                                        >
-                                            {word.id}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                        align='center'
-                                        className={notoSansJP.className}
-                                        >
-                                            {word.english}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                        align='center'
-                                        className={notoSansJP.className}
-                                        >
-                                            {word.japanese}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                        align='center'
-                                        className={notoSansJP.className}
-                                        >
-                                            {word.date}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-            <Box className={styles.home_buttons}>
-                <Button
-                className={`${notoSansJP.className} ${styles.home_prev}`}
-                onClick={pagePrev}
-                disabled={
-                    currentPage === 1 ? true : false
-                }
-                >
-                    <NavigateBeforeIcon />
-                </Button>
-                <Button
-                className={`${notoSansJP.className} ${styles.home_next}`}
-                onClick={pageNext}
-                disabled={
-                    currentPage === lastPage ? true : false
-                }
-                >
-                    <NavigateNextIcon />
-                </Button>
-            </Box>
+            {
+                dbWords.length > 0 ? (
+                    <>
+                    <Box className={styles.home_todayWordList}>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
+                                        <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
+                                        <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
+                                        <StyledTableCell className={notoSansJP.className} align='center'>前回学習日</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {
+                                        splitWords.map((word, index) => (
+                                            <StyledTableRow key={index}>
+                                                <StyledTableCell
+                                                align='center'
+                                                className={notoSansJP.className}
+                                                >
+                                                    {word.id}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                align='center'
+                                                className={notoSansJP.className}
+                                                >
+                                                    {word.english}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                align='center'
+                                                className={notoSansJP.className}
+                                                >
+                                                    {word.japanese}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                align='center'
+                                                className={notoSansJP.className}
+                                                >
+                                                    {new Date(word.created_at).toLocaleDateString('ja-JP')}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                    <Box className={styles.home_buttons}>
+                        <Button
+                        className={`${notoSansJP.className} ${styles.home_prev}`}
+                        onClick={pagePrev}
+                        disabled={
+                            currentPage === 1 ? true : false
+                        }
+                        >
+                            <NavigateBeforeIcon />
+                        </Button>
+                        <Button
+                        className={`${notoSansJP.className} ${styles.home_next}`}
+                        onClick={pageNext}
+                        disabled={
+                            currentPage === lastPage ? true : false
+                        }
+                        >
+                            <NavigateNextIcon />
+                        </Button>
+                    </Box>
+                    </>
+                ) : (
+                    <Typography className={notoSansJP.className}>
+                        本日取り組む単語がありません。
+                    </Typography>
+                )
+            }
         </Box>
     )
 };

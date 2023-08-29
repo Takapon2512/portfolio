@@ -33,7 +33,7 @@ import styles from './SearchWords.module.scss';
 import { notoSansJP } from '@/utils/font';
 
 //type
-import { WordDataType } from '@/types/globaltype';
+import { WordDataType, WordDBType } from '@/types/globaltype';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -69,18 +69,13 @@ interface weakButtonType {
     good: boolean
 }
 
-const SearchWords = () => {
+const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //Router
     const router: NextRouter = useRouter();
 
-    //DBの単語リストを取得
-    const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(dbWordsState);
-    //DB内の単語の数を求める
-    const dbWordsLength: string = String(dbWords.length);
-
     //テキストフィールドの監視
     const [minText, setMinText] = useState<string>("1");
-    const [maxText, setMaxText] = useState<string>(dbWordsLength);
+    const [maxText, setMaxText] = useState<string>(`${dbWords.length}`);
     const [keyword, setKeyword] = useState<string>("");
 
     //単語番号をnumber型にする
@@ -101,10 +96,15 @@ const SearchWords = () => {
     const perPageItemNum = 10;
 
     //データベースに入っている単語配列を複製
-    const wordsArr: Array<WordDataType> = [...dbWords];
-    
+    const wordsArr: Array<WordDBType> = [...dbWords];
+    //取得したデータを型「WordDataType」にする
+    const newWordsArr: Array<WordDataType> = wordsArr.map((word: WordDBType) => (
+        { ...word, question_register: "出題しない", editing: false }
+    ));
+    const [wordDataWords, setWordDataWords] = useState<WordDataType[]>([...newWordsArr]);
+
     //単語番号で絞る
-    const numWordsArr: Array<WordDataType> = wordsArr
+    const numWordsArr: Array<WordDataType> = wordDataWords
         .filter((word: WordDataType, index: number) => 
         index >= numMin - 1 && numMax - 1 >= index);
 
@@ -114,14 +114,16 @@ const SearchWords = () => {
 
     //単語番号で絞った後、苦手度で絞る
     const weakWordsArr: Array<WordDataType> = numWordsArr.filter((word: WordDataType, index: number) => {
-        if (isActive.weak) {
-            return word.correctRate < normalBorder;
-        } else if (isActive.normal) {
-            return word.correctRate >= normalBorder && goodBorder > word.correctRate;
-        } else if (isActive.good) {
-            return word.correctRate >= goodBorder;
-        }
-        return word.correctRate >= 0 && 100 >= word.correctRate;
+        if (word.correct_rate !== null) {
+            if (isActive.weak) {
+                return word.correct_rate < normalBorder;
+            } else if (isActive.normal) {
+                return word.correct_rate >= normalBorder && goodBorder > word.correct_rate;
+            } else if (isActive.good) {
+                return word.correct_rate >= goodBorder;
+            }
+            return word.correct_rate >= 0 && 100 >= word.correct_rate;
+        };
     });
 
     //苦手度で絞った後、キーワードで絞る
@@ -129,14 +131,13 @@ const SearchWords = () => {
         .filter((word: WordDataType, index: number) => 
         word.english.includes(keyword));
 
-
     //最後のページ番号を求める
     const lastPage: number = Math.ceil(keyWordsArr.length / perPageItemNum); 
 
     //sliceArr配列のステータスに「出題しない」が1つでもあるかを判定
     const statusNotAskJudge = (wordsArr: WordDataType[]) => {
         const notAskArr: Array<WordDataType> = 
-            wordsArr.filter((word: WordDataType) => word.register.includes("出題しない"));
+            wordsArr.filter((word: WordDataType) => word.question_register.includes("出題しない"));
         if (notAskArr.length > 0) return true;
         return false;
     };
@@ -149,56 +150,35 @@ const SearchWords = () => {
 
     //ステータスを切り替える
     const handleChangeStatus = (word: WordDataType) => {
-        const wordsArr: Array<WordDataType> = [...dbWords];
+        const wordsArr: Array<WordDataType> = [...newWordsArr];
         const prevWord: WordDataType = word;
-        const dbWordsIndex: number = word.id - 1;
+        const dbWordsIndex: number = word.user_word_id - 1;
 
-        if (word.register === "出題しない") {
-            const newWord: WordDataType = {
-                ...prevWord,
-                register: "出題"
-            };
-            wordsArr[dbWordsIndex] = newWord;
-        } else if (word.register === "出題") {
-            const newWord: WordDataType = {
-                ...prevWord,
-                register: "出題しない"
-            };
-            wordsArr[dbWordsIndex] = newWord;
-        };
+        const newWord: WordDataType = 
+        word.question_register === "出題しない" 
+        ? { ...prevWord, question_register: "出題" }
+        : { ...prevWord, question_register: "出題しない" }
 
-        setDBWords(wordsArr);
+        wordsArr[dbWordsIndex] = newWord;
     };
 
     //「すべて出題」ボタンを押すとステータスを「出題」にし、「すべて出題しない」ボタンを押すとステータスを「出題しない」にする
     const handleAllStatusChange = () => {
-        const dbWordsArr: Array<WordDataType> = [...dbWords];
-        const sliceWordsArr: Array<WordDataType> = [...sliceArr];
-        const newSliceWordsArr: Array<WordDataType> = sliceWordsArr.map((word: WordDataType) => (
-            { ...word, register: "出題" }
+        const prevQuestions: Array<WordDataType> = [...newWordsArr];
+        const newQuestions: Array<WordDataType> = prevQuestions.map((word: WordDataType) => (
+            word.question_register === "出題しない" 
+            ? ({ ...word, question_register: "出題" }) 
+            : ({ ...word, question_register: "出題しない" })
         ));
-
-        const firstIndex = newSliceWordsArr[0].id - 1;
-        const lastIndex = newSliceWordsArr[sliceWordsArr.length - 1].id - 1;
-
-        if (statusNotAskJudge(sliceArr) === true) {
-            const newDBWordsArr: Array<WordDataType> = dbWordsArr.map((word: WordDataType, index: number) => 
-                (word.id - 1 === index && index >= firstIndex && lastIndex >= index) 
-                ? { ...word, register: "出題"} : { ...word });
-            setDBWords(newDBWordsArr);
-        } else {
-            const newDBWordsArr: Array<WordDataType> = dbWordsArr.map((word: WordDataType, index: number) => 
-                (word.id - 1 === index && index >= firstIndex && lastIndex >= index) 
-                ? { ...word, register: "出題しない" } : { ...word });
-            setDBWords(newDBWordsArr);
-        };
+        setWordDataWords(newQuestions);
     };
 
     //「暗記する」ボタンを押したとき
     const registerButton = () => router.push("/mypage/free/wordcard");
 
     const registerButtonDisabed = () => {
-        const questonArr: Array<WordDataType> = wordsArr.filter((word: WordDataType) => word.register === "出題");
+        const questonArr: Array<WordDataType> = newWordsArr
+            .filter((word: WordDataType) => word.question_register === "出題");
         if (questonArr.length === 0) return true;
         return false;
     };
@@ -344,13 +324,13 @@ const SearchWords = () => {
                                                     className={notoSansJP.className}
                                                     align='center'
                                                     >
-                                                        {`${word.correctRate} %`}
+                                                        {`${word.correct_rate} %`}
                                                     </StyledTableCell>
                                                     <StyledTableCell
                                                     className={notoSansJP.className}
                                                     align='center'
                                                     >
-                                                        {word.register}
+                                                        {word.question_register}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             ))

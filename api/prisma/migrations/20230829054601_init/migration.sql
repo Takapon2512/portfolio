@@ -2,10 +2,12 @@
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(191) NOT NULL,
+    `username` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
 
+    UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -16,16 +18,16 @@ CREATE TABLE `WordData` (
     `japanese` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
-    `last_time_date` DATETIME(3) NULL,
+    `last_time_at` DATETIME(3) NULL,
     `complete` BOOLEAN NULL,
     `user_answer` VARCHAR(191) NULL,
     `right_or_wrong` BOOLEAN NULL,
     `correct_count` INTEGER NULL,
     `question_count` INTEGER NULL,
     `correct_rate` INTEGER NULL,
+    `user_word_id` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `WordData_user_id_key`(`user_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

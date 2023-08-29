@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 //Recoil
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { dbWordsState, remainNumState, wordState, wordsState } from '@/store/mypageState';
+import { DBState, remainNumState, wordState, wordsState } from '@/store/mypageState';
 
 //MUI
 import {
@@ -20,11 +20,10 @@ import { notoSansJP } from '../../../utils/font';
 import styles from './WordRegisterInput.module.scss';
 
 //Type
-import { WordType, WordDataType } from '@/types/globaltype';
+import { WordDBType, WordDataType } from '@/types/globaltype';
 
-const WordRegisterInput = () => {
-    //登録されているすべての単語を取得
-    const dbWords = useRecoilValue<WordDataType[]>(dbWordsState);
+const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
+    
     //登録リストに入っているすべての単語を取得
     const registerWords = useRecoilValue<WordDataType[]>(wordsState);
     
@@ -41,15 +40,19 @@ const WordRegisterInput = () => {
             id: dbWords.length + registerWords.length + 1,
             english: engField,
             japanese: japField,
-            date: createDate(),
+            created_at: new Date(),
+            deleted_at: null,
             editing: false,
-            register: "出題しない",
+            question_register: "出題しない",
             complete: false,
-            yourAnswer: "",
-            rightWrong: false,
-            correctAnswer: 0,
-            questionNum: 0,
-            correctRate: 0
+            user_answer: "",
+            right_or_wrong: false,
+            correct_count: 0,
+            question_count: 0,
+            correct_rate: 0,
+            last_time_at: null,
+            user_word_id: 0, 
+            user_id: 1
         };
 
         //words配列に追加の単語を格納
@@ -89,22 +92,22 @@ const WordRegisterInput = () => {
         }
     };
 
-    //日付の生成
-    const createDate = () => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const today = date.getDate();
+    // //日付の生成
+    // const createDate = () => {
+    //     const date = new Date();
+    //     const year = date.getFullYear();
+    //     const month = date.getMonth() + 1;
+    //     const today = date.getDate();
 
-        let strYear = String(year);
-        let strMonth = String(month);
-        let strToday = String(today);
+    //     let strYear = String(year);
+    //     let strMonth = String(month);
+    //     let strToday = String(today);
 
-        if (month < 10) strMonth = '0' + strMonth;
-        if (today < 10) strToday = '0' + strToday;
+    //     if (month < 10) strMonth = '0' + strMonth;
+    //     if (today < 10) strToday = '0' + strToday;
 
-        return `${strYear}/${strMonth}/${strToday}`;
-    }
+    //     return `${strYear}/${strMonth}/${strToday}`;
+    // }
 
     return (
         <Box className={styles.home_firstContents}>
