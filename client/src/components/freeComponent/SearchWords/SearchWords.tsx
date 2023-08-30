@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
 //recoil
-import { useRecoilState } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
+import { useSetRecoilState } from 'recoil';
+import { WordsState } from '@/store/freePageState';
 
 //MUI
 import { 
@@ -102,11 +102,12 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
         { ...word, question_register: "出題しない", editing: false }
     ));
     const [wordDataWords, setWordDataWords] = useState<WordDataType[]>([...newWordsArr]);
+    const setRecoilWords = useSetRecoilState<WordDataType[]>(WordsState);
 
     //単語番号で絞る
     const numWordsArr: Array<WordDataType> = wordDataWords
-        .filter((word: WordDataType, index: number) => 
-        index >= numMin - 1 && numMax - 1 >= index);
+        .filter((word: WordDataType) => 
+        word.user_word_id >= numMin  && numMax >= word.user_word_id);
 
     //正答率の基準
     const normalBorder = 60;
@@ -137,7 +138,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //sliceArr配列のステータスに「出題しない」が1つでもあるかを判定
     const statusNotAskJudge = (wordsArr: WordDataType[]) => {
         const notAskArr: Array<WordDataType> = 
-            wordsArr.filter((word: WordDataType) => word.question_register.includes("出題しない"));
+            wordsArr.filter((word: WordDataType) => word.question_register === "出題しない");
         if (notAskArr.length > 0) return true;
         return false;
     };
@@ -150,34 +151,36 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //ステータスを切り替える
     const handleChangeStatus = (word: WordDataType) => {
-        const wordsArr: Array<WordDataType> = [...newWordsArr];
+        const wordsArr: Array<WordDataType> = [...wordDataWords];
         const prevWord: WordDataType = word;
         const dbWordsIndex: number = word.user_word_id - 1;
 
         const newWord: WordDataType = 
-        word.question_register === "出題しない" 
-        ? { ...prevWord, question_register: "出題" }
-        : { ...prevWord, question_register: "出題しない" }
+        word.question_register === "出題" 
+        ? { ...prevWord, question_register: "出題しない" }
+        : { ...prevWord, question_register: "出題" };
 
         wordsArr[dbWordsIndex] = newWord;
+        setWordDataWords(wordsArr);
+        setRecoilWords(wordsArr);
     };
 
     //「すべて出題」ボタンを押すとステータスを「出題」にし、「すべて出題しない」ボタンを押すとステータスを「出題しない」にする
     const handleAllStatusChange = () => {
-        const prevQuestions: Array<WordDataType> = [...newWordsArr];
+        const prevQuestions: Array<WordDataType> = [...keyWordsArr];
         const newQuestions: Array<WordDataType> = prevQuestions.map((word: WordDataType) => (
-            word.question_register === "出題しない" 
-            ? ({ ...word, question_register: "出題" }) 
-            : ({ ...word, question_register: "出題しない" })
-        ));
+            statusNotAskJudge(wordDataWords) ?
+            { ...word, question_register: "出題" } : { ...word, question_register: "出題しない" }
+    ));
         setWordDataWords(newQuestions);
+        setRecoilWords(newQuestions);
     };
 
     //「暗記する」ボタンを押したとき
     const registerButton = () => router.push("/mypage/free/wordcard");
 
     const registerButtonDisabed = () => {
-        const questonArr: Array<WordDataType> = newWordsArr
+        const questonArr: Array<WordDataType> = wordDataWords
             .filter((word: WordDataType) => word.question_register === "出題");
         if (questonArr.length === 0) return true;
         return false;
@@ -187,19 +190,23 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
         const newObj: weakButtonType = isActive.weak 
         ? { weak: false, normal: false, good: false } : { weak: true, normal: false, good: false };
         setIsActive(newObj);
+        setCurrentPage(1);
     };
 
     const handleNormalButton = () => {
         const newObj: weakButtonType = isActive.normal
         ? { weak: false, normal: false, good: false } : { weak: false, normal: true, good: false };
         setIsActive(newObj);
+        setCurrentPage(1);
     };
 
     const handleGoodButton = () => {
         const newObj: weakButtonType = isActive.good
         ? { weak: false, normal: false, good: false } : { weak: false, normal: false, good: true };
         setIsActive(newObj);
+        setCurrentPage(1);
     };
+    console.log(keyWordsArr);
 
     return (
         <>        
@@ -214,7 +221,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     type='number'
                     className={styles.free_searchNumMin}
                     value={minText}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinText(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setMinText(e.target.value); setCurrentPage(1)}}
                     />
                     <Typography className={`${styles.free_searchNumberMiddle} ${notoSansJP.className}`}>
                         ～
@@ -224,7 +231,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     type='number'
                     className={styles.free_searchNumMax}
                     value={maxText}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMaxText(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setMaxText(e.target.value); setCurrentPage(1)}}
                     />
                 </Box>
                 <Box className={styles.free_searchKeyword}>
@@ -232,7 +239,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     label="英単語で検索"
                     fullWidth
                     value={keyword}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setKeyword(e.target.value); setCurrentPage(1)}}
                     />
                 </Box>
                 <Box className={styles.free_correctRateButtons}>

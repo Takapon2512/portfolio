@@ -1,6 +1,4 @@
-import react, { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { DBState } from '@/store/mypageState';
+import react from 'react';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -19,15 +17,30 @@ import { WordDBType } from '@/types/globaltype';
 //Component
 import Layout from '@/components/Layout/layout';
 import SearchWords from '@/components/freeComponent/SearchWords/SearchWords';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetStaticProps } from 'next';
 
 //type 
 type Props = {
   words: WordDBType[]
 }
 
-//サーバーサイドで単語を取得する
-export const getServerSideProps: GetServerSideProps = async (context) => {
+// //サーバーサイドで単語を取得する
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   try {
+//     const response = await apiClient.get("/posts/db_search");
+
+//     return {
+//       props: { words: response.data }
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     return {
+//       notFound: true
+//     };
+//   };
+// };
+
+export const getStaticProps: GetStaticProps = async () => {
   try {
     const response = await apiClient.get("/posts/db_search");
 

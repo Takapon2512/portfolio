@@ -3,7 +3,7 @@ import { useRouter, NextRouter } from 'next/router';
 
 //recoil
 import { useRecoilState } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
+import { WordsState } from '@/store/freePageState';
 
 //MUI
 import {
@@ -29,17 +29,17 @@ import { notoSansJP } from '@/utils/font';
 
 const WordCard = () => {
   //router
-  const router: NextRouter = useRouter();
+  const router = useRouter();
 
   //DB内の英単語を取得
-  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(dbWordsState);
+  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(WordsState);
 
   //英単語と日本語訳の切替を管理
   const [ejSwitch, setEJSwitch] = useState<boolean>(true);
 
   //出題状態の単語のみを取得
   const questionWords: Array<WordDataType> = 
-    dbWords.filter((word: WordDataType) => word.register.match(/^出題$/) && word.complete === false);
+    dbWords.filter((word: WordDataType) => word.question_register === "出題" && word.complete === false);
 
   //現在の問題番号を管理
   const [problemNum, setProblemNum] = useState<number>(1);
@@ -57,8 +57,9 @@ const WordCard = () => {
       ...prevWord,
       complete: true
     };
-    const DBWordsIndex: number = newWord.id - 1;
-    dbWordsArr[DBWordsIndex] = newWord;
+
+    const dbIndex: number = dbWordsArr.indexOf(prevWord);
+    dbWordsArr[dbIndex] = newWord;
     
     setProblemNum(currentNum + 1);
     setDBWords(dbWordsArr);
@@ -76,7 +77,7 @@ const WordCard = () => {
     const currentNum: number = problemNum;
     const currentIncompleteCount: number = incompleteCount;
 
-    if (currentNum < questionWords.length + (currentNum - incompleteCount) - 1) {
+    if (currentNum < questionWords.length + (currentNum - currentIncompleteCount) - 1) {
       setProblemNum(currentNum + 1);
       setIncompleteCount(currentIncompleteCount + 1);
     } else if (currentNum >= questionWords.length + (problemNum - incompleteCount) - 1) {
@@ -105,12 +106,13 @@ const WordCard = () => {
       setEJSwitch(true);
     } else {
       setEJSwitch(!ejSwitch);
-    }
+    };
   };
 
   const handleToTestPage = () => {
     router.push("/mypage/free/test")
   };
+  console.log(dbWords);
 
   //テストモードに遷移した後に、フリーモードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
   useEffect(() => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
 
 //MUI
 import { 
@@ -11,7 +10,8 @@ import styles from "./test.module.scss";
 
 //Component
 import Layout from '@/components/Layout/layout';
-const WordTest = dynamic(() => import("../../../components/freeComponent/WordTest/WordTest"), { ssr: false });
+import WordTest from '@/components/freeComponent/WordTest/WordTest';
+
 
 const Test = () => {
 

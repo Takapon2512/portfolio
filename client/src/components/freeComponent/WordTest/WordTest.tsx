@@ -3,7 +3,7 @@ import { useRouter, NextRouter } from 'next/router';
 
 //recoil
 import { useRecoilState } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
+import { WordsState } from '@/store/freePageState';
 
 //MUI
 import{
@@ -23,7 +23,7 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import styles from "./WordTest.module.scss";
 
 //type
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType, WordDataType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -34,14 +34,12 @@ import CircularWithValueLabel from '@/components/CircularProgressWithLabel/Circu
 const WordTest = () => {
   //router
   const router: NextRouter = useRouter();
-  //DB内の英単語を取得
-  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(dbWordsState);
+  //暗記カードで出題した英単語を取得
+  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(WordsState);
   //現在の問題番号を管理
   const [problemNum, setProblemNum] = useState<number>(1);
   //テキストフィールドの監視
   const [answerText, setAnswerText] = useState<string>("");
-  //正答数
-  const [correctNum, setCorrectNum] = useState<number>(1);
   //残り時間の初期設定
   const settingTime = 10;
   //残り時間を管理
@@ -52,12 +50,13 @@ const WordTest = () => {
 
   //出題状態の単語のみを取得
   const questionWords: Array<WordDataType> = 
-  dbWords.filter((word: WordDataType) => word.register.match(/^出題$/));
+  dbWords.filter((word: WordDataType) => word.question_register === "出題" && word.complete === true);
 
   //問題番号の配列を作成
   let intNumArr: Array<number> = [...Array(questionWords.length)].map((_, i: number) => i);
 
-  intNumArr.forEach((item: number, index: number) => {
+  //問題番号をシャッフルする
+  intNumArr.forEach((_, index: number) => {
     let randomNum: number = Math.floor(Math.random() * (index + 1));
     let tmpNum: number = intNumArr[index];
     intNumArr[index] = intNumArr[randomNum];
@@ -77,7 +76,6 @@ const WordTest = () => {
     const currentNum: number = problemNum;
     if (questionWords[intNum[problemNum - 1]].japanese === answerText) {
       userAnswerSituation(answerText, true);
-      setCorrectNum(prev => prev + 1);
     } else {
       userAnswerSituation(answerText, false);
     }
@@ -88,7 +86,9 @@ const WordTest = () => {
 
   //パスボタンを押したとき
   const handlePass = () => {
-    setProblemNum(prev => prev + 1);
+    const currentNum: number = problemNum;
+
+    setProblemNum(currentNum + 1);
     userAnswerSituation("", false);
     setAnswerText("");
     setRemainTime(settingTime);
@@ -105,10 +105,14 @@ const WordTest = () => {
     const prevArr: Array<WordDataType> = [...dbWords];
     const prevWord: WordDataType = questionWords[intNum[problemNum - 1]];
 
-    prevArr[prevWord.id - 1] = {
+    const dbIndex: number = prevArr.indexOf(prevWord);
+
+    prevArr[dbIndex] = {
       ...prevWord,
-      yourAnswer: answer,
-      rightWrong: rightOrWrong
+      user_answer: answer,
+      right_or_wrong: rightOrWrong,
+      question_count: prevWord.question_count || 0 + 1,
+      correct_count: rightOrWrong ? ( prevWord.correct_count || 0 + 1 ) : ( prevWord.correct_count || 0 )
     };
     const newArr: Array<WordDataType> = prevArr;
     setDBWords(newArr);
@@ -119,13 +123,39 @@ const WordTest = () => {
     if (key === "Enter" && composing === false) handleAnswer();
   };
 
+  //結果を確認ボタンを押したとき
+  const handleResultToDB = () => {
+    //型「WordDataType」を型「WordDBType」に変換する
+    const dbRequest: Array<WordDBType> = dbWords.map((word: WordDataType) => (
+      {
+        id: word.id,
+        english: word.english,
+        japanese: word.japanese,
+        created_at: word.created_at,
+        deleted_at: null,
+        last_time_at: null,
+        complete: false,
+        user_answer: word.user_answer || "",
+        right_or_wrong: word.right_or_wrong || false,
+        correct_count: word.correct_count || 0,
+        question_count: word.question_count || 0,
+        correct_rate: Math.round(((word.correct_count || 0) / (word.question_count || 1) * 10) / 10) * 100,
+        user_word_id: word.user_word_id,
+        user_id: word.user_id
+      }
+    ));
+
+    console.log(dbRequest);
+    // router.push("/mypage/free/result");
+  };
+
   useEffect(() => {
     //次の問題に遷移し、解答状況をDBに反映する
-    if (remainTime < 1 && problemNum <= questionWords.length) handlePass();
+    if (remainTime < 0 && problemNum <= questionWords.length) handlePass();
 
     if (problemNum < questionWords.length + 1) {
       const timer: NodeJS.Timer = setInterval(() => {
-        setRemainTime(prev => prev > 0 ? prev - 1 : settingTime);
+        setRemainTime(prev => prev > -1 ? prev - 1 : settingTime);
       }, 1000);
       return () => {
         clearInterval(timer);
@@ -210,7 +240,7 @@ const WordTest = () => {
             <Box className={styles.free_toResult}>
               <Button
               className={styles.free_toResultButton}
-              onClick={() => router.push("/mypage/free/result")}
+              onClick={handleResultToDB}
               >
                 <TextSnippetIcon className={styles.free_toResultIcon} />
                 <Typography className={notoSansJP.className}>

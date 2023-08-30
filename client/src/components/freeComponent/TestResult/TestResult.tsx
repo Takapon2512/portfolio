@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 //recoil
 import { useRecoilValue } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
+import { wordsState } from '@/store/mypageState';
 
 //MUI
 import{
@@ -74,11 +74,10 @@ const TestResult = () => {
     const perPageItemNum = 10;
 
     //問題の数を求める
-    const dbWords = useRecoilValue<WordDataType[]>(dbWordsState);
+    const dbWords = useRecoilValue<WordDataType[]>(wordsState);
     const questionWords: Array<WordDataType> = 
     dbWords.filter((word: WordDataType) => word.register.match(/^出題$/));
     const questionWordsNum: number = questionWords.length;
-    console.log(questionWords);
 
     //最終ページの番号を求める
     const lastPage: number = Math.ceil(questionWords.length / perPageItemNum);
@@ -94,11 +93,9 @@ const TestResult = () => {
         word.rightWrong === true
     );
     const correctWordsNum: number = correctWords.length;
-    console.log(correctWordsNum);
 
     //正答率を求める
     const correctsRate: number = Math.ceil(correctWordsNum / questionWordsNum * 100);
-    console.log(correctsRate);
 
     return (
         <Box className={styles.free_firstContents}>
