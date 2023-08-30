@@ -37,3 +37,8 @@ postsRouter.get("/db_search", async (req: Request, res: Response) => {
 
     return res.status(OK).json(words);
 });
+
+//取り組んだ単語をDBに登録するAPI
+postsRouter.post("/db_learning", async (req: Request, res: Response) => {
+    
+});
