@@ -13,19 +13,19 @@ export type UserType = {
     deleted_at: Date | null;
 }
 
-export type WordDataType = {
+export type WordDBType = {
     id: number;
     english: string;
     japanese: string;
     created_at: Date;
     deleted_at: Date | null;
     last_time_at: Date | null;
-    complete: boolean | null;
-    user_answer: string | null;
-    right_or_wrong: boolean | null;
-    correct_count: number | null;
-    question_count: number | null;
-    correct_rate: number | null;
+    complete: boolean
+    user_answer: string;
+    right_or_wrong: boolean;
+    correct_count: number;
+    question_count: number;
+    correct_rate: number;
     user_word_id: number;
     user_id: number;
 }

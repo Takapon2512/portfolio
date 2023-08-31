@@ -28,12 +28,12 @@ model WordData {
   created_at     DateTime  @default(now())
   deleted_at     DateTime?
   last_time_at   DateTime?
-  complete       Boolean?
-  user_answer    String?
-  right_or_wrong Boolean?
-  correct_count  Int?
-  question_count Int?
-  correct_rate   Int?
+  complete       Boolean
+  user_answer    String
+  right_or_wrong Boolean
+  correct_count  Int
+  question_count Int
+  correct_rate   Int
   user_word_id   Int
   user_id        Int
   user           User      @relation(fields: [user_id], references: [id])
