@@ -1,5 +1,7 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
+
+//lib
+import apiClient from '@/lib/apiClient';
 
 //MUI
 import { Box } from '@mui/material';
@@ -7,20 +9,41 @@ import { Box } from '@mui/material';
 //CSS
 import styles from "./result.module.scss";
 
+//type
+import { WordDBType } from '@/types/globaltype';
+type Props = {
+    words: WordDBType[]
+}
+
 //Component
 import Layout from '@/components/Layout/layout';
-const TestResult = dynamic(
-    () => import("../../../components/freeComponent/TestResult/TestResult"),
-    { ssr: false }
-);
+import TestResult from '@/components/freeComponent/TestResult/TestResult';
+import { GetStaticProps } from 'next';
 
-const result = () => {
+//SSG
+export const getStaticProps: GetStaticProps = async () => {
+    try {
+        const response = await apiClient.get("/posts/db_search");
+
+        return {
+            props: { words: response.data }
+        }
+
+    } catch (err) {
+        console.error(err);
+        return {
+            notFound: true
+        };
+    }
+};
+
+const result = ({ words }: Props) => {
     
     return (
         <Layout>
             <Box className={styles.free}>
                 <Box className={styles.free_container}>
-                    <TestResult />
+                    <TestResult dbWords={words}/>
                 </Box>
             </Box>
         </Layout>

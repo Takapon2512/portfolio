@@ -1,6 +1,5 @@
-import react, { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { DBState } from '@/store/mypageState';
+import react from 'react';
+import { GetStaticProps } from 'next';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -13,6 +12,9 @@ import styles from './index.module.scss';
 
 //type
 import { WordDBType } from '@/types/globaltype';
+type Props = {
+  words: WordDBType[]
+};
 
 //Component
 import Layout from '@/components/Layout/layout';
@@ -20,33 +22,32 @@ import WordRegisterInput from '@/components/mypageComponent/WordRegisterInput/Wo
 import RegisterList from '@/components/mypageComponent/RegisterList/RegisterList';
 import TodayList from '@/components/mypageComponent/TodayList/TodayList';
 
-const Mypage = () => {
+//SSGでDBの単語を取得
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const response = await apiClient.get("/posts/db_search");
 
-    const [dbWords, setDBWords] = useRecoilState<WordDBType[]>(DBState);
-
-    //DBにある単語を取得
-    const fetchWords = async () => {
-        try {
-            const response = await apiClient.get("/posts/db_search");
-            setDBWords(response.data);
-        } catch (err) {
-            console.error(err);
-        }
+    return {
+      props: { words: response.data }
+    }
+  } catch (err) {
+    console.error(err);
+    return {
+      notFound: true
     };
-    console.log(dbWords);
-    
-    useEffect(() => {
-        fetchWords();
-    }, []);
+  };
+};
+
+const Mypage = ({ words }: Props) => {
 
     return (
         <>
         <Layout>
             <Box className={styles.home}>
                 <Box className={styles.home_container}>
-                    <WordRegisterInput dbWords={dbWords}/>
-                    <RegisterList dbWords={dbWords} />
-                    <TodayList dbWords={dbWords} />
+                    <WordRegisterInput dbWords={words}/>
+                    <RegisterList dbWords={words} />
+                    <TodayList dbWords={words} />
                 </Box>
             </Box>
         </Layout>

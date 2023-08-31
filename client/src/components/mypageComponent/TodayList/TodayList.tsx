@@ -56,8 +56,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1)
-    //本日分の単語の配列をコピーする
-    const preSplitWords = [...dbWords];
     //フィルタリング後の配列を格納
     let splitWords: Array<WordDBType> = [];
     //ページあたりのアイテム数
@@ -66,7 +64,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const lastPage = Math.ceil(dbWords.length / perPageItemNum)
 
     const sliceWords = (array: Array<WordDBType>, num: number) => {
-        splitWords = preSplitWords.filter((word, index) => (
+        splitWords = array.filter((word, index) => (
             index >= num * (currentPage - 1) && num * currentPage > index
         ));
     };
@@ -79,7 +77,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
         setCurrentPage((prev) => prev - 1)
     };
 
-    sliceWords(preSplitWords, perPageItemNum);
+    sliceWords(dbWords, perPageItemNum);
 
     return (
         <Box className={styles.home_thirdContents}>
@@ -126,7 +124,11 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                                 align='center'
                                                 className={notoSansJP.className}
                                                 >
-                                                    {new Date(word.created_at).toLocaleDateString('ja-JP')}
+                                                    {
+                                                        word.last_time_at === null 
+                                                        ? ("未学習") 
+                                                        : (new Date(word.last_time_at).toLocaleDateString())
+                                                    }
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                         ))

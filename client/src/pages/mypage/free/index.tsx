@@ -13,34 +13,18 @@ import styles from './index.module.scss';
 
 //type
 import { WordDBType } from '@/types/globaltype';
+type Props = {
+  words: WordDBType[]
+}
 
 //Component
 import Layout from '@/components/Layout/layout';
 import SearchWords from '@/components/freeComponent/SearchWords/SearchWords';
 import { GetServerSideProps, GetStaticProps } from 'next';
 
-//type 
-type Props = {
-  words: WordDBType[]
-}
 
-// //サーバーサイドで単語を取得する
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   try {
-//     const response = await apiClient.get("/posts/db_search");
-
-//     return {
-//       props: { words: response.data }
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     return {
-//       notFound: true
-//     };
-//   };
-// };
-
-export const getStaticProps: GetStaticProps = async () => {
+// //サーバーサイドで単語を取得する（SSR）
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const response = await apiClient.get("/posts/db_search");
 
@@ -54,6 +38,23 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   };
 };
+
+
+//SSG
+// export const getStaticProps: GetStaticProps = async () => {
+//   try {
+//     const response = await apiClient.get("/posts/db_search");
+
+//     return {
+//       props: { words: response.data }
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     return {
+//       notFound: true
+//     };
+//   };
+// };
 
 const Free = ({ words }: Props) => {
 

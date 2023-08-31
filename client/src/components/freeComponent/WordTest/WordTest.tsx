@@ -30,6 +30,7 @@ import { notoSansJP } from '@/utils/font';
 
 //Components
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
+import apiClient from '@/lib/apiClient';
 
 const WordTest = () => {
   //router
@@ -111,11 +112,12 @@ const WordTest = () => {
       ...prevWord,
       user_answer: answer,
       right_or_wrong: rightOrWrong,
-      question_count: prevWord.question_count || 0 + 1,
-      correct_count: rightOrWrong ? ( prevWord.correct_count || 0 + 1 ) : ( prevWord.correct_count || 0 )
+      question_count: prevWord.question_count + 1,
+      correct_count: rightOrWrong ? prevWord.correct_count + 1 : prevWord.correct_count
     };
-    const newArr: Array<WordDataType> = prevArr;
+    const newArr: Array<WordDataType> = [...prevArr];
     setDBWords(newArr);
+    console.log(dbWords);
   };
 
   //解答欄でEnterキーを押したとき
@@ -124,29 +126,41 @@ const WordTest = () => {
   };
 
   //結果を確認ボタンを押したとき
-  const handleResultToDB = () => {
-    //型「WordDataType」を型「WordDBType」に変換する
-    const dbRequest: Array<WordDBType> = dbWords.map((word: WordDataType) => (
-      {
-        id: word.id,
-        english: word.english,
-        japanese: word.japanese,
-        created_at: word.created_at,
-        deleted_at: null,
-        last_time_at: null,
-        complete: false,
-        user_answer: word.user_answer || "",
-        right_or_wrong: word.right_or_wrong || false,
-        correct_count: word.correct_count || 0,
-        question_count: word.question_count || 0,
-        correct_rate: Math.round(((word.correct_count || 0) / (word.question_count || 1) * 10) / 10) * 100,
-        user_word_id: word.user_word_id,
-        user_id: word.user_id
-      }
-    ));
+  const handleResultToDB = async () => {
 
-    console.log(dbRequest);
-    // router.push("/mypage/free/result");
+    try {
+      const response = await apiClient.get("/posts/get_time");
+      const responseData: Date = response.data;
+
+      //型「WordDataType」を型「WordDBType」に変換する
+      const dbRequest: Array<WordDBType> = dbWords.map((word: WordDataType) => (
+        {
+          id: word.id,
+          english: word.english,
+          japanese: word.japanese,
+          created_at: word.created_at,
+          deleted_at: null,
+          last_time_at: responseData,
+          complete: word.complete,
+          user_answer: word.user_answer,
+          right_or_wrong: word.right_or_wrong,
+          correct_count: word.correct_count,
+          question_count: word.question_count,
+          correct_rate: Math.round((word.correct_count / word.question_count * 10) / 10) * 100,
+          user_word_id: word.user_word_id,
+          user_id: word.user_id
+        }
+      ));
+
+      await apiClient.post("/posts/db_learning", {
+        dbRequest: dbRequest
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+
+    router.push("/mypage/free/result");
   };
 
   useEffect(() => {

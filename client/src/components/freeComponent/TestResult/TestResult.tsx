@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
-//recoil
-import { useRecoilValue } from 'recoil';
-import { wordsState } from '@/store/mypageState';
-
 //MUI
 import{
     Box,
@@ -31,7 +27,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import styles from "./TestResult.module.scss";
 
 //Types
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -63,7 +59,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
-const TestResult = () => {
+const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //router
     const router = useRouter();
 
@@ -74,28 +70,38 @@ const TestResult = () => {
     const perPageItemNum = 10;
 
     //問題の数を求める
-    const dbWords = useRecoilValue<WordDataType[]>(wordsState);
-    const questionWords: Array<WordDataType> = 
-    dbWords.filter((word: WordDataType) => word.register.match(/^出題$/));
+    const questionWords: Array<WordDBType> = 
+    dbWords.filter((word: WordDBType) => word.complete === true);
     const questionWordsNum: number = questionWords.length;
 
     //最終ページの番号を求める
     const lastPage: number = Math.ceil(questionWords.length / perPageItemNum);
 
     //一度に表示する単語を10個に制限する
-    const sliceArr: Array<WordDataType> = questionWords.filter((word: WordDataType, index: number) => (
+    const sliceArr: Array<WordDBType> = questionWords.filter((word: WordDBType, index: number) => (
         index >= perPageItemNum * (currentPage - 1) 
         && perPageItemNum * currentPage > index 
     ));
 
     //正解した単語のみ取り出す
-    const correctWords: Array<WordDataType> = questionWords.filter((word: WordDataType, index: number) => 
-        word.rightWrong === true
+    const correctWords: Array<WordDBType> = questionWords.filter((word: WordDBType, index: number) => 
+        word.right_or_wrong === true
     );
     const correctWordsNum: number = correctWords.length;
 
     //正答率を求める
-    const correctsRate: number = Math.ceil(correctWordsNum / questionWordsNum * 100);
+    const correctRate: number = Math.round((correctWordsNum / questionWordsNum * 10) / 10) * 100;
+
+    //結果を確認した後のボタン
+    const handleNextAction = () => {
+        if (correctRate === 100) {
+            
+
+            router.push("/mypage");
+        } else {
+            router.push("/mypage/free/test");
+        }
+    };
 
     return (
         <Box className={styles.free_firstContents}>
@@ -149,17 +155,17 @@ const TestResult = () => {
                                                 className={notoSansJP.className}
                                                 align='center'
                                             >
-                                                {word.yourAnswer}
+                                                {word.user_answer}
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 className={notoSansJP.className}
                                                 align='center'
                                                 sx={
-                                                    word.rightWrong ? 
+                                                    word.right_or_wrong ? 
                                                     { color: "rgb(48, 48, 48)"} : { color: "rgb(236, 75, 18)"}
                                                 }
                                             >
-                                                {word.rightWrong ? "正解" : "誤答"}
+                                                {word.right_or_wrong ? "正解" : "誤答"}
                                             </StyledTableCell>                                          
                                         </StyledTableRow>
                                     ))
@@ -188,15 +194,15 @@ const TestResult = () => {
             <Box className={styles.free_resultButtonWrapper}>
                 <Button 
                 className={styles.free_resultButton}
-                onClick={() => correctsRate !== 100 ? (router.push("/mypage/free/test")) : (router.push("/mypage")) }
+                onClick={handleNextAction}
                 >
                     {
-                        correctsRate < 100 
+                        correctRate < 100 
                         ? ( <QuizIcon className={styles.free_resultButtonIcon} /> ) 
                         : ( <HomeIcon className={styles.free_resultButtonIcon} /> )
                     }
                     <Typography className={notoSansJP.className}>
-                        { correctsRate < 100 ? "再テストを行う" : "ホームに戻る" }
+                        { correctRate < 100 ? "再テストを行う" : "ホームに戻る" }
                     </Typography>
                 </Button>
             </Box>
