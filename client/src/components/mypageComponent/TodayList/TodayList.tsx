@@ -106,7 +106,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                                 align='center'
                                                 className={notoSansJP.className}
                                                 >
-                                                    {word.id}
+                                                    {word.user_word_id}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                 align='center'

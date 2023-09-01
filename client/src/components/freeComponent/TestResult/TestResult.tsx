@@ -34,6 +34,7 @@ import { notoSansJP } from '@/utils/font';
 
 //Components
 import CircularResultLabel from '@/components/CircularProgressWithLabel/CircularResultLabel';
+import apiClient from '@/lib/apiClient';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -78,7 +79,7 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const lastPage: number = Math.ceil(questionWords.length / perPageItemNum);
 
     //一度に表示する単語を10個に制限する
-    const sliceArr: Array<WordDBType> = questionWords.filter((word: WordDBType, index: number) => (
+    const sliceArr: Array<WordDBType> = questionWords.filter((_, index: number) => (
         index >= perPageItemNum * (currentPage - 1) 
         && perPageItemNum * currentPage > index 
     ));
@@ -93,9 +94,23 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const correctRate: number = Math.round((correctWordsNum / questionWordsNum * 10) / 10) * 100;
 
     //結果を確認した後のボタン
-    const handleNextAction = () => {
+    const handleNextAction = async () => {
         if (correctRate === 100) {
-            
+            const prevWords: Array<WordDBType> = [...questionWords];
+            const finishQuestionWords: Array<WordDBType> = prevWords.map(word => (
+                {
+                    ...word,
+                    complete: false,
+                    user_answer: "",
+                    right_or_wrong: false
+                }
+            ));
+
+            await apiClient.post("/posts/db_finish", {
+                finishQuestionWords: finishQuestionWords
+            });
+
+            console.log(finishQuestionWords);
 
             router.push("/mypage");
         } else {

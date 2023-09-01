@@ -22,7 +22,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import styles from "./WordCard.module.scss";
 
 //type
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType, WordDataType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -103,7 +103,7 @@ const WordCard = () => {
         };
     };
 
-    //テストモードに遷移した後に、フリーモードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
+    //テストモードに遷移した後に、暗記モードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
     useEffect(() => {
         const prevArr: Array<WordDataType> = [...todayWords];
         const newArr: Array<WordDataType> = prevArr.map((word: WordDataType) => (

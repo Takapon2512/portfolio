@@ -96,17 +96,15 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
         });
     };
 
-    const registerAndLogin = async (path: string) => {
+    const registerAndLogin = async (apiPath: string) => {
         try {
-            const response = await apiClient.post(path, {
+            const response = await apiClient.post(apiPath, {
                 name: formText.name,
                 email: formText.email,
                 password: formText.password
             });
 
             const token: string = response.data.token;
-            console.log(token);
-
             login(token);
 
             router.push("./mypage");

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 //lib
 import apiClient from '@/lib/apiClient';
 
 //Recoil
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { DBState, remainNumState, wordsState } from '@/store/mypageState';
+import { remainNumState, wordsState } from '@/store/mypageState';
 
 //MUI
 import {
@@ -30,6 +31,9 @@ import { notoSansJP } from '../../../utils/font';
 //CSS
 import styles from './RegisterList.module.scss';
 import { WordDBType, WordDataType } from '@/types/globaltype';
+
+//context
+import { useAuth } from '@/context/auth';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -95,6 +99,12 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const [editEngText, setEditEngText] = useState<string>('');
     const [editJapText, setEditJapText] = useState<string>('');
 
+    //ユーザー情報を取得
+    const { user } = useAuth();
+
+    //router
+    const router = useRouter();
+
     //登録リストを削除
     const RegisterListDelete = () => setRegisterWords([]);
 
@@ -102,9 +112,8 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const handleWordEditing = (word: WordDataType, index: number) => {
         if (editing !== true) {
             const wordsArr: Array<WordDataType> = [...registerWords];
-            const prevWord: WordDataType = word;
             const newWord: WordDataType = {
-                ...prevWord,
+                ...word,
                 editing: true
             };
     
@@ -144,7 +153,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const RegisterWordDelete = (index: number) => {
         const wordsArr: Array<WordDataType> = [...registerWords];
         
-        const wordsMinId: number = wordsArr[0].id;
+        const wordsMinId: number = wordsArr[0].user_word_id;
         wordsArr.splice(index, 1);
 
         //欠番が生じる可能性があるため、単語番号をふり直す
@@ -152,7 +161,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
         const newWordsArr: Array<WordDataType> = 
         prevWordsArr.map((word: WordDataType, num: number) => ({
             ...word,
-            id: wordsMinId + num
+            user_word_id: wordsMinId + num
         }));
 
         setRegisterWords(newWordsArr);
@@ -167,32 +176,41 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //本登録ボタンをクリックしたときの処理
     const handletoDB = async () => {
-        const dbRegisterWords: Array<WordDBType> = registerWords.map((word: WordDataType, index: number) => ({
-            id: 0,
-            english: word.english,
-            japanese: word.japanese,
-            created_at: new Date(),
-            deleted_at: null,
-            last_time_at: null,
-            complete: false,
-            user_answer: "",
-            right_or_wrong: false,
-            correct_count: 0,
-            question_count: 0,
-            correct_rate: 0,
-            user_word_id: dbWords.length + index + 1,
-            user_id: 1
-        }));
+        //日付を取得
+        const date = await apiClient.get("/posts/get_time");
+        const now: Date = date.data;
 
-        try {
-            const newRegisterWords = await apiClient.post("/posts/db_register", dbRegisterWords);
-            console.log(newRegisterWords);
-
-            setRegisterWords([]);
-        } catch (err) {
-            console.error(err);
-            alert("登録に失敗しました。");
-        };
+        if (user !== null) {
+            const dbRegisterWords: Array<WordDBType> = registerWords.map((word: WordDataType, index: number) => ({
+                id: 0,
+                english: word.english,
+                japanese: word.japanese,
+                created_at: now,
+                deleted_at: null,
+                last_time_at: null,
+                complete: false,
+                user_answer: "",
+                right_or_wrong: false,
+                correct_count: 0,
+                question_count: 0,
+                correct_rate: 0,
+                user_word_id: dbWords.length + index + 1,
+                user_id: user.id
+            }));
+    
+            try {
+                await apiClient.post("/posts/db_register", dbRegisterWords);
+    
+                setRegisterWords([]);
+                alert("登録に成功しました。");
+            } catch (err) {
+                console.error(err);
+                alert("登録に失敗しました。");
+            };
+        } else {
+            alert("再度ログインお願いします。");
+            router.push("/login");
+        }
     };
     
     useEffect(() => {
@@ -237,7 +255,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                             align='center'
                                             className={notoSansJP.className}
                                             >
-                                                {word.id}
+                                                {word.user_word_id}
                                             </StyledTableCell>
                                             <StyledTableCell 
                                             align='center'
@@ -297,7 +315,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                 editEngText.length === 0 ||
                                 editJapText.length === 0 ||
                                 TextFieldLimit(editEngText, /^[a-zA-Z]*$/) ||
-                                TextFieldLimit(editJapText, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠]*$/) 
+                                TextFieldLimit(editJapText, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、〜々]*$/) 
                                 ? true : false
                             }
                             >
@@ -330,7 +348,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 </Box>
                 </Box>
             ) : (<></>)
-        }        
+        }
         </>
     )
 };

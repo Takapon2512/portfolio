@@ -59,3 +59,9 @@ export type UserInputType = {
     maxText: string,
     wordText: string
 };
+
+export type ResUserType = {
+    id: number,
+    email: string,
+    username: string
+};

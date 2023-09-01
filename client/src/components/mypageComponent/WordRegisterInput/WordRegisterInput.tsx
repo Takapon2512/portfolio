@@ -21,6 +21,7 @@ import styles from './WordRegisterInput.module.scss';
 
 //Type
 import { WordDBType, WordDataType } from '@/types/globaltype';
+import apiClient from '@/lib/apiClient';
 
 const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
     
@@ -35,12 +36,16 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //入力を検知
     const [composing, setComposing] = useState<boolean>(false);
 
-    const handleWordsAdd = () => {
+    const handleWordsAdd = async () => {
+        //日付を取得する
+        const date = await apiClient.get("/posts/get_time");
+        const now: Date = date.data;
+
         const registerWord: WordDataType = {
-            id: dbWords.length + registerWords.length + 1,
+            id: 0,
             english: engField,
             japanese: japField,
-            created_at: new Date(),
+            created_at: now,
             deleted_at: null,
             editing: false,
             question_register: "出題しない",
@@ -51,7 +56,7 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
             question_count: 0,
             correct_rate: 0,
             last_time_at: null,
-            user_word_id: 0, 
+            user_word_id: dbWords.length + registerWords.length + 1, 
             user_id: 1
         };
 

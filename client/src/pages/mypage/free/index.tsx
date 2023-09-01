@@ -1,4 +1,9 @@
-import react from 'react';
+import React, { useEffect } from 'react';
+import { GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
+
+//context
+import { useAuth } from '@/context/auth';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -20,11 +25,9 @@ type Props = {
 //Component
 import Layout from '@/components/Layout/layout';
 import SearchWords from '@/components/freeComponent/SearchWords/SearchWords';
-import { GetServerSideProps, GetStaticProps } from 'next';
 
-
-// //サーバーサイドで単語を取得する（SSR）
-export const getServerSideProps: GetServerSideProps = async () => {
+//SSG
+export const getStaticProps: GetStaticProps = async () => {
   try {
     const response = await apiClient.get("/posts/db_search");
 
@@ -39,24 +42,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-
-//SSG
-// export const getStaticProps: GetStaticProps = async () => {
-//   try {
-//     const response = await apiClient.get("/posts/db_search");
-
-//     return {
-//       props: { words: response.data }
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     return {
-//       notFound: true
-//     };
-//   };
-// };
-
 const Free = ({ words }: Props) => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, []);
 
   return (
     <Layout>

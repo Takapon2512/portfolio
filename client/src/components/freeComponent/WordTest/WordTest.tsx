@@ -174,7 +174,7 @@ const WordTest = () => {
       return () => {
         clearInterval(timer);
       };
-    }
+    };
   }, [remainTime]);
 
   return (

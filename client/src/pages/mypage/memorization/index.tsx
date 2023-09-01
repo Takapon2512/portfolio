@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+//context
+import { useAuth } from '@/context/auth';
 
 //MUI
 import { 
@@ -12,7 +16,30 @@ import styles from "./index.module.scss";
 import Layout from '@/components/Layout/layout';
 import WordCard from '@/components/memorizeComponents/WordCard/WordCard';
 
+//SSG
+// export const getStaticProps: GetStaticProps = async () => {
+//   try {
+//     const response = await apiClient.get("/posts/db_search");
+
+//     return {
+//       props: { words: response.data }
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     return {
+//       notFound: true
+//     };
+//   };
+// };
+
 const Memorize = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) router.push("/login");
+  }, [user]);
+
   return (
     <Layout>
       <Box className={styles.memorize}>

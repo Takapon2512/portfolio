@@ -1,5 +1,5 @@
-import react from 'react';
-import { GetStaticProps } from 'next';
+import React, { useEffect } from 'react';
+import { GetStaticProps, GetServerSideProps } from 'next';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -22,14 +22,22 @@ import WordRegisterInput from '@/components/mypageComponent/WordRegisterInput/Wo
 import RegisterList from '@/components/mypageComponent/RegisterList/RegisterList';
 import TodayList from '@/components/mypageComponent/TodayList/TodayList';
 
-//SSGでDBの単語を取得
-export const getStaticProps: GetStaticProps = async () => {
+//SSRでDBの単語を取得
+export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const response = await apiClient.get("/posts/db_search");
+    const token: string | undefined = context.req.headers.cookie?.split('=')[1];
+    const response = await apiClient.get("/posts/db_search", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return {
-      props: { words: response.data }
-    }
+      props: {
+        words: response.data
+      },
+    };
+
   } catch (err) {
     console.error(err);
     return {
@@ -40,19 +48,19 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const Mypage = ({ words }: Props) => {
 
-    return (
-        <>
-        <Layout>
-            <Box className={styles.home}>
-                <Box className={styles.home_container}>
-                    <WordRegisterInput dbWords={words}/>
-                    <RegisterList dbWords={words} />
-                    <TodayList dbWords={words} />
-                </Box>
-            </Box>
-        </Layout>
-        </>
-    );
+  return (
+      <>
+      <Layout>
+          <Box className={styles.home}>
+              <Box className={styles.home_container}>
+                  <WordRegisterInput dbWords={words}/>
+                  <RegisterList dbWords={words} />
+                  <TodayList dbWords={words} />
+              </Box>
+          </Box>
+      </Layout>
+      </>
+  );
 };
 
 export default Mypage;

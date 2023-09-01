@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+
+//context
+import { useAuth } from '@/context/auth';
 
 //MUI
 import {
@@ -28,10 +31,13 @@ import styles from './layout.module.scss';
 import noImage from '../../../public/images/noImage.png';
 
 //type
-import { SidebarType } from '@/types/globaltype';
+import { ResUserType, SidebarType } from '@/types/globaltype';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
+    const { user, logout } = useAuth();
+
+    const [userData, setUserData] = useState<ResUserType | null>(null)
 
     const sidebarArr: Array<SidebarType> = [
         {
@@ -67,7 +73,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         {
             title: 'ログアウト',
             icon: <LogoutIcon />,
-            link: '../login',
+            link: '/login',
             active: false
         }
     ];
@@ -77,6 +83,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         if (router.pathname === value.link) return true;
         return false;
     };
+
+    const handleAction = (value: SidebarType) => {
+        if (value.link === "/login") logout();
+        router.push(value.link)
+    };
+
+    useEffect(() => {
+        setUserData(user);
+    }, [user]);
 
     return (
         <Box className={styles.layout}>
@@ -93,7 +108,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         </Box>
                         <Box className={styles.layout_userWrapper}>
                             <Typography className={`${styles.layout_user} ${notoSansJP.className}`}>
-                                たかぽん
+                                { userData?.username }
                             </Typography>
                         </Box>
                         <List className={styles.layout_sidebarList}>
@@ -103,7 +118,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                         <ListItem
                                         key={key} 
                                         className={styles.layout_sidebarItem} 
-                                        onClick={() => router.push(value.link) }
+                                        onClick={() => handleAction(value) }
                                         sx={
                                             activeJudge(value, key)
                                             ? 
