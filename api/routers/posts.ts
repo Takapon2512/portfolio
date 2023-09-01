@@ -7,6 +7,7 @@ import { LoginType, UserType, WordDBType } from '../types/ApiTypes';
 //utils
 import { Unauthorized, ServerError, Created, OK } from '../utils/StatusCode';
 import { serverErrorMsg } from "../utils/message";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 
 export const postsRouter: Router = Router();
 const prisma: PrismaClient = new PrismaClient();
@@ -28,15 +29,20 @@ postsRouter.post("/db_register", async (req: Request, res: Response) => {
 });
 
 //DBの単語を取得するAPI
-postsRouter.get("/db_search", async (req: Request, res: Response) => {
-    const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: 1 } });
-
-    if (!words) {
+postsRouter.get("/db_search", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+        const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id } });
+        return res.status(OK).json(words);
+    } catch (err) {
         return res.status(ServerError).json({ error: serverErrorMsg });
-    };
+    }
 
-    return res.status(OK).json(words);
 });
+
+// //DBの単語を取得するAPI（暗記モード）
+// postsRouter.get("db_search_memorize", async (req: Request, res: Response) => {
+
+// });
 
 //時刻の取得
 postsRouter.get("/get_time", (req: Request, res: Response) => {
@@ -77,6 +83,43 @@ postsRouter.post("/db_learning", async (req: Request, res: Response) => {
                 correct_count,
                 question_count,
                 correct_rate
+            }
+        });
+    });
+
+    try {
+        const updateResults = await Promise.all(updatePromises);
+        return res.status(OK).json(updateResults);
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+});
+
+//学習が完了した単語の状態をDBに登録するAPI
+postsRouter.post("/db_finish", async (req: Request, res: Response) => {
+    const wordsArr: Array<WordDBType> = req.body.finishQuestionWords;
+
+    const updatePromises = wordsArr.map(async (word) => {
+        const { 
+            id, 
+            user_id, 
+            user_word_id, 
+            user_answer,
+            complete,
+            right_or_wrong
+        } = word;
+
+        return await prisma.wordData.updateMany({
+            where: {
+                id, 
+                user_id, 
+                user_word_id
+            },
+            data: {
+                user_answer,
+                complete,
+                right_or_wrong
             }
         });
     });

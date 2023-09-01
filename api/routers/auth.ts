@@ -4,7 +4,7 @@ import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 
 //type
-import { LoginType, UserType } from '../types/ApiTypes';
+import { LoginType, UserType, WordDBType } from '../types/ApiTypes';
 
 //utils
 import { Unauthorized, ServerError } from '../utils/StatusCode';
@@ -34,7 +34,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     });
 
     //クライアントへJWTの発行
-    const token: string = sign({ email }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
+    const token: string = sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
 
     return res.json({ user: user, token: token });
 });
@@ -49,10 +49,10 @@ authRouter.post("/login", async (req: Request, res: Response) => {
         return res.status(Unauthorized).json({ error: "メールアドレスかパスワードが間違っています。" });
     };
 
-    const isPassWordVaild: boolean = await compare(password, user.password);
+    const isPassWord: boolean = await compare(password, user.password);
 
     //パスワードに間違いがないかどうかを確認
-    if (!isPassWordVaild) {
+    if (!isPassWord) {
         return res.status(Unauthorized).json({ error: "そのパスワードは間違っています。" });
     };
 
