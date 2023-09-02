@@ -1,16 +1,143 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { scheduleJob } from "node-schedule";
 
 //type
-import { LoginType, UserType, WordDBType } from '../types/ApiTypes';
+import { WordDBType } from '../types/ApiTypes';
 
 //utils
-import { Unauthorized, ServerError, Created, OK } from '../utils/StatusCode';
+import { ServerError, Created, OK } from '../utils/StatusCode';
 import { serverErrorMsg } from "../utils/message";
 import { isAuthenticated } from "../middleware/isAuthenticated";
+import { normalBorder, goodBorder } from "../utils/border";
 
 export const postsRouter: Router = Router();
 const prisma: PrismaClient = new PrismaClient();
+
+//毎日0時0分に学習対象になっている単語の「today_learning」をfalseにする
+scheduleJob('0 0 * * *', async () => {
+    try {
+        let i = 1;
+        while (true) {
+            const words: Array<WordDBType> = await prisma.wordData.findMany({ 
+                where: { user_id: i, today_learning: true } 
+            });
+            //データが取れなくなったら、While文を抜ける
+            if (words.length === 0) break;
+        
+            //サボり判定
+            const slackingJudge = (word: WordDBType) => {
+                const now: Date = new Date(Date.now());
+                // //本日の0時を取得
+                const todayMidnight: Date = new Date(now);
+                todayMidnight.setHours(0, 0, 0, 0);
+    
+                //明日の0時を取得
+                const tomorrowMidnight: Date = new Date(now);
+                tomorrowMidnight.setDate(tomorrowMidnight.getDate() + 1);
+                tomorrowMidnight.setHours(0, 0, 0, 0);
+
+                if (word.last_time_at === null) return true;
+                if (!(tomorrowMidnight >= word.last_time_at 
+                    && word.last_time_at >= todayMidnight)) return true;
+                
+                return false;
+            };
+
+            words.map(async (word) => {
+                return await prisma.wordData.updateMany({
+                    where: {
+                        id: word.id,
+                        user_id: word.user_id,
+                        user_word_id: word.user_word_id
+                    },
+                    data: {
+                        correct_count: slackingJudge(word) ? 0 : word.correct_count,
+                        correct_rate: slackingJudge(word) ? 0: word.correct_rate,
+                        today_learning: false
+                    },
+                });
+            });
+            i++;
+        };
+
+        i = 1;
+        console.log("ループ抜けた");
+    } catch (err) {
+        console.error(err);
+    };
+});
+
+//毎日0時5分に学習予定の単語の「today_learning」をtrueにする
+scheduleJob('5 0 * * *', async () => {
+    try {
+        let i = 1;
+        while (true) {
+            const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: i } });
+            //データが取れなくなったら、While文を抜ける
+            if (words.length === 0) break;
+
+            //単語を絞る（優先度S：未学習の単語）
+            const notLearningWords: Array<WordDBType> = words.filter((word) => 
+                word.last_time_at === null
+            );
+
+            //単語を絞る（優先度A：出題回数が1回以上10回未満の単語）
+            const fewerWords: Array<WordDBType> = words.filter((word) => 
+                word.question_count >= 1 
+                && 10 > word.question_count
+            ).sort((x: WordDBType, y: WordDBType) => x.question_count - y.question_count);
+
+            //単語を絞る（優先度B：分類「苦手」の単語。ただし、優先度SとAに当てはまらないようにする。）
+            const weakWords: Array<WordDBType> = words.filter((word) => 
+                normalBorder > word.correct_rate 
+                && word.question_count >= 10
+            );
+
+            //単語を絞る（優先度C：分類「まあまあ」の単語。ただし、優先度SとAに当てはまらないようにする。）
+            const normalWords: Array<WordDBType> = words.filter((word) => 
+                word.correct_rate >= normalBorder 
+                && goodBorder > word.correct_rate 
+                && word.question_count >= 10
+            );
+
+            //単語を絞る（優先度D：分類「得意」の単語。ただし、優先度SとAに当てはまらないようにする。）
+            const goodWords: Array<WordDBType> = words.filter((word) => 
+                goodBorder >= word.correct_rate 
+                && word.question_count >= 10
+            );
+
+            //絞った単語を格納し、制限数より後の単語をカットする
+            const filterWords: Array<WordDBType> = [
+                ...notLearningWords,
+                ...fewerWords,
+                ...weakWords,
+                ...normalWords, 
+                ...goodWords
+            ].slice(0, 20).sort((x: WordDBType, y: WordDBType) => x.user_word_id - y.user_word_id);
+
+            filterWords.map(async (word) => {
+                return await prisma.wordData.updateMany({
+                    where: {
+                        id: word.id,
+                        user_id: word.user_id,
+                        user_word_id: word.user_word_id
+                    },
+                    data: {
+                        today_learning: true
+                    },
+                });
+            });
+            i++;
+        };
+
+        i = 1;
+        console.log("ループ抜けた");
+
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 //単語をDBに登録するAPI
 postsRouter.post("/db_register", async (req: Request, res: Response) => {
@@ -35,14 +162,19 @@ postsRouter.get("/db_search", isAuthenticated, async (req: Request, res: Respons
         return res.status(OK).json(words);
     } catch (err) {
         return res.status(ServerError).json({ error: serverErrorMsg });
-    }
-
+    };
 });
 
-// //DBの単語を取得するAPI（暗記モード）
-// postsRouter.get("db_search_memorize", async (req: Request, res: Response) => {
+postsRouter.get("/db_search_memorize", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+        const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, today_learning: true } });
 
-// });
+        return res.status(OK).json(words);
+    } catch (err) {
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+
+});
 
 //時刻の取得
 postsRouter.get("/get_time", (req: Request, res: Response) => {

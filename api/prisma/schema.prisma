@@ -22,21 +22,22 @@ model User {
 }
 
 model WordData {
-  id             Int       @id @default(autoincrement())
-  english        String
-  japanese       String
-  created_at     DateTime  @default(now())
-  deleted_at     DateTime?
-  last_time_at   DateTime?
-  complete       Boolean
-  user_answer    String
-  right_or_wrong Boolean
-  correct_count  Int
-  question_count Int
-  correct_rate   Int
-  user_word_id   Int
-  user_id        Int
-  user           User      @relation(fields: [user_id], references: [id])
+  id                Int       @id @default(autoincrement())
+  english           String
+  japanese          String
+  created_at        DateTime  @default(now())
+  deleted_at        DateTime?
+  last_time_at      DateTime?
+  complete          Boolean
+  today_learning    Boolean   @default(false)
+  user_answer       String
+  right_or_wrong    Boolean
+  correct_count     Int
+  question_count    Int
+  correct_rate      Int
+  user_word_id      Int
+  user_id           Int
+  user              User      @relation(fields: [user_id], references: [id])
 }
 
 model Setting {

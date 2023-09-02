@@ -21,6 +21,7 @@ export type WordDBType = {
     deleted_at: Date | null;
     last_time_at: Date | null;
     complete: boolean
+    today_learning: boolean;
     user_answer: string;
     right_or_wrong: boolean;
     correct_count: number;
