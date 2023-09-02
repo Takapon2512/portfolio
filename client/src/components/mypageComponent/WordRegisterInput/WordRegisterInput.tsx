@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 //Recoil
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { DBState, remainNumState, wordState, wordsState } from '@/store/mypageState';
+import { remainNumState, wordsState } from '@/store/mypageState';
 
 //MUI
 import {
@@ -50,6 +50,7 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
             editing: false,
             question_register: "出題しない",
             complete: false,
+            today_learning: false,
             user_answer: "",
             right_or_wrong: false,
             correct_count: 0,

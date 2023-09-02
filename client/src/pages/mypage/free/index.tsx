@@ -44,13 +44,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const Free = ({ words }: Props) => {
   const { user } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  }, []);
 
   return (
     <Layout>

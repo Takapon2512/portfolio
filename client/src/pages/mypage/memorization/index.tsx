@@ -34,11 +34,6 @@ import WordCard from '@/components/memorizeComponents/WordCard/WordCard';
 
 const Memorize = () => {
   const router = useRouter();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    if (!user) router.push("/login");
-  }, [user]);
 
   return (
     <Layout>

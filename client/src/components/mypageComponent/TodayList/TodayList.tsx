@@ -54,6 +54,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
+    console.log(dbWords);
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1)
     //フィルタリング後の配列を格納
@@ -61,7 +62,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //ページあたりのアイテム数
     const perPageItemNum = 10;
     //最終ページを求める
-    const lastPage = Math.ceil(dbWords.length / perPageItemNum)
+    const lastPage = Math.ceil(dbWords.length / perPageItemNum);
 
     const sliceWords = (array: Array<WordDBType>, num: number) => {
         splitWords = array.filter((word, index) => (
@@ -82,7 +83,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     return (
         <Box className={styles.home_thirdContents}>
             <Typography className={`${styles.home_wordListTitle} ${notoSansJP.className}`}>
-                本日の英単語一覧
+                おすすめ英単語一覧
             </Typography>
             {
                 dbWords.length > 0 ? (
@@ -160,7 +161,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     </>
                 ) : (
                     <Typography className={notoSansJP.className}>
-                        本日取り組む単語がありません。
+                        おすすめの英単語がありません。
                     </Typography>
                 )
             }
