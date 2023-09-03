@@ -87,7 +87,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //苦手度ボタンの切り替えを管理
     const [isActive, setIsActive] = useState<weakButtonType>({
-        weak: true,
+        weak: false,
         normal: false,
         good: false
     });
@@ -206,7 +206,6 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
         setIsActive(newObj);
         setCurrentPage(1);
     };
-    console.log(keyWordsArr);
 
     return (
         <>        

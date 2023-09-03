@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 
 //context
@@ -26,10 +26,15 @@ type Props = {
 import Layout from '@/components/Layout/layout';
 import SearchWords from '@/components/freeComponent/SearchWords/SearchWords';
 
-//SSG
-export const getStaticProps: GetStaticProps = async () => {
+//SSR
+export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const response = await apiClient.get("/posts/db_search");
+    const token: string | undefined = context.req.headers.cookie?.split('=')[1];
+    const response = await apiClient.get("/posts/db_search", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return {
       props: { words: response.data }

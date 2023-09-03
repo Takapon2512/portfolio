@@ -83,7 +83,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     return (
         <Box className={styles.home_thirdContents}>
             <Typography className={`${styles.home_wordListTitle} ${notoSansJP.className}`}>
-                おすすめ英単語一覧
+                本日の英単語一覧
             </Typography>
             {
                 dbWords.length > 0 ? (
@@ -161,7 +161,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     </>
                 ) : (
                     <Typography className={notoSansJP.className}>
-                        おすすめの英単語がありません。
+                        本日の英単語を取得できませんでした。
                     </Typography>
                 )
             }

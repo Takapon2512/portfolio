@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
-//recoil
-import { useRecoilState } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
-
 //MUI
 import {
   Box,
@@ -22,23 +18,23 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import styles from "./WordCard.module.scss";
 
 //type
-import { WordDBType, WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
 
-const WordCard = () => {
+const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
     //router
     const router: NextRouter = useRouter();
 
-    //本日分の単語を取得
-    const [todayWords, setTodayWords] = useRecoilState<WordDataType[]>(dbWordsState);
-    
+    //complete変更前と変更後の単語を格納する
+    const [completeWords, setCompleteWords] = useState<WordDBType[]>([...todayWords]);
+
     //英単語と日本語訳の切り替え
     const [ejSwitch, setEJSwitch] = useState<boolean>(true);
 
     //completeがfalseの単語のみを取得
-    const incompleteWords: Array<WordDataType> = todayWords.filter(word => word.complete === false);
+    const incompleteWords: Array<WordDBType> = completeWords.filter(word => word.complete === false);
 
     //現在の問題番号を管理
     const [problemNum, setProblemNum] = useState<number>(1);
@@ -49,17 +45,17 @@ const WordCard = () => {
     const handleRemember = () => {
         const currentNum: number = problemNum;
 
-        const todayWordsArr: Array<WordDataType> = [...todayWords];
-        const incompleteWordsArr: Array<WordDataType> = [...incompleteWords];
-        const prevWord: WordDataType = incompleteWordsArr[0 + incompleteCount];
-        const newWord: WordDataType = {
+        const todayWordsArr: Array<WordDBType> = [...completeWords];
+        const incompleteWordsArr: Array<WordDBType> = [...incompleteWords];
+        const prevWord: WordDBType = incompleteWordsArr[0 + incompleteCount];
+        const newWord: WordDBType = {
             ...prevWord,
             complete: true
         };
-        todayWordsArr[newWord.id - 1] = newWord;
+        todayWordsArr[problemNum - 1] = newWord;
 
         setProblemNum(currentNum + 1);
-        setTodayWords(todayWordsArr);
+        setCompleteWords(todayWordsArr);
 
         if (incompleteWords.length > 0 && currentNum === incompleteWords.length + (currentNum - incompleteCount) - 1) {
             setProblemNum(1);
@@ -105,14 +101,16 @@ const WordCard = () => {
 
     //テストモードに遷移した後に、暗記モードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
     useEffect(() => {
-        const prevArr: Array<WordDataType> = [...todayWords];
-        const newArr: Array<WordDataType> = prevArr.map((word: WordDataType) => (
+        const prevArr: Array<WordDBType> = [...completeWords];
+        const newArr: Array<WordDBType> = prevArr.map((word: WordDBType) => (
         {
             ...word,
             complete: false
         }
         ));
-        setTodayWords(newArr);
+        setCompleteWords(newArr);
+        setProblemNum(1);
+        setIncompleteCount(0);
     }, []);
 
     return (
@@ -149,7 +147,7 @@ const WordCard = () => {
             <Box className={styles.memorize_nextButtons}>
                 {
                     problemNum <= incompleteWords.length + (problemNum - incompleteCount) - 1 ? (
-                        <>                        
+                        <>
                         <Button 
                         className={styles.memorize_remembered}
                         onClick={handleRemember}

@@ -142,6 +142,7 @@ const WordTest = () => {
           deleted_at: null,
           last_time_at: responseData,
           complete: word.complete,
+          today_learning: word.today_learning,
           user_answer: word.user_answer,
           right_or_wrong: word.right_or_wrong,
           correct_count: word.correct_count,

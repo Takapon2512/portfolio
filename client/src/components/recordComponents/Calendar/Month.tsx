@@ -38,7 +38,7 @@ const Month = () => {
             </Box>
             <Box className={styles.calendar_container}>
                 {
-                    getMonth(monthNum).map((row: Dayjs[], i) => (
+                    getMonth(monthNum).map((row: Dayjs[], i: number) => (
                         <React.Fragment key={i}>
                             {
                                 row.map((day: Dayjs, index: number) => (

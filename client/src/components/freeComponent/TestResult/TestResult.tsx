@@ -110,8 +110,6 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 finishQuestionWords: finishQuestionWords
             });
 
-            console.log(finishQuestionWords);
-
             router.push("/mypage");
         } else {
             router.push("/mypage/free/test");
