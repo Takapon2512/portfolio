@@ -4,7 +4,7 @@ import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 
 //type
-import { LoginType, UserType, WordDBType } from '../types/ApiTypes';
+import { LoginType, UserType } from '../types/ApiTypes';
 
 //utils
 import { Unauthorized, ServerError } from '../utils/StatusCode';
