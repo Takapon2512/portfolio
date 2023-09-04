@@ -1,4 +1,8 @@
 import React from 'react';
+import { GetServerSideProps } from 'next';
+
+//lib
+import apiClient from '@/lib/apiClient';
 
 //MUI
 import { 
@@ -8,20 +12,51 @@ import {
 //CSS
 import styles from './index.module.scss';
 
+//type
+import { SettingType } from '@/types/globaltype';
+type Props = {
+  setting: SettingType
+};
+
 //Component
 import Layout from '@/components/Layout/layout';
 import User from '@/components/settingComponents/User/User';
 import Question from '@/components/settingComponents/Question/Question';
 import Address from '@/components/settingComponents/Address/Address';
 
-const Setting = () => {
+//SSRでDBにある設定情報を取得
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const token: string | undefined = context.req.headers.cookie?.split("=")[1];
+    const response = await apiClient.get("/users/setting_find", {
+      headers: {
+        Authorization: `Barer ${token}`
+      },
+    });
+
+    return {
+      props: {
+        setting: response.data
+      }
+    };
+
+  } catch (err) {
+    console.error(err);
+
+    return {
+      notFound: true
+    }
+  }
+};
+
+const Setting = ({ setting }: Props) => {
   return (
     <Layout>
       <Box className={styles.setting}>
         <Box className={styles.setting_container}>
           <User />
           <Address />
-          <Question />
+          <Question setting={setting} />
         </Box>
       </Box>
     </Layout>

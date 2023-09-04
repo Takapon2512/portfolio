@@ -27,9 +27,6 @@ import { notoSansJP } from '../../utils/font';
 //CSS
 import styles from './layout.module.scss';
 
-//Image
-import noImage from '../../../public/images/noImage.png';
-
 //type
 import { ResUserType, SidebarType } from '@/types/globaltype';
 
@@ -100,7 +97,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         <Box className={styles.layout_imageWrapper}>
                             <Image 
                             className={styles.layout_image}
-                            src={noImage}
+                            src={`/images/${'noImage.png'}`}
                             width={104}
                             height={104}
                             alt='ユーザー画像'
@@ -108,7 +105,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         </Box>
                         <Box className={styles.layout_userWrapper}>
                             <Typography className={`${styles.layout_user} ${notoSansJP.className}`}>
-                                { userData?.username }
+                                { userData ? userData.username + "さん" : "名無し さん" }
                             </Typography>
                         </Box>
                         <List className={styles.layout_sidebarList}>

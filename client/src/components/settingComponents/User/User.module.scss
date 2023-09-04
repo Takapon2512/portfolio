@@ -35,13 +35,13 @@
         margin-bottom: 40px;
     }
 
-    &_name, &_image {
+    &_image {
         display: flex;
         align-items: center;
         margin-bottom: 16px;
     }
 
-    &_nameTitle, &_iconTitle {
+    &_iconTitle {
         min-width: 28%;
         @extend .text-color;
     }
@@ -59,6 +59,10 @@
         &Wrapper {
             display: flex;
             justify-content: center;
+        }
+
+        &:disabled {
+            background-color: rgb(218, 206, 200);
         }
     }
 }

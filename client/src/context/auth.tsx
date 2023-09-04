@@ -1,8 +1,11 @@
-import apiClient from "@/lib/apiClient";
 import React, { useContext, useEffect, useState } from "react";
 
 //type
 import { ResUserType } from "@/types/globaltype";
+
+//lib
+import { apiClient_multi } from "@/lib/apiClient";
+import apiClient from "@/lib/apiClient";
 
 interface AuthContextType {
     user: ResUserType | null;
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const token: string = cookie.split("=")[1];
         if (token) {
             apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
+            apiClient_multi.defaults.headers["Authorization"] = `Bearer ${token}`;
             apiClient.get("/users/find").then((res) => {
                 setUser(res.data.user);
             }).catch((err) => {
@@ -47,6 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         try {
             apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
+            apiClient_multi.defaults.headers["Authorization"] = `Bearer ${token}`;
             apiClient.get("/users/find").then(res => setUser(res.data.user));
         } catch (err) {
             console.error(err);

@@ -66,3 +66,8 @@ export type ResUserType = {
     email: string,
     username: string
 };
+
+export type SettingType = {
+    work_on_count: number;
+    time_constraint: number;
+}
