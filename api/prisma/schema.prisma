@@ -43,6 +43,7 @@ model WordData {
 model Setting {
   id              Int       @id @default(autoincrement())
   work_on_count   Int
+  icon_url        String?
   time_constraint Int
   created_at      DateTime  @default(now())
   updated_at      DateTime?

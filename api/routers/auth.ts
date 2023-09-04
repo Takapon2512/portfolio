@@ -33,6 +33,16 @@ authRouter.post("/register", async (req: Request, res: Response) => {
         }
     });
 
+    //ユーザー登録時に初期設定を行う
+    await prisma.setting.create({
+        data: {
+            work_on_count: 100,
+            time_constraint: 10,
+            icon_url: "/images/noImage.png",
+            user_id: user.id,
+        }
+    });
+
     //クライアントへJWTの発行
     const token: string = sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
 
