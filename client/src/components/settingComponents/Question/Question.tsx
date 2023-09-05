@@ -12,9 +12,12 @@ import { notoSansJP } from '@/utils/font';
 //type
 import { SettingType } from '@/types/globaltype';
 
+//lib
+import apiClient from '@/lib/apiClient';
+
 const Question = ({ setting }: { setting: SettingType }) => {
-  const num_timeLimit = setting.time_constraint;
-  const num_questions = setting.work_on_count;
+  const num_timeLimitInit = setting.time_constraint;
+  const num_questionsInit = setting.work_on_count;
 
   //下限・上限の値
   const num_timeLimitMin = 5;
@@ -23,8 +26,8 @@ const Question = ({ setting }: { setting: SettingType }) => {
   const num_questionsMin = 10;
   const num_questionsMax = 300;
 
-  const [timeLimit, setTimeLimit] = useState<string>(String(num_timeLimit));
-  const [questions, setQuestions] = useState<string>(String(num_questions));
+  const [timeLimit, setTimeLimit] = useState<string>(String(num_timeLimitInit));
+  const [questions, setQuestions] = useState<string>(String(num_questionsInit));
 
   const handleTimeLimit = (e: React.ChangeEvent<HTMLInputElement>) => setTimeLimit(e.target.value);
   const handleQuestions = (e: React.ChangeEvent<HTMLInputElement>) => setQuestions(e.target.value);
@@ -34,6 +37,17 @@ const Question = ({ setting }: { setting: SettingType }) => {
     && (Number(questions) >= num_questionsMin && num_questionsMax >= Number(questions))) return false;
 
     return true;
+  };
+
+  //「変更する」をクリックしたときの処理
+  const handleSettingChange = async () => {
+    const num_timeLimit = Number(timeLimit);
+    const num_questions = Number(questions);
+
+    const updateData = { num_timeLimit, num_questions };
+    const response = await apiClient.post("/users/mode_upload", updateData);
+
+    alert(response.data.message);
   };
 
   return (
@@ -70,6 +84,7 @@ const Question = ({ setting }: { setting: SettingType }) => {
           <Button
           className={`${notoSansJP.className} ${styles.question_button}`}
           disabled={disabledJudge()}
+          onClick={handleSettingChange}
           >
             変更する
           </Button>

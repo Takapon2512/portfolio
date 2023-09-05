@@ -8,7 +8,6 @@ import { dbWordsState } from '@/store/mypageState';
 import { 
     Box,
     Typography,
-    Button,
     TextField
 } from '@mui/material';
 
@@ -20,14 +19,16 @@ import { notoSansJP } from '@/utils/font';
 import WordList from '../WordList/WordList';
 
 //type
-import { UserInputType, WordDataType } from '@/types/globaltype';
+import { UserInputType, WordDBType, WordDataType } from '@/types/globaltype';
+type Props = {
+    recordWords: WordDBType[]
+}
 
-const SearchWordsInput = () => {
-    const dbWords: Array<WordDataType> = useRecoilValue(dbWordsState);
+const SearchWordsInput = ({recordWords}: Props) => {
 
     const [userInput, setUserInput] = useState<UserInputType>({
         minText: "1",
-        maxText: String(dbWords.length),
+        maxText: String(recordWords.length),
         wordText: ""
     });
     const prevUserInput: UserInputType = userInput;
@@ -69,6 +70,7 @@ const SearchWordsInput = () => {
             minText={userInput.minText}
             maxText={userInput.maxText}
             wordText={userInput.wordText}
+            recordWords={recordWords}
             />
         </Box>
     );

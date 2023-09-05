@@ -312,7 +312,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                                     className={notoSansJP.className}
                                                     align='center'
                                                     >
-                                                        {word.id}
+                                                        {word.user_word_id}
                                                     </StyledTableCell>
                                                     <StyledTableCell
                                                     className={notoSansJP.className}

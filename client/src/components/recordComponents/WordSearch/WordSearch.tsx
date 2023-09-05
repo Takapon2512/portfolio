@@ -12,13 +12,20 @@ import SearchWordsInput from './SearchWordsInput/SearchWordsInput';
 //utils
 import { notoSansJP } from '@/utils/font';
 
-const WordSearch = () => {
+//type
+import { WordDBType } from '@/types/globaltype';
+type Props = {
+  recordWords: WordDBType[]
+}
+
+const WordSearch = ({ recordWords }: Props) => {
+    console.log(recordWords);
     return (
         <Box className={styles.record}>
             <Typography className={`${styles.record_title} ${notoSansJP.className}`}>
                 英単語の記録
             </Typography>
-            <SearchWordsInput />
+            <SearchWordsInput recordWords={recordWords} />
         </Box>
     );
 };

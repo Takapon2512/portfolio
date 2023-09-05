@@ -36,7 +36,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    
+    //「today_learning」がtrueの単語を取得
     const response_today = await apiClient.get("/posts/db_search_memorize", {
       headers: {
         Authorization: `Bearer ${token}`,

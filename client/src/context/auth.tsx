@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }, []);
 
     const login = async (token: string) => {
-        document.cookie = `auth_token=${token}; secure;`;
+        document.cookie = `auth_token=${token};`;
 
         try {
             apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;

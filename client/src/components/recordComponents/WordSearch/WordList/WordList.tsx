@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 
-//recoil
-import { useRecoilValue } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
-
 //MUI
 import { 
     Box,
@@ -29,7 +25,7 @@ import styles from "./WordList.module.scss";
 import { notoSansJP } from '@/utils/font';
 
 //type
-import { UserInputType, WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -55,31 +51,35 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
-const WordList = ({ minText, maxText, wordText }: UserInputType) => {
-    const dbWords: Array<WordDataType> = useRecoilValue(dbWordsState);
+const WordList = ({ minText, maxText, wordText, recordWords }: { 
+        minText: string,
+        maxText: string, 
+        wordText: string, 
+        recordWords: WordDBType[]
+    }) => {
 
     //現在のページ番号を管理
     const [currentPage, setCurrentPage] = useState<number>(1);
     //1ページに表示する単語数
     const perPageItemNum = 10;
     //DBの単語を複製
-    const wordsArr: Array<WordDataType> = [...dbWords];
+    const wordsArr: Array<WordDBType> = [...recordWords];
     //stringをnumberに変換
     const minNum: number = Number(minText);
     const maxNum: number = Number(maxText);
 
     //単語番号で絞る
-    const numWordsArr: Array<WordDataType> = wordsArr.filter((word: WordDataType, index: number) => 
+    const numWordsArr: Array<WordDBType> = wordsArr.filter((word: WordDBType, index: number) => 
         index >= minNum - 1 && maxNum - 1 >= index
     );
 
     //単語番号で絞ったあと、キーワードで絞る
-    const keyWordsArr: Array<WordDataType> = numWordsArr.filter((word: WordDataType, index: number) => 
+    const keyWordsArr: Array<WordDBType> = numWordsArr.filter((word: WordDBType, index: number) => 
         word.english.includes(wordText)
     );
 
     //表示する単語を制限
-    const sliceArr: Array<WordDataType> = keyWordsArr.filter((word, index) => (
+    const sliceArr: Array<WordDBType> = keyWordsArr.filter((word, index) => (
         index >= (currentPage - 1) * perPageItemNum && currentPage * perPageItemNum > index
     ));
 
@@ -104,13 +104,13 @@ const WordList = ({ minText, maxText, wordText }: UserInputType) => {
                     </TableHead>
                     <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
                         {
-                            sliceArr.map((word: WordDataType, index: number) => (
+                            sliceArr.map((word: WordDBType, index: number) => (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
                                     >
-                                        {word.id}
+                                        {word.user_word_id}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
@@ -128,25 +128,29 @@ const WordList = ({ minText, maxText, wordText }: UserInputType) => {
                                     className={notoSansJP.className}
                                     align='center'
                                     >
-                                        {`${word.questionNum} 回`}
+                                        {`${word.question_count} 回`}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
                                     >
-                                        {`${word.correctRate} %`}
+                                        {`${word.correct_rate} %`}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
                                     >
-                                        {word.date}
+                                        {
+                                            word.last_time_at === null 
+                                            ? ("未学習") 
+                                            : (new Date(word.last_time_at).toLocaleDateString())
+                                        }
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
                                     >
-                                        {word.date}
+                                        { new Date(word.created_at).toLocaleDateString() }
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))

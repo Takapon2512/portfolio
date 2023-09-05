@@ -78,6 +78,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
         created_at: new Date(),
         editing: false,
         question_register: "出題しない",
+        today_learning: false,
         complete: false,
         user_answer: "",
         right_or_wrong: false,
@@ -175,7 +176,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     };
 
     //本登録ボタンをクリックしたときの処理
-    const handletoDB = async () => {
+    const handleSendDB = async () => {
         //日付を取得
         const date = await apiClient.get("/posts/get_time");
         const now: Date = date.data;
@@ -189,6 +190,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 deleted_at: null,
                 last_time_at: null,
                 complete: false,
+                today_learning: false,
                 user_answer: "",
                 right_or_wrong: false,
                 correct_count: 0,
@@ -199,7 +201,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
             }));
     
             try {
-                await apiClient.post("/posts/db_register", dbRegisterWords);
+                await apiClient.post("/posts/db_register", { dbRegisterWords: dbRegisterWords});
     
                 setRegisterWords([]);
                 alert("登録に成功しました。");
@@ -332,7 +334,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                             <>                            
                             <Button
                             className={`${styles.home_registerButton} ${notoSansJP.className}`}
-                            onClick={handletoDB}
+                            onClick={handleSendDB}
                             >
                                 本登録
                             </Button>
