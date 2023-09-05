@@ -11,7 +11,7 @@ export type UserType = {
     password: string;
     created_at: Date;
     deleted_at: Date | null;
-}
+};
 
 export type WordDBType = {
     id: number;
@@ -29,4 +29,15 @@ export type WordDBType = {
     correct_rate: number;
     user_word_id: number;
     user_id: number;
-}
+};
+
+export type SettingType = {
+    id: number;
+    work_on_count: number;
+    icon_url: string | null;
+    time_constraint: number;
+    created_at: Date;
+    updated_at: Date | null;
+    deleted_at: Date | null;
+    user_id: number;
+};

@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { scheduleJob } from "node-schedule";
 
 //type
-import { WordDBType } from '../types/ApiTypes';
+import { WordDBType, SettingType } from '../types/ApiTypes';
 
 //utils
 import { ServerError, Created, OK } from '../utils/StatusCode';
@@ -14,8 +14,8 @@ import { normalBorder, goodBorder } from "../utils/border";
 export const postsRouter: Router = Router();
 const prisma: PrismaClient = new PrismaClient();
 
-//毎日0時0分に学習対象になっている単語の「today_learning」をfalseにする
-scheduleJob('0 0 * * *', async () => {
+//毎日23時55分に学習対象になっている単語の「today_learning」をfalseにする
+scheduleJob('55 23 * * *', async () => {
     try {
         let i = 1;
         while (true) {
@@ -53,7 +53,8 @@ scheduleJob('0 0 * * *', async () => {
                     },
                     data: {
                         correct_count: slackingJudge(word) ? 0 : word.correct_count,
-                        correct_rate: slackingJudge(word) ? 0: word.correct_rate,
+                        correct_rate: slackingJudge(word) ? 0 : word.correct_rate,
+                        question_count: slackingJudge(word) ? 0 : word.question_count,
                         today_learning: false
                     },
                 });
@@ -62,20 +63,22 @@ scheduleJob('0 0 * * *', async () => {
         };
 
         i = 1;
-        console.log("ループ抜けた");
+        console.log("ループを抜ける");
     } catch (err) {
         console.error(err);
     };
 });
 
-//毎日0時5分に学習予定の単語の「today_learning」をtrueにする
-scheduleJob('5 0 * * *', async () => {
+//毎日0時0分に学習予定の単語の「today_learning」をtrueにする
+scheduleJob('0 0 * * *', async () => {
     try {
         let i = 1;
         while (true) {
             const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: i } });
+            const setting: SettingType | null = await prisma.setting.findUnique({ where: { user_id: i } });
             //データが取れなくなったら、While文を抜ける
             if (words.length === 0) break;
+            if (setting === null) break;
 
             //単語を絞る（優先度S：未学習の単語）
             const notLearningWords: Array<WordDBType> = words.filter((word) => 
@@ -86,7 +89,7 @@ scheduleJob('5 0 * * *', async () => {
             const fewerWords: Array<WordDBType> = words.filter((word) => 
                 word.question_count >= 1 
                 && 10 > word.question_count
-            ).sort((x: WordDBType, y: WordDBType) => x.question_count - y.question_count);
+            );
 
             //単語を絞る（優先度B：分類「苦手」の単語。ただし、優先度SとAに当てはまらないようにする。）
             const weakWords: Array<WordDBType> = words.filter((word) => 
@@ -114,7 +117,7 @@ scheduleJob('5 0 * * *', async () => {
                 ...weakWords,
                 ...normalWords, 
                 ...goodWords
-            ].slice(0, 20).sort((x: WordDBType, y: WordDBType) => x.user_word_id - y.user_word_id);
+            ].sort((x, y) => x.correct_count - y.correct_count).slice(0, setting.work_on_count);
 
             filterWords.map(async (word) => {
                 return await prisma.wordData.updateMany({
@@ -132,16 +135,29 @@ scheduleJob('5 0 * * *', async () => {
         };
 
         i = 1;
-        console.log("ループ抜けた");
-
+        console.log("ループを抜ける");
     } catch (err) {
         console.error(err);
     }
 });
 
+//単語に重複があるかを調べる関数
+const hasDuplicateEnglish = (userWords: Array<WordDBType>, wordsArr: Array<WordDBType>) => {
+    const englishSet = new Set<string>(userWords.map(word => word.english));
+    const duplicates: Array<WordDBType> = wordsArr.filter(word => englishSet.has(word.english));
+
+    if (duplicates.length > 0) return true;
+    return false;
+};
+
 //単語をDBに登録するAPI
-postsRouter.post("/db_register", async (req: Request, res: Response) => {
-    const WordsArr: Array<WordDBType> = req.body;
+postsRouter.post("/db_register", isAuthenticated, async (req: Request, res: Response) => {
+    const WordsArr: Array<WordDBType> = req.body.dbRegisterWords;
+
+    //ログインしているユーザーの単語を取得する
+    const userWords = await prisma.wordData.findMany({ where: { user_id: req.body.user_id } });
+    if (!userWords) return res.status(ServerError).json({ error: "そのユーザーの単語を取得できませんでした。" });
+    if (hasDuplicateEnglish(userWords, WordsArr)) return res.status(ServerError).json({ error: "すでに登録されている単語が存在します。" });
 
     try {
         const newRegisterWords = await prisma.wordData.createMany({
@@ -167,9 +183,9 @@ postsRouter.get("/db_search", isAuthenticated, async (req: Request, res: Respons
 
 postsRouter.get("/db_search_memorize", isAuthenticated, async (req: Request, res: Response) => {
     try {
-        const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, today_learning: true } });
+        const todayWords: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, today_learning: true } });
 
-        return res.status(OK).json(words);
+        return res.status(OK).json(todayWords);
     } catch (err) {
         return res.status(ServerError).json({ error: serverErrorMsg });
     };

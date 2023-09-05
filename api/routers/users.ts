@@ -86,10 +86,15 @@ usersRouter.post("/user_upload", isAuthenticated, async (req: Request, res: Resp
 
     //新しいユーザー名があるときの処理
     if (name !== "") {
-        await prisma.user.update({
-            where: { id: req.body.user_id },
-            data: { username: name }
-        });
+        try {
+            await prisma.user.update({
+                where: { id: req.body.user_id },
+                data: { username: name }
+            });
+        } catch (err) {
+            console.error(err);
+            return res.status(ServerError).json({ message: "変更に失敗しました。" });
+        };
     };
 
     //新しいメールアドレスがあるときの処理
@@ -97,10 +102,15 @@ usersRouter.post("/user_upload", isAuthenticated, async (req: Request, res: Resp
         const responseFindEmail = await prisma.user.findUnique({ where: { email: email } });
         if (responseFindEmail) return res.status(ServerError).json({ error: "登録に失敗しました。" });
 
-        await prisma.user.update({
-            where: { id: req.body.user_id },
-            data: { email: email }
-        });
+        try {
+            await prisma.user.update({
+                where: { id: req.body.user_id },
+                data: { email: email }
+            });
+        } catch(err) {
+            console.error(err);
+            return res.status(ServerError).json({ message: "" })
+        };
     };
 
     //新しいパスワードがあるときの処理
@@ -124,6 +134,23 @@ usersRouter.post("/user_upload", isAuthenticated, async (req: Request, res: Resp
     }
 
     return res.status(OK).json({ message: "正常に反映されました。" });
+});
+
+usersRouter.post("/mode_upload", isAuthenticated, async (req: Request, res: Response) => {
+    const { num_timeLimit, num_questions }: { num_timeLimit: number, num_questions: number } = req.body;
+    //現在の時刻を取得
+    const now = new Date(Date.now());
+
+    try {
+        await prisma.setting.update({ 
+            where: { user_id: req.body.user_id },
+            data: { time_constraint: num_timeLimit, work_on_count: num_questions, updated_at: now }
+        });
+        return res.status(OK).json({ message: "正常に反映されました。" });
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ message: "変更に失敗しました。" });
+    };
 });
 
 //設定情報を取得する
