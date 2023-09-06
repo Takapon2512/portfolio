@@ -120,7 +120,7 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
             <Typography className={`${styles.home_wordRegisterTitle} ${notoSansJP.className}`}>
                 英単語を登録
             </Typography>
-            <Box className={styles.home_wordRegisterInputs} component={Paper}>
+            <Box className={styles.home_wordRegisterInputs}>
                 <Box className={styles.home_RegisterEnglish}>
                     <TextField 
                     label="英単語"

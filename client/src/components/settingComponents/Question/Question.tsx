@@ -72,13 +72,20 @@ const Question = ({ setting }: { setting: SettingType }) => {
           <Typography className={`${notoSansJP.className} ${styles.question_amountTitle}`}>
             取り組む問題数
           </Typography>
-          <TextField 
-          fullWidth
-          value={questions}
-          onChange={handleQuestions}
-          type='number'
-          label="10〜300の値を入力してください"
-          />
+          <Box sx={{ width: "100%",  }}>
+            <TextField 
+            fullWidth
+            value={questions}
+            onChange={handleQuestions}
+            type='number'
+            label="10〜300の値を入力してください"
+            />
+            <Box className={styles.question_amount_coution}>
+              <Typography className={`${notoSansJP.className} ${styles.question_amountCoutionTitle}`}>
+                ※問題数は明日以降の学習に反映されます。
+              </Typography>
+            </Box>
+          </Box>
         </Box>
         <Box className={styles.question_buttonWrapper}>
           <Button

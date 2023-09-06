@@ -1,4 +1,5 @@
 import React from 'react';
+import { GetServerSideProps } from 'next';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -18,9 +19,8 @@ type Props = {
 //Component
 import Layout from '@/components/Layout/layout';
 import TestResult from '@/components/freeComponent/TestResult/TestResult';
-import { GetServerSideProps } from 'next';
 
-//SSG
+//SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const token: string | undefined = context.req.headers.cookie?.split('=')[1];

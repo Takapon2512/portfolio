@@ -1,16 +1,11 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-
-//context
-import { useAuth } from '@/context/auth';
+import React from 'react';
+import { GetServerSideProps } from 'next';
 
 //lib
 import apiClient from '@/lib/apiClient';
 
 //MUI
-import { 
-  Box 
-} from '@mui/material';
+import { Box } from '@mui/material';
 
 //CSS
 import styles from "./index.module.scss";
@@ -18,7 +13,6 @@ import styles from "./index.module.scss";
 //Component
 import Layout from '@/components/Layout/layout';
 import WordCard from '@/components/memorizeComponents/WordCard/WordCard';
-import { GetServerSideProps } from 'next';
 
 //type
 import { WordDBType } from '@/types/globaltype';
@@ -26,7 +20,7 @@ type Props = {
   words: WordDBType[]
 }
 
-//SSG
+//SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const token: string | undefined = context.req.headers.cookie?.split('=')[1];
@@ -48,7 +42,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const Memorize = ({ words }: Props) => {
-  const router = useRouter();
 
   return (
     <Layout>

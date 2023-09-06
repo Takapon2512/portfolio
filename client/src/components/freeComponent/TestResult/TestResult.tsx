@@ -20,7 +20,6 @@ import{
 //MUIIcon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
 
 //CSS
@@ -90,30 +89,24 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
     );
     const correctWordsNum: number = correctWords.length;
 
-    //正答率を求める
-    const correctRate: number = Math.round((correctWordsNum / questionWordsNum * 10) / 10) * 100;
-
     //結果を確認した後のボタン
     const handleNextAction = async () => {
-        if (correctRate === 100) {
-            const prevWords: Array<WordDBType> = [...questionWords];
-            const finishQuestionWords: Array<WordDBType> = prevWords.map(word => (
-                {
-                    ...word,
-                    complete: false,
-                    user_answer: "",
-                    right_or_wrong: false
-                }
-            ));
+        const prevWords: Array<WordDBType> = [...questionWords];
+        const finishQuestionWords: Array<WordDBType> = prevWords.map(word => (
+            {
+                ...word,
+                complete: false,
+                user_answer: "",
+                right_or_wrong: false
+            }
+        ));
 
-            await apiClient.post("/posts/db_finish", {
-                finishQuestionWords: finishQuestionWords
-            });
+        await apiClient.post("/posts/db_finish", {
+            finishQuestionWords: finishQuestionWords
+        });
 
-            router.push("/mypage");
-        } else {
-            router.push("/mypage/free/test");
-        }
+        router.push("/mypage");
+        
     };
 
     return (
@@ -209,13 +202,9 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 className={styles.free_resultButton}
                 onClick={handleNextAction}
                 >
-                    {
-                        correctRate < 100 
-                        ? ( <QuizIcon className={styles.free_resultButtonIcon} /> ) 
-                        : ( <HomeIcon className={styles.free_resultButtonIcon} /> )
-                    }
+                    <HomeIcon className={styles.free_resultButtonIcon} /> 
                     <Typography className={notoSansJP.className}>
-                        { correctRate < 100 ? "再テストを行う" : "ホームに戻る" }
+                        ホームに戻る
                     </Typography>
                 </Button>
             </Box>

@@ -3,7 +3,7 @@ import { useRouter, NextRouter } from 'next/router';
 
 //recoil
 import { useRecoilState } from 'recoil';
-import { WordsState } from '@/store/freePageState';
+import { fleeWordsState } from '@/store/freePageState';
 
 //MUI
 import{
@@ -32,17 +32,17 @@ import { notoSansJP } from '@/utils/font';
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
 import apiClient from '@/lib/apiClient';
 
-const WordTest = () => {
+const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
   //router
   const router: NextRouter = useRouter();
   //暗記カードで出題した英単語を取得
-  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(WordsState);
+  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(fleeWordsState);
   //現在の問題番号を管理
   const [problemNum, setProblemNum] = useState<number>(1);
   //テキストフィールドの監視
   const [answerText, setAnswerText] = useState<string>("");
-  //残り時間の初期設定
-  const settingTime = 10;
+  //残り時間の設定を取得する
+  const settingTime: number = timeConstraint;
   //残り時間を管理
   const [remainTime, setRemainTime] = useState<number>(settingTime);
 
@@ -126,30 +126,18 @@ const WordTest = () => {
   };
 
   //結果を確認ボタンを押したとき
-  const handleResultToDB = async () => {
+  const confirmResult = async () => {
 
     try {
       const response = await apiClient.get("/posts/get_time");
       const responseData: Date = response.data;
 
       //型「WordDataType」を型「WordDBType」に変換する
-      const dbRequest: Array<WordDBType> = dbWords.map((word: WordDataType) => (
+      const dbRequest: Array<WordDBType> = questionWords.map((word: WordDataType) => (
         {
-          id: word.id,
-          english: word.english,
-          japanese: word.japanese,
-          created_at: word.created_at,
-          deleted_at: null,
+          ...word,
           last_time_at: responseData,
-          complete: word.complete,
-          today_learning: word.today_learning,
-          user_answer: word.user_answer,
-          right_or_wrong: word.right_or_wrong,
-          correct_count: word.correct_count,
-          question_count: word.question_count,
-          correct_rate: Math.round((word.correct_count / word.question_count * 10) / 10) * 100,
-          user_word_id: word.user_word_id,
-          user_id: word.user_id
+          correct_rate: Math.round((word.correct_count / word.question_count) * 100),
         }
       ));
 
@@ -159,7 +147,7 @@ const WordTest = () => {
 
     } catch (err) {
       console.error(err);
-    }
+    };
 
     router.push("/mypage/free/result");
   };
@@ -255,7 +243,7 @@ const WordTest = () => {
             <Box className={styles.free_toResult}>
               <Button
               className={styles.free_toResultButton}
-              onClick={handleResultToDB}
+              onClick={confirmResult}
               >
                 <TextSnippetIcon className={styles.free_toResultIcon} />
                 <Typography className={notoSansJP.className}>

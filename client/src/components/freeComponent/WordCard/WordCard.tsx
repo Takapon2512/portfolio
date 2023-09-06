@@ -3,7 +3,7 @@ import { useRouter, NextRouter } from 'next/router';
 
 //recoil
 import { useRecoilState } from 'recoil';
-import { WordsState } from '@/store/freePageState';
+import { fleeWordsState } from '@/store/freePageState';
 
 //MUI
 import {
@@ -22,7 +22,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import styles from "./WordCard.module.scss";
 
 //type
-import { WordDataType } from '@/types/globaltype';
+import { WordDataType, WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -31,8 +31,8 @@ const WordCard = () => {
   //router
   const router = useRouter();
 
-  //DB内の英単語を取得
-  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(WordsState);
+  //型変換後の英単語を管理
+  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(fleeWordsState);
 
   //英単語と日本語訳の切替を管理
   const [ejSwitch, setEJSwitch] = useState<boolean>(true);

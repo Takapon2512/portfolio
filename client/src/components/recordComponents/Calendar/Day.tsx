@@ -34,7 +34,7 @@ const Day = ({day, rowIndex}: {day: Dayjs, rowIndex: number}) => {
                     getCurrentDayStyle() 
                     ? {
                         backgroundColor: "rgb(240, 119, 49)",
-                        borderRadius: "50%",
+                        borderRadius: "12px",
                         color: "#fff"
                     } : {}
                 }
@@ -42,6 +42,11 @@ const Day = ({day, rowIndex}: {day: Dayjs, rowIndex: number}) => {
                     { day.format("DD") }
                 </Typography>
             </Box>
+            {/* <Box className={styles.calendar_memorize}>
+                <Typography className={styles.calendar_completion}>
+                    済
+                </Typography>
+            </Box> */}
         </Box>
     );
 };

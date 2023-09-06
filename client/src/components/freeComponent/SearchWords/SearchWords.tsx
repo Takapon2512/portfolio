@@ -3,7 +3,7 @@ import { useRouter, NextRouter } from 'next/router';
 
 //recoil
 import { useSetRecoilState } from 'recoil';
-import { WordsState } from '@/store/freePageState';
+import { fleeWordsState } from '@/store/freePageState';
 
 //MUI
 import { 
@@ -102,7 +102,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
         { ...word, question_register: "出題しない", editing: false }
     ));
     const [wordDataWords, setWordDataWords] = useState<WordDataType[]>([...newWordsArr]);
-    const setRecoilWords = useSetRecoilState<WordDataType[]>(WordsState);
+    const setRecoilWords = useSetRecoilState<WordDataType[]>(fleeWordsState);
 
     //単語番号で絞る
     const numWordsArr: Array<WordDataType> = wordDataWords
@@ -213,7 +213,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
             <Typography className={styles.free_searchTitle}>
                 単語を検索する
             </Typography>
-            <Box className={styles.free_searchInputs} component={Paper}>
+            <Box className={styles.free_searchInputs}>
                 <Box className={styles.free_searchNumber}>
                     <TextField
                     label="最初の単語番号"
@@ -290,9 +290,9 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 {
                     sliceArr.length !== 0 ? (                        
                         <Box className={styles.free_searchList}>
-                            <TableContainer component={Paper}>
+                            <TableContainer sx={{ borderRadius: "4px" }}>
                                 <Table>
-                                    <TableHead>
+                                    <TableHead sx={{border: "1px solid rgb(217, 217, 217)"}}>
                                         <TableRow>
                                             <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
                                             <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
@@ -301,7 +301,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                             <StyledTableCell className={notoSansJP.className} align='center'>ステータス</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
-                                    <TableBody>
+                                    <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
                                         {
                                             sliceArr.map((word: WordDataType, index: number) => (
                                                 <StyledTableRow 

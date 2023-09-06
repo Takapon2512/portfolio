@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
+//recoil
+import { useRecoilState } from 'recoil';
+import { memorizeWordsState } from '@/store/memorizePageState';
+
 //MUI
 import {
   Box,
@@ -22,6 +26,7 @@ import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
+import apiClient from '@/lib/apiClient';
 
 const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
     //router
@@ -29,6 +34,8 @@ const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
 
     //complete変更前と変更後の単語を格納する
     const [completeWords, setCompleteWords] = useState<WordDBType[]>([...todayWords]);
+    //wordTestで共有するために単語を格納
+    const [testWords, setTestWords] = useRecoilState<WordDBType[]>(memorizeWordsState);
 
     //英単語と日本語訳の切り替え
     const [ejSwitch, setEJSwitch] = useState<boolean>(true);
@@ -97,6 +104,12 @@ const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
         } else {
             setEJSwitch(!ejSwitch);
         };
+    };
+
+    const handleToTest = async () => {
+        setTestWords(completeWords);
+        await apiClient.post("/posts/db_learning", { dbRequest: completeWords });
+        router.push("/mypage/memorization/test");
     };
 
     //テストモードに遷移した後に、暗記モードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
@@ -170,7 +183,7 @@ const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
                     ) : (
                         <Button
                         className={styles.memorize_complete}
-                        onClick={() => router.push("/mypage/memorization/test")}
+                        onClick={handleToTest}
                         >
                         <QuizIcon className={styles.memorize_nextButtonsIcon} />
                         <Typography className={notoSansJP.className}>

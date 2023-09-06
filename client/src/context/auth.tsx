@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     const logout = () => {
-        document.cookie = "auth_token=";
+        document.cookie = "auth_token=; max-age=0"
         delete apiClient.defaults.headers["Authorization"];
         setUser(null);
     };

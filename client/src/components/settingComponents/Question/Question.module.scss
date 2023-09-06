@@ -46,6 +46,12 @@
         @extend .text-color;
     }
 
+    &_amountCoutionTitle {
+        font-size: 12px;
+        color: rgb(153, 153, 153);
+        letter-spacing: 0.5px;
+    }
+
     &_button {
         width: 120px;
         background-color: rgb(240, 119, 49);

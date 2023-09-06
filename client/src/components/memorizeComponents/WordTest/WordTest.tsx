@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 //recoil
 import { useRecoilState } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
+import { memorizeWordsState } from '@/store/memorizePageState';
 
 //MUI
 import{
@@ -23,20 +23,21 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import styles from "./WordTest.module.scss";
 
 //type
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
 
 //Components
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
+import apiClient from '@/lib/apiClient';
 
-const WordTest = () => {
+const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
     //router
     const router = useRouter();
 
     //本日分の英単語を取得・管理
-    const [todayWords, setTodayWords] = useRecoilState<WordDataType[]>(dbWordsState);
+    const [todayWords, setTodayWords] = useRecoilState<WordDBType[]>(memorizeWordsState);
 
     //現在の問題番号を管理
     const [problemNum, setProblemNum] = useState<number>(1);
@@ -48,7 +49,7 @@ const WordTest = () => {
     const [correctNum, setCorrectNum] = useState<number>(1);
 
     //残り時間の設定を受け取る
-    const settingTime = 10;
+    const settingTime: number = timeConstraint;
 
     //残り時間を管理
     const [remainTime, setRemainTime] = useState<number>(settingTime);
@@ -86,7 +87,6 @@ const WordTest = () => {
         if (todayWords[intNum[curretNum - 1]].japanese === answerText) {
             userAnswerSituation(answerText, true);
             setCorrectNum(prev => prev + 1);
-            localStorageStore();
         } else {
             userAnswerSituation(answerText, false);
         };
@@ -103,38 +103,67 @@ const WordTest = () => {
         setRemainTime(settingTime);
     };
 
-    //localStorageに正解数を保存
-    const localStorageStore = () => {
-        const jsonCorrectnum: string = JSON.stringify(correctNum);
-        localStorage.setItem("correct", jsonCorrectnum);
-    };
-
     //ユーザーの解答状況を記録
     const userAnswerSituation = (answer: string, rightOrWrong: boolean) => {
-        const prevArr: Array<WordDataType> = [...todayWords];
-        const prevWord: WordDataType = todayWords[intNum[problemNum - 1]];
-        const addJudge: number = rightOrWrong ? prevWord.correctAnswer + 1 : prevWord.correctAnswer;
-        const correctRate: number = Math.ceil(addJudge / (prevWord.questionNum + 1)) * 100;
+        const prevArr: Array<WordDBType> = [...todayWords];
+        const prevWord: WordDBType = todayWords[intNum[problemNum - 1]];
+        const addJudge: number = rightOrWrong ? prevWord.correct_count + 1 : prevWord.correct_count;
+        const correctRate: number = Math.ceil(addJudge / (prevWord.question_count + 1)) * 100;
 
         prevArr[intNum[problemNum - 1]] = {
             ...prevWord,
-            yourAnswer: answer,
-            rightWrong: rightOrWrong,
-            questionNum: prevWord.questionNum + 1,
-            correctAnswer: addJudge,
-            correctRate: correctRate
+            user_answer: answer,
+            right_or_wrong: rightOrWrong,
+            question_count: prevWord.question_count + 1,
+            correct_count: addJudge,
+            correct_rate: correctRate
         };
-        const newArr: Array<WordDataType> = prevArr;
+        const newArr: Array<WordDBType> = prevArr;
         setTodayWords(newArr);
     };
+    console.log(todayWords);
 
     //解答欄でEnterキーを押したとき
     const onkeyDownEnter = (key: string) => {
         if (key === "Enter" && composing === false) handleAnswer();
     };
 
-    //結果を確認
-    const confirmResult = () =>  router.push("/mypage/memorization/result");
+    //「結果を確認」ボタンを押したとき
+    const confirmResult = async () => {
+        try {
+            const response = await apiClient.get("/posts/get_time");
+            const responseData: Date = response.data;
+
+            //型「WordDataType」を型「WordDBType」に変換する
+            const dbRequest: Array<WordDBType> = todayWords.map((word: WordDBType) => (
+                {
+                id: word.id,
+                english: word.english,
+                japanese: word.japanese,
+                created_at: word.created_at,
+                deleted_at: null,
+                last_time_at: responseData,
+                complete: word.complete,
+                today_learning: word.today_learning,
+                user_answer: word.user_answer,
+                right_or_wrong: word.right_or_wrong,
+                correct_count: word.correct_count,
+                question_count: word.question_count,
+                correct_rate: Math.round((word.correct_count / word.question_count) * 100),
+                user_word_id: word.user_word_id,
+                user_id: word.user_id
+                }
+            ));
+
+            await apiClient.post("/posts/db_learning", {
+                dbRequest: dbRequest
+            });
+        } catch(err) {
+            console.error(err);
+        };
+
+        router.push("/mypage/memorization/result");
+    };
 
     useEffect(() => {
         //次の問題に遷移し、解答状況を反映する
@@ -149,6 +178,13 @@ const WordTest = () => {
           };
         };
     }, [remainTime]);
+
+    useEffect(() => {
+        if (todayWords.length === 0) {
+            alert("進行状況がリセットされたため、暗記カードからやり直しです。");
+            router.push("/mypage/memorization");
+        };
+    }, []);
 
     return (
         <Box className={styles.memorize_firstContents}>

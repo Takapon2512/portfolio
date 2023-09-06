@@ -54,7 +54,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
-    console.log(dbWords);
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1)
     //フィルタリング後の配列を格納
@@ -89,9 +88,9 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 dbWords.length > 0 ? (
                     <>
                     <Box className={styles.home_todayWordList}>
-                        <TableContainer component={Paper}>
+                        <TableContainer sx={{ borderRadius: "4px" }}>
                             <Table>
-                                <TableHead>
+                                <TableHead sx={{border: "1px solid rgb(240, 119, 49)"}}>
                                     <TableRow>
                                         <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
                                         <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
@@ -99,7 +98,7 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                         <StyledTableCell className={notoSansJP.className} align='center'>前回学習日</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>
+                                <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
                                     {
                                         splitWords.map((word, index) => (
                                             <StyledTableRow key={index}>

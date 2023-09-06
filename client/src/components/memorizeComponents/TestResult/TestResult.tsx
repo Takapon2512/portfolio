@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
-//recoil
-import { useRecoilValue } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
+//lib
+import apiClient from '@/lib/apiClient';
 
 //MUI
 import{
@@ -23,14 +22,13 @@ import{
 //MUIIcon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
 
 //CSS
 import styles from "./TestResult.module.scss";
 
 //Types
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -63,20 +61,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
-const TestResult = () => {
+const TestResult = ({ todayWords }: { todayWords: WordDBType[] }) => {
     //router
     const router: NextRouter = useRouter();
 
-    //出題した問題を取得
-    const todayWords = useRecoilValue<WordDataType[]>(dbWordsState);
-    const todayWordsNum: number = todayWords.length;
+    //問題の数を求める
+    const questionWords: Array<WordDBType> = 
+    todayWords.filter((word: WordDBType) => word.complete === true);
+    const questionWordsNum: number = questionWords.length;
 
     //正解した単語のみを取り出す
-    const correctWords: Array<WordDataType> = todayWords.filter((word) => word.rightWrong === true);
+    const correctWords: Array<WordDBType> = todayWords.filter((word) => word.right_or_wrong === true);
     const correctWordsNum: number = correctWords.length;
-
-    //正答率を算出
-    const correctsRate: number = Math.ceil(correctWordsNum / todayWordsNum * 100);
 
     //現在のページを管理
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -85,14 +81,36 @@ const TestResult = () => {
     const perPageItemNum = 10;
 
     //最終ページの番号を求める
-    const lastPage: number = Math.ceil(todayWordsNum / perPageItemNum);
+    const lastPage: number = Math.ceil(questionWordsNum / perPageItemNum);
 
-    //1ページに表示する単語数を制限する
-    const sliceArr: Array<WordDataType> = todayWords.filter((word, index) => (
+    //1ページに表示する単語数を10個に制限する
+    const sliceArr: Array<WordDBType> = todayWords.filter((word, index) => (
         index >= perPageItemNum * (currentPage - 1)
         && perPageItemNum * currentPage > index
     ));
     console.log(sliceArr);
+
+    //正答率を求める
+    const correctRate: number = Math.round((correctWordsNum / questionWordsNum * 10) / 10) * 100;
+
+    //結果を確認した後のボタン
+    const handleNextAction = async () => {
+        const prevWords: Array<WordDBType> = [...questionWords];
+        const finishQuestionWords: Array<WordDBType> = prevWords.map(word => (
+            {
+                ...word,
+                complete: false,
+                user_answer: "",
+                right_or_wrong: false
+            }
+        ));
+
+        await apiClient.post("/posts/db_finish", {
+            finishQuestionWords: finishQuestionWords
+        });
+
+        router.push("/mypage");
+    };
 
     return (
         <Box className={styles.memorize_firstContents}>
@@ -104,7 +122,7 @@ const TestResult = () => {
                     あなたの正答率は...
                 </Typography>
                 <Box className={styles.memorize_resultDisplayContainer}>
-                    <CircularResultLabel correct={correctWordsNum} questionNum={todayWordsNum} />
+                    <CircularResultLabel correct={correctWordsNum} questionNum={questionWordsNum} />
                 </Box>
                 <Box className={styles.memorize_resultDetail}>
                     <TableContainer component={Paper}>
@@ -146,17 +164,17 @@ const TestResult = () => {
                                             className={notoSansJP.className}
                                             align='center'
                                             >
-                                                {word.yourAnswer}
+                                                {word.user_answer}
                                             </StyledTableCell>
                                             <StyledTableCell
                                             className={notoSansJP.className}
                                             align='center'
                                             sx={
-                                                word.rightWrong ? 
+                                                word.right_or_wrong ? 
                                                 { color: "rgb(48, 48, 48)"} : { color: "rgb(236, 75, 18)"}
                                             }
                                             >
-                                                {word.rightWrong ? "正解" : "誤答"}
+                                                {word.right_or_wrong ? "正解" : "誤答"}
                                             </StyledTableCell>
                                         </StyledTableRow>
                                     ))
@@ -185,15 +203,11 @@ const TestResult = () => {
             <Box className={styles.memorize_resultButtonWrapper}>
                 <Button 
                 className={styles.memorize_resultButton}
-                onClick={() => correctsRate < 100 ? (router.push("/mypage/memorization/test")) : (router.push("/mypage")) }
+                onClick={handleNextAction}
                 >
-                    {
-                        correctsRate < 100 
-                        ? ( <QuizIcon className={styles.memorize_resultButtonIcon} /> ) 
-                        : ( <HomeIcon className={styles.memorize_resultButtonIcon} /> )
-                    }
+                <HomeIcon className={styles.memorize_resultButtonIcon} />
                     <Typography className={notoSansJP.className}>
-                        { correctsRate < 100 ? "再テストを行う" : "ホームに戻る" }
+                        ホームに戻る
                     </Typography>
                 </Button>
             </Box>

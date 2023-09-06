@@ -4,6 +4,7 @@ import {
     CircularProgressProps,
     Box,
     Typography,
+    circularProgressClasses
 } from '@mui/material';
 
 import { notoSansJP } from '@/utils/font';
@@ -13,7 +14,28 @@ const CirculerProgressWithLabel = (
 ) => {
     return (
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <CircularProgress variant="determinate" size={48} thickness={5.0} {...props} />
+            <CircularProgress 
+            variant='determinate'
+            size={48} 
+            thickness={5.0}
+            value={100}
+            sx={{
+                color: (theme) =>
+                    theme.palette.grey[300]
+            }}
+            />
+            <CircularProgress 
+            variant="determinate" 
+            size={48} 
+            thickness={5.0} 
+            sx={{
+                position: "absolute",
+                left: "0",
+                [`& .${circularProgressClasses.circle}`]: {
+                    strokeLinecap: 'round',
+                },
+            }}
+            {...props} />
             <Box
             sx={{
                 top: 0,

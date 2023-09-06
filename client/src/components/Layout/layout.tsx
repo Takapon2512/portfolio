@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
+//lib
+import apiClient from '@/lib/apiClient';
+
 //context
 import { useAuth } from '@/context/auth';
 
@@ -81,9 +84,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         return false;
     };
 
-    const handleAction = (value: SidebarType) => {
+    const handleAction = async (value: SidebarType) => {
+        //ユーザーがテスト画面や満点でないまま結果画面を離れたときに対処する処理
+        await apiClient.post("/posts/db_reset");
+
         if (value.link === "/login") logout();
-        router.push(value.link)
+        router.push(value.link);
     };
 
     useEffect(() => {
