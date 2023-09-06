@@ -280,3 +280,22 @@ postsRouter.post("/db_finish", async (req: Request, res: Response) => {
         return res.status(ServerError).json({ error: serverErrorMsg });
     };
 });
+
+//学習を中断した単語の状態をリセットするAPI
+postsRouter.post("/db_reset", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+        await prisma.wordData.updateMany({
+            where: { user_id: req.body.user_id, complete: true },
+            data: { 
+                complete: false,
+                user_answer: "",
+                right_or_wrong: false
+            }
+        });
+
+        return res.status(OK).json({ message: "初期化が完了しました" });
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+});
