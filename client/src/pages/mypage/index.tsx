@@ -8,7 +8,7 @@ import { useAuth } from '@/context/auth';
 import apiClient from '@/lib/apiClient';
 
 //MUI
-import { Box } from '@mui/material';
+import { Box, createTheme } from '@mui/material';
 
 //CSS
 import styles from './index.module.scss';
@@ -60,11 +60,28 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const Mypage = ({ words, todayWords }: Props) => {
+  createTheme({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 768,
+            lg: 1025,
+            xl: 1536
+        }
+    }
+});
+
 
   return (
       <>
       <Layout>
-          <Box className={styles.home}>
+          <Box 
+          className={styles.home}
+          sx={{
+            width: { xs: "100vw", md: "calc(100vw - 248px)" }
+          }}
+          >
               <Box className={styles.home_container}>
                   <WordRegisterInput dbWords={words}/>
                   <RegisterList dbWords={words} />

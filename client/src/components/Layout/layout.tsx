@@ -13,7 +13,8 @@ import {
     Box,
     Typography,
     List,
-    ListItem
+    ListItem,
+    Button
 } from '@mui/material';
 
 //Icon
@@ -23,6 +24,8 @@ import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfast';
 import AlbumIcon from '@mui/icons-material/Album';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 //Font
 import { notoSansJP } from '../../utils/font';
@@ -36,8 +39,8 @@ import { ResUserType, SidebarType } from '@/types/globaltype';
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const { user, logout } = useAuth();
-
-    const [userData, setUserData] = useState<ResUserType | null>(null)
+    const [userData, setUserData] = useState<ResUserType | null>(null);
+    const [sideOn, setSideOn] = useState<boolean>(false);
 
     const sidebarArr: Array<SidebarType> = [
         {
@@ -96,12 +99,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         setUserData(user);
     }, [user]);
 
+    console.log(sideOn);
+
     return (
-        <Box className={styles.layout}>
-            <Box className={styles.layout_container}>
-                    <Box className={styles.layout_sidebar}>
+        <Box 
+        className={styles.layout}
+        >
+            <Box 
+            className={styles.layout_container}
+            >
+                    <Box 
+                    className={styles.layout_sidebar}
+                    sx={{
+                        translate: { xs: sideOn ? "-168px" : "0px", md: "0px"},
+                        position: { xs: "absolute", md: "static" },
+                        width: { xs: "168px", md: "248px" }
+                    }}
+                    >
                         <Box className={styles.layout_imageWrapper}>
                             <Image 
+                            //Imageタグのレスポンシブはscssファイルに記入
                             className={styles.layout_image}
                             src={`/images/${'noImage.png'}`}
                             width={104}
@@ -110,7 +127,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             />
                         </Box>
                         <Box className={styles.layout_userWrapper}>
-                            <Typography className={`${styles.layout_user} ${notoSansJP.className}`}>
+                            <Typography 
+                            className={`${styles.layout_user} ${notoSansJP.className}`}
+                            //続きはここから
+                            >
                                 { userData ? userData.username + "さん" : "名無し さん" }
                             </Typography>
                         </Box>
@@ -141,9 +161,28 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         </List>
                     </Box>
                 { children }
+                <Box
+                sx={{
+                    position: "absolute",
+                    display: { xs: "block", md: "none" },
+                    right: 24,
+                    bottom: 24
+                }}
+                >
+                    <Button 
+                    className={styles.layout_sidebarControl}
+                    onClick={() => setSideOn(!sideOn)}
+                    >
+                        {
+                            sideOn 
+                            ? <MenuIcon className={styles.layout_sidebarControlIcon} /> 
+                            : <CloseIcon className={styles.layout_sidebarControlIcon} />
+                        }
+                    </Button>
+                </Box>
             </Box>
         </Box>
-    )
-}
+    );
+};
 
 export default Layout;

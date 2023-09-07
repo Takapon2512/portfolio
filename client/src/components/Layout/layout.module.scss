@@ -27,10 +27,11 @@
     }
 
     &_sidebar {
-        width: 248px;
         background-color: rgb(240, 119, 49);
         min-height: 100vh;
         padding: 40px 0;
+        z-index: 10;
+        transition: all 0.2s ease;
     }
     
     &_sidebarList {
@@ -89,6 +90,11 @@
 
     &_image {
         border-radius: 50%;
+
+        @media screen and (max-width: 900px) {
+            width: 64px;
+            height: 64px;
+        }
     }
 
     &_userWrapper {
@@ -100,5 +106,21 @@
         font-weight: 600;
         @extend .text-color;
         @extend .font-m;
+    }
+
+    &_sidebarControl {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background-color: rgb(240, 119, 49);
+
+        &Icon {
+            color: #fff;
+            @extend .font-l;
+        }
+
+        &:hover {
+            background-color: rgb(240, 119, 49);
+        }
     }
 }

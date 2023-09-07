@@ -80,6 +80,10 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
     } else {
       userAnswerSituation(answerText, false);
     }
+
+    //正誤判定(スマホやタブレットのとき)
+
+
     setProblemNum(currentNum + 1);
     setRemainTime(settingTime);
     setAnswerText("");
