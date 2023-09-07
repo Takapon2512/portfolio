@@ -299,3 +299,5 @@ postsRouter.post("/db_reset", isAuthenticated, async (req: Request, res: Respons
         return res.status(ServerError).json({ error: serverErrorMsg });
     };
 });
+
+//解答4つを取得するAPI
