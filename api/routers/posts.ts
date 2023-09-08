@@ -300,4 +300,24 @@ postsRouter.post("/db_reset", isAuthenticated, async (req: Request, res: Respons
     };
 });
 
-//解答4つを取得するAPI
+//解答4つを取得するAPI（暗記モード用）
+postsRouter.get("/db_sp_memorize_answer", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+        const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, today_learning: true } });
+        
+        //問題番号の配列を作成
+        const wordsIdArr: Array<number> = words.map((word) => word.user_word_id);
+        
+        //配列番号をシャッフルする
+        wordsIdArr.forEach((_, index: number) => {
+            let randomNum: number = Math.floor(Math.random() * (index + 1));
+           [wordsIdArr[index], wordsIdArr[randomNum]] = [wordsIdArr[randomNum], wordsIdArr[index]]; 
+        });
+
+        return res.status(OK).json(wordsIdArr);
+
+    } catch(err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    }
+});

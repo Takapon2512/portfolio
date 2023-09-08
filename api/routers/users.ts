@@ -152,11 +152,3 @@ usersRouter.post("/mode_upload", isAuthenticated, async (req: Request, res: Resp
         return res.status(ServerError).json({ message: "変更に失敗しました。" });
     };
 });
-
-//設定情報を取得する
-usersRouter.get("/setting_find", isAuthenticated, async (req: Request, res: Response) => {
-    const settingData = await prisma.setting.findUnique({ where: { id: req.body.user_id } });
-    if (!settingData) return res.status(ServerError).json({ error: "設定情報を取得できませんでした。" });
-
-    return res.status(OK).json(settingData);
-});
