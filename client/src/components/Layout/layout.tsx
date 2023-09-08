@@ -45,37 +45,37 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const sidebarArr: Array<SidebarType> = [
         {
             title: "ホーム",
-            icon: <HomeIcon />,
+            icon: <HomeIcon sx={{ fontSize: { xs: "20px", md: "28px" }}} />,
             link: "/mypage",
             active: false
         },
         {
             title: "暗記モード",
-            icon: <ViewListIcon />,
+            icon: <ViewListIcon sx={{ fontSize: { xs: "20px", md: "28px" }}} />,
             link: "/mypage/memorization",
             active: false
         },
         {
             title: "フリーモード",
-            icon: <FreeBreakfastIcon />,
+            icon: <FreeBreakfastIcon  sx={{ fontSize: { xs: "20px", md: "28px" }}} />,
             link: "/mypage/free",
             active: false
         },
         {
             title: "記録",
-            icon: <AlbumIcon />,
+            icon: <AlbumIcon  sx={{ fontSize: { xs: "20px", md: "28px" }}} />,
             link: "/mypage/record",
             active: false
         },
         {
             title: "設定",
-            icon: <SettingsIcon />,
+            icon: <SettingsIcon  sx={{ fontSize: { xs: "20px", md: "28px" }}} />,
             link: "/mypage/setting",
             active: false
         },
         {
             title: 'ログアウト',
-            icon: <LogoutIcon />,
+            icon: <LogoutIcon  sx={{ fontSize: { xs: "20px", md: "28px" }}} />,
             link: '/login',
             active: false
         }
@@ -99,8 +99,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         setUserData(user);
     }, [user]);
 
-    console.log(sideOn);
-
     return (
         <Box 
         className={styles.layout}
@@ -111,9 +109,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <Box 
                     className={styles.layout_sidebar}
                     sx={{
-                        translate: { xs: sideOn ? "-168px" : "0px", md: "0px"},
+                        translate: { xs: !sideOn ? "-176px" : "0px", md: "0px"},
                         position: { xs: "absolute", md: "static" },
-                        width: { xs: "168px", md: "248px" }
+                        width: { xs: "176px", md: "248px" }
                     }}
                     >
                         <Box className={styles.layout_imageWrapper}>
@@ -129,12 +127,19 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         <Box className={styles.layout_userWrapper}>
                             <Typography 
                             className={`${styles.layout_user} ${notoSansJP.className}`}
-                            //続きはここから
+                            sx={{ 
+                                fontSize: { xs: "16px", md: "18px" }
+                            }}
                             >
                                 { userData ? userData.username + "さん" : "名無し さん" }
                             </Typography>
                         </Box>
-                        <List className={styles.layout_sidebarList}>
+                        <List 
+                        className={styles.layout_sidebarList}
+                        sx={{
+                            fontSize: { xs: "14px", md: "16px" }
+                        }}
+                        >
                             {
                                 sidebarArr.map((value: SidebarType, key: number) => 
                                     (
@@ -148,7 +153,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                             { backgroundColor: 'rgb(233, 139, 85)' } : { backgroundColor: 'rgb(240, 119, 49)' }
                                         }
                                         >
-                                            <Box className={styles.layout_sidebarIcon}>
+                                            <Box 
+                                            className={styles.layout_sidebarIcon}
+                                            >
                                                 {value.icon}
                                             </Box>
                                             <Box className={`${styles.layout_sidebarTitle} ${notoSansJP.className}`}>
@@ -163,7 +170,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 { children }
                 <Box
                 sx={{
-                    position: "absolute",
+                    position: "fixed",
                     display: { xs: "block", md: "none" },
                     right: 24,
                     bottom: 24
@@ -174,7 +181,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     onClick={() => setSideOn(!sideOn)}
                     >
                         {
-                            sideOn 
+                            !sideOn 
                             ? <MenuIcon className={styles.layout_sidebarControlIcon} /> 
                             : <CloseIcon className={styles.layout_sidebarControlIcon} />
                         }

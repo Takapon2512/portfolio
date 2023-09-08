@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 //recoil
@@ -11,7 +11,9 @@ import{
     Typography,
     Button,
     Paper,
-    TextField
+    TextField,
+    List,
+    ListItem
 } from "@mui/material";
 
 //MUIIcon
@@ -27,17 +29,19 @@ import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
+import { dummyWords } from '@/utils/words';
 
 //Components
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
 import apiClient from '@/lib/apiClient';
 
-const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
+const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, targetWords: WordDBType[] }) => {
     //router
     const router = useRouter();
 
     //本日分の英単語を取得・管理
     const [todayWords, setTodayWords] = useRecoilState<WordDBType[]>(memorizeWordsState);
+    const dummyArr: Array<WordDBType> = dummyWords;
 
     //現在の問題番号を管理
     const [problemNum, setProblemNum] = useState<number>(1);
@@ -66,11 +70,12 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
         intNumArr[index] = intNumArr[randomNum];
         intNumArr[randomNum] = tmpNum;
     });
-
+    console.log(intNumArr);
     const [intNum, setIntNum] = useState<number[]>(intNumArr);
 
     //画面に問題文を表示する
     const englishDisplay = () => {
+        if (todayWords.length === 0) return "";
         if (problemNum > todayWords.length) return "お疲れ様でした";
         return todayWords[intNum[problemNum - 1]].english;
     };
@@ -121,7 +126,6 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
         const newArr: Array<WordDBType> = prevArr;
         setTodayWords(newArr);
     };
-    console.log(todayWords);
 
     //解答欄でEnterキーを押したとき
     const onkeyDownEnter = (key: string) => {
@@ -165,35 +169,56 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
         router.push("/mypage/memorization/result");
     };
 
-    useEffect(() => {
-        //次の問題に遷移し、解答状況を反映する
-        if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
+    
+    let choiceArr: Array<WordDBType> = [];
+    
+    // //0~3の数字配列を作成し、シャッフル
+    let randomArr: Array<number> = [...Array(4)].map((_, i) => i);
+    randomArr.forEach((_, index: number) => {
+        const randomNum: number = Math.floor(Math.random() * (index + 1));
+        [randomArr[index], randomArr[randomNum]] = [randomArr[randomNum], randomArr[index]];
+    });
+    
+    for (let i = 0; i < randomArr.length; i++) {
+        let word: WordDBType = todayWords[intNum[(problemNum - 1) + randomArr[i]]];
+        choiceArr.push(word);
+    };
 
-        if (problemNum < todayWords.length + 1) {
-          const timer: NodeJS.Timer = setInterval(() => {
-            setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
-          }, 1000);
-          return () => {
-            clearInterval(timer);
-          };
-        };
-    }, [remainTime]);
-
     useEffect(() => {
-        if (todayWords.length === 0) {
-            alert("進行状況がリセットされたため、暗記カードからやり直しです。");
-            router.push("/mypage/memorization");
-        };
+        if (todayWords.length === 0) router.push("/mypage");
     }, []);
+
+    // useEffect(() => {
+    //     //次の問題に遷移し、解答状況を反映する
+    //     if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
+
+    //     if (problemNum < todayWords.length + 1) {
+    //       const timer: NodeJS.Timer = setInterval(() => {
+    //         setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
+    //       }, 1000);
+    //       return () => {
+    //         clearInterval(timer);
+    //       };
+    //     };
+    // }, [remainTime]);
 
     return (
         <Box className={styles.memorize_firstContents}>
-            <Typography className={`${notoSansJP.className} ${styles.memorize_testTitle}`}>
+            <Typography 
+            className={`${notoSansJP.className} ${styles.memorize_testTitle}`}
+            sx={{ fontSize: { xs: "18px", md: "20px" } }}
+            >
                 確認テスト
             </Typography>
             {
                 problemNum <= todayWords.length ? (
-                    <Typography className={notoSansJP.className} sx={{marginBottom: 1}}>
+                    <Typography 
+                    className={notoSansJP.className} 
+                    sx={{
+                        marginBottom: 1,
+                        fontSize: { xs: "14px", md: "16px" }
+                    }}
+                    >
                         次の英単語の日本語訳を答えよ。
                     </Typography>
                 ) : (<></>)
@@ -201,16 +226,36 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
             <Paper
             className={styles.memorize_questionDisplay}
             >
-                <Box className={styles.memorize_questionDisplayContainer}>
-                    <Typography className={`${notoSansJP.className} ${styles.memorize_questionWord}`}>
+                <Box 
+                className={styles.memorize_questionDisplayContainer}
+                sx={{
+                    height: { xs: "200px", md: "400px" }
+                }}
+                >
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.memorize_questionWord}`}
+                    sx={{ 
+                        fontSize: { xs: "48px", md: "78px" },
+                        paddingBottom: { xs: "16px", md: "36px" }
+                    }}
+                    >
                         { englishDisplay() }
                     </Typography>
                 </Box>
                 {
                     problemNum <= todayWords.length ? (
                         <>
-                        <Box className={styles.memorize_questionCount}>
-                            <Typography className={`${notoSansJP.className} ${styles.memorize_questionCountText}`}>
+                        <Box 
+                        className={styles.memorize_questionCount}
+                        sx={{
+                            width: { xs: "72px", md: "80px" },
+                            height: { xs: "24px", md: "32px" }
+                        }}
+                        >
+                            <Typography 
+                            className={`${notoSansJP.className} ${styles.memorize_questionCountText}`}
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
                                 {problemNum} / {todayWords.length}
                             </Typography>
                         </Box>
@@ -223,7 +268,10 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
             </Paper>
             {
                 problemNum <= todayWords.length ? (
-                    <Box className={styles.memorize_answerInput}>
+                    <Box 
+                    className={styles.memorize_answerInput}
+                    sx={{ display: { xs: "none", md: "block" } }}
+                    >
                         <TextField 
                         label="解答欄（入力後、Enterキーを押下しても解答できます）"
                         fullWidth
@@ -263,12 +311,28 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
                         >
                             <TextSnippetIcon className={styles.memorize_toResultIcon} />
                             <Typography className={notoSansJP.className}>
-                            結果を確認
+                                結果を確認
                             </Typography>
                         </Button>
                     </Box>
                 )
             }
+            <Box 
+            //スマホ・タブレット用の解答欄
+            className={styles.memorize_answers}
+            sx={{ display: { xs: "display", md: "none" } }}
+            >
+                <List>
+                    {
+                    choiceArr.map((word, index) => (
+                        <ListItem key={index}>
+                            { word ? word.japanese : "" }
+                        </ListItem>
+                    ))                        
+                    }
+                </List>
+            </Box>
+
         </Box>
     );
 };

@@ -33,12 +33,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: 'rgb(240, 119, 49)',
         color: theme.palette.common.white,
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     }
@@ -81,7 +79,10 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     return (
         <Box className={styles.home_thirdContents}>
-            <Typography className={`${styles.home_wordListTitle} ${notoSansJP.className}`}>
+            <Typography 
+            className={`${styles.home_wordListTitle} ${notoSansJP.className}`}
+            sx={{ fontSize: { xs: "18px", md: "20px" } }}
+            >
                 本日の英単語一覧
             </Typography>
             {
@@ -89,13 +90,33 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     <>
                     <Box className={styles.home_todayWordList}>
                         <TableContainer sx={{ borderRadius: "4px" }}>
-                            <Table>
+                            <Table sx={{ minWidth: "720px" }}>
                                 <TableHead sx={{border: "1px solid rgb(240, 119, 49)"}}>
                                     <TableRow>
-                                        <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
-                                        <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
-                                        <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
-                                        <StyledTableCell className={notoSansJP.className} align='center'>前回学習日</StyledTableCell>
+                                        <StyledTableCell 
+                                        className={notoSansJP.className} align='center'
+                                        sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                        >
+                                            単語番号
+                                        </StyledTableCell>
+                                        <StyledTableCell 
+                                        className={notoSansJP.className} align='center'
+                                        sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                        >
+                                            英単語
+                                        </StyledTableCell>
+                                        <StyledTableCell 
+                                        className={notoSansJP.className} align='center'
+                                        sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                        >
+                                            日本語訳
+                                        </StyledTableCell>
+                                        <StyledTableCell 
+                                        className={notoSansJP.className} align='center'
+                                        sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                        >
+                                            前回学習日
+                                        </StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
@@ -105,24 +126,28 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                                 <StyledTableCell
                                                 align='center'
                                                 className={notoSansJP.className}
+                                                sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                                 >
                                                     {word.user_word_id}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                 align='center'
                                                 className={notoSansJP.className}
+                                                sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                                 >
                                                     {word.english}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                 align='center'
                                                 className={notoSansJP.className}
+                                                sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                                 >
                                                     {word.japanese}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                 align='center'
                                                 className={notoSansJP.className}
+                                                sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                                 >
                                                     {
                                                         word.last_time_at === null 

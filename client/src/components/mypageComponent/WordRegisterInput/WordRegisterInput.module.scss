@@ -28,12 +28,10 @@
         font-weight: 600;
         letter-spacing: 1px;
         margin-bottom: 16px;
-        @extend .font-l;
         @extend .text-color;
     }
 
     &_wordRegisterInputs {
-        padding: 24px 32px;
         background-color: rgb(255, 255, 255);
         border-radius: 8px;
     }
@@ -44,14 +42,34 @@
 
     &_RegisterEnglish {
         margin-bottom: 16px;
+
+        @media screen and (max-width: 900px) {            
+            & input {
+                padding: 12px 14px;
+            }
+
+            & label {
+                top: -3px;
+            }
+        }
+
     }
 
     &_RegisterJapanese {
         margin-bottom: 24px;
+
+        @media screen and (max-width: 900px) {            
+            & input {
+                padding: 12px 14px;
+            }
+
+            & label {
+                top: -3px;
+            }
+        }
     }
 
     &_wordRegister {
-        width: 160px;
         background-color: rgb(240, 119, 49);
         color: rgb(255, 255, 255);
 

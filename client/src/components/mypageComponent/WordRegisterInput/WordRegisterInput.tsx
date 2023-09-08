@@ -117,12 +117,19 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     return (
         <Box className={styles.home_firstContents}>
-            <Typography className={`${styles.home_wordRegisterTitle} ${notoSansJP.className}`}>
+            <Typography 
+            className={`${styles.home_wordRegisterTitle} ${notoSansJP.className}`}
+            sx={{ fontSize: { xs: "18px", md: "20px" } }}
+            >
                 英単語を登録
             </Typography>
-            <Box className={styles.home_wordRegisterInputs}>
+            <Box 
+            className={styles.home_wordRegisterInputs}
+            sx={{ padding: { xs: "16px 24px" } }}
+            >
                 <Box className={styles.home_RegisterEnglish}>
                     <TextField 
+                    //レスポンシブ対応はscssファイルに記入(43)
                     label="英単語"
                     required
                     className={notoSansJP.className}
@@ -136,6 +143,7 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 </Box>
                 <Box className={styles.home_RegisterJapanese}>
                     <TextField 
+                    //レスポンシブ対応はscssファイルに記入(58)
                     label="日本語訳"
                     required
                     className={notoSansJP.className}
@@ -150,9 +158,9 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 <Box className={styles.home_wordRegisterWrapper}>
                     <Button
                     className={`${styles.home_wordRegister} ${notoSansJP.className}`}
+                    sx={{ fontSize: { xs: "12px", md: "14px" }, width: { xs: "140px", md: "160px" } }}
                     onClick={handleWordsAdd}
-                    disabled=
-                    { 
+                    disabled={ 
                         remain === 0 || 
                         engField.length === 0 || 
                         japField.length === 0 ||

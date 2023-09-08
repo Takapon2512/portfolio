@@ -20,7 +20,7 @@ import WordTest from '@/components/freeComponent/WordTest/WordTest';
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const token: string | undefined = context.req.headers.cookie?.split("=")[1];
-    const response = await apiClient.get("/users/setting_find", {
+    const response = await apiClient.get("/users/find_setting", {
       headers: {
         Authorization: `Bearer ${token}`
       }
