@@ -24,16 +24,6 @@ interface UserInfoType extends LoginType {
 export const usersRouter: Router = Router();
 const prisma: PrismaClient = new PrismaClient();
 
-const storage: StorageEngine = diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    },
-});
-const upload: Multer = multer({ storage });
-
 //ユーザーを検索するAPI
 usersRouter.get("/find", isAuthenticated, async (req: Request, res: Response) => {
     try {
@@ -43,7 +33,7 @@ usersRouter.get("/find", isAuthenticated, async (req: Request, res: Response) =>
 
         return res.status(OK).json({ user: { id: user?.id, email: user?.email, username: user?.username } });
     } catch (err) {
-        return res.status(ServerError).json({ message: "サーバーエラーです。" });
+        return res.status(ServerError).json({ message: serverErrorMsg });
     }
 });
 
@@ -56,28 +46,8 @@ usersRouter.get("/find_setting", isAuthenticated, async (req: Request, res: Resp
 
         return res.status(OK).json(userSetting);
     } catch (err) {
-        return res.status(ServerError).json({ message: "サーバーエラーです。" });
+        return res.status(ServerError).json({ message: serverErrorMsg });
     }
-});
-
-//プロフィールをアップロードするAPI
-usersRouter.post("/profile_upload", [upload.single("profile_icon"), isAuthenticated], async (req: Request, res: Response) => {
-
-    try {
-        const user: UserInfoType | null = await prisma.user.findUnique({ where: { id: req.body.user_id } });
-        if (!user) return res.status(NotFound).json({ message: "ユーザーが見つかりませんでした。" });
-
-        const uploadUrl = await prisma.setting.update({
-            where: { user_id: req.body.user_id },
-            data: { icon_url: req.file?.originalname }
-        });
-
-        return res.status(OK).json({uploadUrl});
-        
-    } catch (err) {
-        console.error(err);
-        return res.status(ServerError).json({ error: serverErrorMsg });
-    };
 });
 
 //ユーザー情報をDBにアップロードするAPI
@@ -109,7 +79,7 @@ usersRouter.post("/user_upload", isAuthenticated, async (req: Request, res: Resp
             });
         } catch(err) {
             console.error(err);
-            return res.status(ServerError).json({ message: "" })
+            return res.status(ServerError).json({ message: serverErrorMsg })
         };
     };
 
