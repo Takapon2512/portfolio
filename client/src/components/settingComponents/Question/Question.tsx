@@ -82,7 +82,7 @@ const Question = ({ setting }: { setting: SettingType }) => {
             />
             <Box className={styles.question_amount_coution}>
               <Typography className={`${notoSansJP.className} ${styles.question_amountCoutionTitle}`}>
-                ※問題数は明日以降の学習に反映されます。
+                ※ここで変更した問題数は明日以降の学習に反映されます。
               </Typography>
             </Box>
           </Box>

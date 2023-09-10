@@ -51,7 +51,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Test = ({ timeConstraint, words }: { timeConstraint: number, words: WordDBType[] }) => {
   return (
     <Layout>
-        <Box className={styles.memorize}>
+        <Box 
+        className={styles.memorize}>
             <Box className={styles.memorize_container}>
                 <WordTest timeConstraint={timeConstraint} targetWords={words} />
             </Box>

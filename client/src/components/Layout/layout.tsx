@@ -106,67 +106,67 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Box 
             className={styles.layout_container}
             >
-                    <Box 
-                    className={styles.layout_sidebar}
-                    sx={{
-                        translate: { xs: !sideOn ? "-176px" : "0px", md: "0px"},
-                        position: { xs: "absolute", md: "static" },
-                        width: { xs: "176px", md: "248px" }
-                    }}
-                    >
-                        <Box className={styles.layout_imageWrapper}>
-                            <Image 
-                            //Imageタグのレスポンシブはscssファイルに記入
-                            className={styles.layout_image}
-                            src={`/images/${'noImage.png'}`}
-                            width={104}
-                            height={104}
-                            alt='ユーザー画像'
-                            />
-                        </Box>
-                        <Box className={styles.layout_userWrapper}>
-                            <Typography 
-                            className={`${styles.layout_user} ${notoSansJP.className}`}
-                            sx={{ 
-                                fontSize: { xs: "16px", md: "18px" }
-                            }}
-                            >
-                                { userData ? userData.username + "さん" : "名無し さん" }
-                            </Typography>
-                        </Box>
-                        <List 
-                        className={styles.layout_sidebarList}
-                        sx={{
-                            fontSize: { xs: "14px", md: "16px" }
+                <Box 
+                className={styles.layout_sidebar}
+                sx={{
+                    translate: { xs: !sideOn ? "-176px" : "0px", md: "0px"},
+                    position: { xs: "fixed", md: "static" },
+                    width: { xs: "176px", md: "248px" }
+                }}
+                >
+                    <Box className={styles.layout_imageWrapper}>
+                        <Image 
+                        //Imageタグのレスポンシブはscssファイルに記入
+                        className={styles.layout_image}
+                        src={`/images/noImage.png`}
+                        width={104}
+                        height={104}
+                        alt='ユーザー画像'
+                        />
+                    </Box>
+                    <Box className={styles.layout_userWrapper}>
+                        <Typography 
+                        className={`${styles.layout_user} ${notoSansJP.className}`}
+                        sx={{ 
+                            fontSize: { xs: "16px", md: "18px" }
                         }}
                         >
-                            {
-                                sidebarArr.map((value: SidebarType, key: number) => 
-                                    (
-                                        <ListItem
-                                        key={key} 
-                                        className={styles.layout_sidebarItem} 
-                                        onClick={() => handleAction(value) }
-                                        sx={
-                                            activeJudge(value, key)
-                                            ? 
-                                            { backgroundColor: 'rgb(233, 139, 85)' } : { backgroundColor: 'rgb(240, 119, 49)' }
-                                        }
-                                        >
-                                            <Box 
-                                            className={styles.layout_sidebarIcon}
-                                            >
-                                                {value.icon}
-                                            </Box>
-                                            <Box className={`${styles.layout_sidebarTitle} ${notoSansJP.className}`}>
-                                                {value.title}
-                                            </Box>
-                                        </ListItem>
-                                    )
-                                )
-                            }
-                        </List>
+                            { userData ? userData.username + " さん" : "名無し さん" }
+                        </Typography>
                     </Box>
+                    <List 
+                    className={styles.layout_sidebarList}
+                    sx={{
+                        fontSize: { xs: "14px", md: "16px" }
+                    }}
+                    >
+                        {
+                            sidebarArr.map((value: SidebarType, key: number) => 
+                                (
+                                    <ListItem
+                                    key={key} 
+                                    className={styles.layout_sidebarItem} 
+                                    onClick={() => handleAction(value) }
+                                    sx={
+                                        activeJudge(value, key)
+                                        ? 
+                                        { backgroundColor: 'rgb(233, 139, 85)' } : { backgroundColor: 'rgb(240, 119, 49)' }
+                                    }
+                                    >
+                                        <Box 
+                                        className={styles.layout_sidebarIcon}
+                                        >
+                                            {value.icon}
+                                        </Box>
+                                        <Box className={`${styles.layout_sidebarTitle} ${notoSansJP.className}`}>
+                                            {value.title}
+                                        </Box>
+                                    </ListItem>
+                                )
+                            )
+                        }
+                    </List>
+                </Box>
                 { children }
                 <Box
                 sx={{

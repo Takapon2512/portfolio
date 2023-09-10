@@ -27,7 +27,6 @@
     &_wordRegisterTitle, &_wordListTitle {
         font-weight: 600;
         letter-spacing: 1px;
-        @extend .font-l;
         @extend .text-color;
     }
 
@@ -108,7 +107,6 @@
     }
 
     &_registerButton, &_deleteButton {
-        width: 160px;
         background-color: rgb(60, 123, 239);
         color: rgb(255, 255, 255);
 

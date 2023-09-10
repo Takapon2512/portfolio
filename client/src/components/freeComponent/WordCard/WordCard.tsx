@@ -22,7 +22,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import styles from "./WordCard.module.scss";
 
 //type
-import { WordDataType, WordDBType } from '@/types/globaltype';
+import { WordDataType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -48,7 +48,6 @@ const WordCard = () => {
 
   //「覚えた！」ボタンをクリックしたときの処理
   const handleRemember = () => {
-    const currentNum: number = problemNum;
 
     const dbWordsArr: Array<WordDataType> = [...dbWords];
     const questionWordsArr: Array<WordDataType> = [...questionWords];
@@ -61,10 +60,10 @@ const WordCard = () => {
     const dbIndex: number = dbWordsArr.indexOf(prevWord);
     dbWordsArr[dbIndex] = newWord;
     
-    setProblemNum(currentNum + 1);
+    setProblemNum(problemNum + 1);
     setDBWords(dbWordsArr);
 
-    if (questionWords.length > 0 && currentNum === questionWords.length + (currentNum - incompleteCount) - 1) {
+    if (questionWords.length > 0 && problemNum === questionWords.length + (problemNum - incompleteCount) - 1) {
       setProblemNum(1);
       setIncompleteCount(0);
     };
@@ -74,13 +73,11 @@ const WordCard = () => {
 
   //「もう一度」ボタンをクリックしたときの処理
   const handleRetry = () => {
-    const currentNum: number = problemNum;
-    const currentIncompleteCount: number = incompleteCount;
 
-    if (currentNum < questionWords.length + (currentNum - currentIncompleteCount) - 1) {
-      setProblemNum(currentNum + 1);
-      setIncompleteCount(currentIncompleteCount + 1);
-    } else if (currentNum >= questionWords.length + (problemNum - incompleteCount) - 1) {
+    if (problemNum < questionWords.length + (problemNum - incompleteCount) - 1) {
+      setProblemNum(prev => prev + 1);
+      setIncompleteCount(incompleteCount + 1);
+    } else if (problemNum >= questionWords.length + (problemNum - incompleteCount) - 1) {
       setProblemNum(1);
       setIncompleteCount(0);
     };
@@ -91,13 +88,13 @@ const WordCard = () => {
   //questionsWords配列が空のときは「お疲れ様でした」を表示する
   const englishDisplay = () => {
     if (questionWords.length === 0) return "お疲れ様でした";
-    return questionWords[incompleteCount].english;
+    return (questionWords[incompleteCount].english) ? (questionWords[incompleteCount].english) : "";
   };
 
   //questionWords配列が空のときは空文字を表示する
   const japaneseDisplay = () => {
     if (questionWords.length === 0) return "";
-    return questionWords[incompleteCount].japanese;
+    return (questionWords[incompleteCount].japanese) ? (questionWords[incompleteCount].japanese) : "";
   };
 
   //questionWords配列が空のときは英単語と日本語の切替をできなくさせる
@@ -128,16 +125,32 @@ const WordCard = () => {
 
   return (
     <Box className={styles.free_firstContents}>
-      <Typography className={`${styles.free_memoryTitle} ${notoSansJP.className}`}>
+      <Typography 
+      className={`${styles.free_memoryTitle} ${notoSansJP.className}`}
+      sx={{ fontSize: { xs: "18px", md: "20px" } }}
+      >
         英単語を暗記する
       </Typography>
       <Paper
       className={styles.free_memoryCard}
       elevation={2}
       onClick={handleEJSwitch}
+      sx={{ marginBottom: { xs: "16px", md: "32px" } }}
       >
-        <Box className={styles.free_memoryCardContainer}>
-          <Typography className={`${styles.free_memoryWord} ${notoSansJP.className}`} variant='h2'>
+        <Box 
+        className={styles.free_memoryCardContainer}
+        sx={{
+          height: { xs: "200px", md: "400px" }
+        }}
+        >
+          <Typography 
+          className={`${styles.free_memoryWord} ${notoSansJP.className}`} 
+          variant='h2'
+          sx={{ 
+            fontSize: { xs: "48px", md: "78px" },
+            paddingBottom: { xs: "16px", md: "36px" }
+          }}
+          >
             {
               ejSwitch ? englishDisplay() : japaneseDisplay()
             }
@@ -145,8 +158,17 @@ const WordCard = () => {
         </Box>
         {
           problemNum <= questionWords.length + (problemNum - incompleteCount) - 1 ? (
-            <Box className={styles.free_questionCount}>
-              <Typography className={`${notoSansJP.className} ${styles.free_questionCountText}`}>
+            <Box 
+            className={styles.free_questionCount}
+            sx={{
+              width: { xs: "72px", md: "80px" },
+              height: { xs: "24px", md: "32px" }
+            }}
+            >
+              <Typography 
+              className={`${notoSansJP.className} ${styles.free_questionCountText}`}
+              sx={{ fontSize: { xs: "14px", md: "16px" } }}
+              >
                 { problemNum } / { questionWords.length + (problemNum - incompleteCount) - 1 }
               </Typography>
             </Box>

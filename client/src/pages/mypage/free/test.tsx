@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       props: { 
-        timeConstraint: { time_constraint: response.data.time_constraint } 
+        timeConstraint: response.data.time_constraint
       }
     }
 

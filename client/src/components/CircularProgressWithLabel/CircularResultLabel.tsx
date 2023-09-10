@@ -14,20 +14,22 @@ import { notoSansJP } from '@/utils/font';
 const CircularResultLabel = ({ correct, questionNum }: { correct: number, questionNum: number }) => {
     //表示する正答率
     const [displayRate, setDisplayRate] = useState<number>(0);
+    console.log(correct);
+    console.log(questionNum === 0 ? correct : questionNum);
 
     //正答率
-    const correctRate: number = Math.ceil(correct / questionNum * 100);
+    const correctRate: number = Math.ceil((correct / (questionNum === 0 ? 1 : questionNum)) * 100);
 
-    useEffect(() => {
-        if (displayRate <= correctRate) {
-            const timer: NodeJS.Timer = setInterval(() => {
-                setDisplayRate((prev) => prev < correctRate ? prev + 1 : correctRate);
-            }, 40);
-            return () => {
-                clearInterval(timer);
-            };
-        };
-    }, []);
+    // useEffect(() => {
+    //     if (displayRate <= correctRate) {
+    //         const timer: NodeJS.Timer = setInterval(() => {
+    //             setDisplayRate((prev) => prev < correctRate ? prev + 1 : correctRate);
+    //         }, 40);
+    //         return () => {
+    //             clearInterval(timer);
+    //         };
+    //     };
+    // }, []);
 
     return (
         <>
@@ -46,7 +48,7 @@ const CircularResultLabel = ({ correct, questionNum }: { correct: number, questi
             variant='determinate' 
             size={240} 
             thickness={5.6} 
-            value={displayRate} 
+            value={displayRate > 100 ? 0 : displayRate} 
             sx={{
                 position: "absolute",
                 left: "0",

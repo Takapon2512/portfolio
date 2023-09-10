@@ -28,12 +28,10 @@
         font-weight: 600;
         letter-spacing: 1px;
         margin-bottom: 16px;
-        @extend .font-l;
         @extend .text-color;
     }
 
     &_searchInputs {
-        padding: 24px 32px;
         background-color: #fff;
         border-radius: 4px;
     }
@@ -43,7 +41,6 @@
     }
 
     &_searchNumber {
-        display: flex;
         align-items: center;
         margin-bottom: 16px;
 
@@ -52,10 +49,6 @@
             text-align: center;
             @extend .font-l;
         }
-    }
-
-    &_searchNumMin, &_searchNumMax {
-        width: calc(50% - 48px);
     }
 
     &_searchButtons {
@@ -96,7 +89,6 @@
     }
 
     &_register, &_all {
-        width: 160px;
         background-color: rgb(60, 123, 239);
         color: rgb(255, 255, 255);
         margin-top: 32px;
@@ -147,10 +139,6 @@
         display: flex;
         align-items: center;
         margin-bottom: 24px;
-
-        &Container {
-            padding-left: 32px;
-        }
     }
 
     &_weakButton, &_normalButton, &_goodButton {
@@ -159,26 +147,29 @@
         font-weight: 300;
         margin-right: 8px;
 
-        &:hover {
-            background-color: rgb(241, 39, 39);
-            color: #fff;
-            border: 1px solid transparent;
+        @media screen and (max-width: 900px) {            
+            &:hover {
+                background-color: rgb(241, 39, 39);
+                color: #fff;
+                border: 1px solid transparent;
+            }
         }
+
     }
 
     &_normalButton {
-        &:hover {
-            background-color: rgb(240, 119, 49);
-            color: #fff;
-            border: 1px solid transparent;
+        @media screen and (max-width: 900px) {            
+            &:hover {
+                background-color: rgb(240, 119, 49);
+            }
         }
     }
 
     &_goodButton {
-        &:hover {
-            background-color: rgb(60, 123, 239);
-            color: #fff;
-            border: 1px solid transparent;
+        @media screen and (max-width: 900px) {
+            &:hover {
+                background-color: rgb(60, 123, 239);
+            }
         }
     }
 

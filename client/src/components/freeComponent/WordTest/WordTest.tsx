@@ -11,7 +11,9 @@ import{
     Typography,
     Button,
     Paper,
-    TextField
+    TextField,
+    List,
+    ListItem
 } from "@mui/material";
 
 //MUIIcon
@@ -80,9 +82,6 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
     } else {
       userAnswerSituation(answerText, false);
     }
-
-    //正誤判定(スマホやタブレットのとき)
-
 
     setProblemNum(currentNum + 1);
     setRemainTime(settingTime);
@@ -156,29 +155,76 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
     router.push("/mypage/free/result");
   };
 
-  useEffect(() => {
-    //次の問題に遷移し、解答状況をDBに反映する
-    if (remainTime < 0 && problemNum <= questionWords.length) handlePass();
-
-    if (problemNum < questionWords.length + 1) {
-      const timer: NodeJS.Timer = setInterval(() => {
-        setRemainTime(prev => prev > -1 ? prev - 1 : settingTime);
-      }, 1000);
-      return () => {
-        clearInterval(timer);
+  let choiceArr: Array<WordDBType> = [];
+    
+  //0~3の数字配列を作成し、シャッフル
+  let randomArr: Array<number> = [...Array(4)].map((_, i) => i);
+  randomArr.forEach((_, index: number) => {
+      const randomNum: number = Math.floor(Math.random() * (index + 1));
+      [randomArr[index], randomArr[randomNum]] = [randomArr[randomNum], randomArr[index]];
+  });
+  
+  for (let i = 0; i < randomArr.length; i++) {
+      let intIndex: number = (problemNum - 1) + randomArr[i];
+      if (intNum.length <= intIndex) {
+          intIndex = intIndex - intNum.length;
       };
-    };
-  }, [remainTime]);
+
+      let word: WordDBType = questionWords[intNum[intIndex]];
+      choiceArr.push(word);
+  };
+  console.log(questionWords);
+  console.log(choiceArr);
+  console.log(randomArr);
+
+  //選択肢をクリックしたときの処理
+  const clickChoice = (word: WordDBType) => {
+      console.log(word);
+      
+      if (questionWords[intNum[problemNum - 1]].japanese === word.japanese) {
+          console.log("正解");
+          userAnswerSituation(word.japanese, true);
+      } else {
+          console.log("不正解");
+          userAnswerSituation(word.japanese, false);
+      };
+
+      setProblemNum(prev => prev + 1);
+      setRemainTime(settingTime);
+      console.log(questionWords);
+  };
+
+  // useEffect(() => {
+  //   //次の問題に遷移し、解答状況をDBに反映する
+  //   if (remainTime < 0 && problemNum <= questionWords.length) handlePass();
+
+  //   if (problemNum < questionWords.length + 1) {
+  //     const timer: NodeJS.Timer = setInterval(() => {
+  //       setRemainTime(prev => prev > -1 ? prev - 1 : settingTime);
+  //     }, 1000);
+  //     return () => {
+  //       clearInterval(timer);
+  //     };
+  //   };
+  // }, [remainTime]);
 
   return (
     <>
     <Box className={styles.free_firstContents}>
-        <Typography className={`${styles.free_testTitle} ${notoSansJP.className}`}>
+        <Typography 
+        className={`${styles.free_testTitle} ${notoSansJP.className}`} 
+        sx={{ fontSize: { xs: "18px", md: "20px" } }}
+        >
             確認テスト
         </Typography>
         {
           problemNum <= questionWords.length ? (
-            <Typography className={notoSansJP.className} sx={{marginBottom: 1}}>
+            <Typography className={notoSansJP.className} 
+            sx={{
+              marginBottom: 1,
+              fontSize: { xs: "14px", md: "16px" }
+            }}
+            >
               次の英単語の日本語訳を答えよ。
             </Typography>
           ) : (<></>)
@@ -187,15 +233,35 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
         className={styles.free_questionDisplay}
         elevation={2}
         >
-          <Box className={styles.free_questionDisplayContainer}>
-            <Typography className={`${notoSansJP.className} ${styles.free_questionWord}`}>
+          <Box 
+          className={styles.free_questionDisplayContainer}
+          sx={{
+            height: { xs: "200px", md: "400px" }
+          }}
+          >
+            <Typography 
+            className={`${notoSansJP.className} ${styles.free_questionWord}`}
+            sx={{ 
+              fontSize: { xs: "48px", md: "78px" },
+              paddingBottom: { xs: "16px", md: "36px" }
+            }}
+            >
               { englishDisplay() }
             </Typography>
           </Box>
           {
             problemNum <= questionWords.length ? (
-              <Box className={styles.free_questionCount}>
-                <Typography className={`${notoSansJP.className} ${styles.free_questionCountText}`}>
+              <Box 
+              className={styles.free_questionCount}
+              sx={{
+                width: { xs: "72px", md: "80px" },
+                height: { xs: "24px", md: "32px" }
+              }}
+              >
+                <Typography 
+                className={`${notoSansJP.className} ${styles.free_questionCountText}`}
+                sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                >
                   { problemNum } / { questionWords.length }
                 </Typography>
               </Box>
@@ -211,7 +277,10 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
         </Paper>
         {
           problemNum <= questionWords.length ? (
-            <Box className={styles.free_answerInput}>
+            <Box 
+            className={styles.free_answerInput}
+            sx={{ display: { xs: "none", md: "block" } }}
+            >
               <TextField
               label="解答欄（入力後、Enterキーを押下しても解答できます）"
               fullWidth
@@ -257,6 +326,30 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
             </Box>
           )
         }
+        {
+          problemNum <= questionWords.length ? (
+              <Box 
+              //スマホ・タブレット用の解答欄
+              className={styles.free_answers}
+              sx={{ display: { xs: "block", md: "none" } }}
+              >
+                  <List>
+                      {
+                      choiceArr.map((word: WordDBType, index: number) => (
+                          <ListItem 
+                          className={styles.free_choice}
+                          key={index}
+                          component={Paper}
+                          onClick={() => clickChoice(word)}
+                          >
+                              { word ? word.japanese : "" }
+                          </ListItem>
+                      ))                        
+                      }
+                  </List>
+              </Box>
+          ) : (<></>)
+    }
     </Box>
     </>
   );

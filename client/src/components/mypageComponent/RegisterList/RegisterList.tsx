@@ -39,12 +39,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: 'rgb(240, 119, 49)',
         color: theme.palette.common.white,
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     },
@@ -227,26 +225,52 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 <Box className={styles.home_secondContents}>
                 <Box className={styles.home_titleWrapper}>
                     <Typography 
-                    className={`${styles.home_wordListTitle} ${notoSansJP.className}`}>
+                    className={`${styles.home_wordListTitle} ${notoSansJP.className}`}
+                    sx={{ fontSize: { xs: "18px", md: "20px" } }}
+                    >
                         登録リスト
                     </Typography>
                     <Box className={styles.home_remainWrapper}>
-                        <Typography className={`${styles.home_remainRegister} ${notoSansJP.className}`}>
+                        <Typography 
+                        className={`${styles.home_remainRegister} ${notoSansJP.className}`}
+                        sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                        >
                             登録できる数
                         </Typography>
-                        <Typography className={`${styles.home_remainNumber} ${notoSansJP.className}`}>
+                        <Typography 
+                        className={`${styles.home_remainNumber} ${notoSansJP.className}`}
+                        sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                        >
                             {remain} / 10
                         </Typography>
                     </Box>
                 </Box>
                 <Box className={styles.home_wordRegisterList}>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
+                    <TableContainer sx={{ borderRadius: "4px" }}>
+                        <Table sx={{ minWidth: "480px" }}>
+                            <TableHead sx={{border: "1px solid rgb(240, 119, 49)"}}>
                                 <TableRow>
-                                    <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
-                                    <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
-                                    <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className} 
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        単語番号
+                                    </StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className} 
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        英単語
+                                    </StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className} 
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        日本語訳
+                                    </StyledTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -313,6 +337,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                             <Button
                             className={`${styles.home_registerButton} ${notoSansJP.className}`}
                             onClick={handleEditEnd}
+                            sx={{ width: { xs: "136px", md: "160px" } }}
                             disabled={
                                 editEngText.length === 0 ||
                                 editJapText.length === 0 ||
@@ -326,6 +351,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                             <Button
                             className={`${styles.home_deleteButton} ${notoSansJP.className}`}
                             onClick={() => RegisterWordDelete(editWordIndex)}
+                            sx={{ width: { xs: "136px", md: "160px" } }}
                             >
                                 単語削除
                             </Button>
@@ -335,12 +361,14 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                             <Button
                             className={`${styles.home_registerButton} ${notoSansJP.className}`}
                             onClick={handleSendDB}
+                            sx={{ width: { xs: "136px", md: "160px" } }}
                             >
                                 本登録
                             </Button>
                             <Button
                             className={`${styles.home_deleteButton} ${notoSansJP.className}`}
                             onClick={RegisterListDelete}
+                            sx={{ width: { xs: "136px", md: "160px" } }}
                             >
                                 リスト削除
                             </Button>

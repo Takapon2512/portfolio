@@ -20,7 +20,6 @@ type Props = {
 
 //Component
 import Layout from '@/components/Layout/layout';
-import User from '@/components/settingComponents/User/User';
 import Question from '@/components/settingComponents/Question/Question';
 import Address from '@/components/settingComponents/Address/Address';
 
@@ -28,7 +27,7 @@ import Address from '@/components/settingComponents/Address/Address';
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const token: string | undefined = context.req.headers.cookie?.split("=")[1];
-    const response = await apiClient.get("/users/setting_find", {
+    const response = await apiClient.get("/users/find_setting", {
       headers: {
         Authorization: `Barer ${token}`
       },
@@ -54,7 +53,6 @@ const Setting = ({ setting }: Props) => {
     <Layout>
       <Box className={styles.setting}>
         <Box className={styles.setting_container}>
-          <User />
           <Address />
           <Question setting={setting} />
         </Box>

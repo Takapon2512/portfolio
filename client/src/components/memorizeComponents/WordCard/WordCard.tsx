@@ -47,16 +47,17 @@ const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
     const [problemNum, setProblemNum] = useState<number>(1);
     //覚えていない単語の数を管理
     const [incompleteCount, setIncompleteCount] = useState<number>(0);
-    //周数
-    const [lap, setLap] = useState<number>(1);
 
     //「覚えた！」ボタンをクリックしたとき
     const handleRemember = () => {
         //現在のmemorizeWords配列を保存
         const prevWords: Array<WordDBType> = [...memorizeWords];
 
+        //現在のincompleteWordsをコピー
+        const incompleteWordsArr: Array<WordDBType> = [...incompleteWords];
+
         //現在の単語の状態
-        const currentWord: WordDBType = incompleteWords[0 + incompleteCount];
+        const currentWord: WordDBType = incompleteWordsArr[0 + incompleteCount];
 
         //対象の単語の「complete」をtrueにする
         const newWord: WordDBType = { ...currentWord, complete: true };
@@ -74,16 +75,9 @@ const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
         //更新後の配列にする
         setMemorizeWords(newWords);
 
-        if (incompleteWords.length > 0 && lap > 1 && (problemNum === incompleteWords.length)) {
+        if (incompleteWords.length > 0 && (problemNum === incompleteWords.length + (problemNum - incompleteCount) - 1)) {
             setProblemNum(1);
             setIncompleteCount(0);
-            setLap(current => current + 1);
-        };
-
-        if (incompleteWords.length > 0 && (problemNum === memorizeWords.length)) {
-            setProblemNum(1);
-            setIncompleteCount(0);
-            setLap(current => current + 1);
         };
 
         if (ejSwitch === false) setEJSwitch(true);
@@ -91,28 +85,19 @@ const WordCard = ({ todayWords }: { todayWords: WordDBType[] }) => {
 
     //「もう一度」ボタンをクリックしたとき
     const handleRetry = () => {
-        if (problemNum < memorizeWords.length) {
+        if (problemNum < incompleteWords.length + (problemNum - incompleteCount) - 1) {
             setProblemNum(current => current + 1);
             setIncompleteCount(current => current + 1);
+        } else if (problemNum >= incompleteWords.length + (problemNum - incompleteCount) - 1) {
+            setProblemNum(1);
+            setIncompleteCount(0);
         };
 
-        if (lap > 1 && (problemNum === incompleteWords.length)) {
-            setProblemNum(1);
-            setIncompleteCount(0);
-            setLap(current => current + 1);
-        };
-        
-        if (problemNum === memorizeWords.length) {
-            setProblemNum(1);
-            setIncompleteCount(0);
-            setLap(current => current + 1);
-        };
+        if (ejSwitch === false) setEJSwitch(true);
     };
 
     //英単語を画面に表示する関数
     const englishDisplay = () => {
-        console.log(incompleteWords);
-        console.log(incompleteCount);
         if (incompleteWords.length === 0) return "お疲れ様でした";
         return (incompleteWords[0 + incompleteCount].english) ? (incompleteWords[0 + incompleteCount].english) : "";
     };

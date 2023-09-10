@@ -29,7 +29,6 @@ import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
-import { dummyWords } from '@/utils/words';
 
 //Components
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
@@ -41,7 +40,6 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
 
     //本日分の英単語を取得・管理
     const [todayWords, setTodayWords] = useRecoilState<WordDBType[]>(memorizeWordsState);
-    const dummyArr: Array<WordDBType> = dummyWords;
 
     //現在の問題番号を管理
     const [problemNum, setProblemNum] = useState<number>(1);
@@ -95,6 +93,7 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
         } else {
             userAnswerSituation(answerText, false);
         };
+
         setProblemNum(prev => prev + 1);
         setRemainTime(settingTime);
         setAnswerText("");
@@ -113,15 +112,13 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
         const prevArr: Array<WordDBType> = [...todayWords];
         const prevWord: WordDBType = todayWords[intNum[problemNum - 1]];
         const addJudge: number = rightOrWrong ? prevWord.correct_count + 1 : prevWord.correct_count;
-        const correctRate: number = Math.ceil(addJudge / (prevWord.question_count + 1)) * 100;
 
         prevArr[intNum[problemNum - 1]] = {
             ...prevWord,
             user_answer: answer,
             right_or_wrong: rightOrWrong,
             question_count: prevWord.question_count + 1,
-            correct_count: addJudge,
-            correct_rate: correctRate
+            correct_count: addJudge
         };
         const newArr: Array<WordDBType> = prevArr;
         setTodayWords(newArr);
@@ -169,10 +166,9 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
         router.push("/mypage/memorization/result");
     };
 
-    
     let choiceArr: Array<WordDBType> = [];
     
-    // //0~3の数字配列を作成し、シャッフル
+    //0~3の数字配列を作成し、シャッフル
     let randomArr: Array<number> = [...Array(4)].map((_, i) => i);
     randomArr.forEach((_, index: number) => {
         const randomNum: number = Math.floor(Math.random() * (index + 1));
@@ -180,10 +176,35 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
     });
     
     for (let i = 0; i < randomArr.length; i++) {
-        let word: WordDBType = todayWords[intNum[(problemNum - 1) + randomArr[i]]];
+        let intIndex: number = (problemNum - 1) + randomArr[i];
+        if (intNum.length <= intIndex) {
+            intIndex = intIndex - intNum.length;
+        };
+
+        let word: WordDBType = todayWords[intNum[intIndex]];
         choiceArr.push(word);
     };
+    console.log(todayWords);
+    console.log(choiceArr);
+    console.log(randomArr);
 
+    //選択肢をクリックしたときの処理
+    const clickChoice = (word: WordDBType) => {
+        console.log(word);
+        
+        if (todayWords[intNum[problemNum - 1]].japanese === word.japanese) {
+            console.log("正解");
+            userAnswerSituation(word.japanese, true);
+        } else {
+            console.log("不正解");
+            userAnswerSituation(word.japanese, false);
+        };
+
+        setProblemNum(prev => prev + 1);
+        setRemainTime(settingTime);
+        console.log(todayWords);
+    };
+    
     useEffect(() => {
         if (todayWords.length === 0) router.push("/mypage");
     }, []);
@@ -317,22 +338,30 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
                     </Box>
                 )
             }
-            <Box 
-            //スマホ・タブレット用の解答欄
-            className={styles.memorize_answers}
-            sx={{ display: { xs: "display", md: "none" } }}
-            >
-                <List>
-                    {
-                    choiceArr.map((word, index) => (
-                        <ListItem key={index}>
-                            { word ? word.japanese : "" }
-                        </ListItem>
-                    ))                        
-                    }
-                </List>
-            </Box>
-
+            {
+                problemNum <= todayWords.length ? (
+                    <Box 
+                    //スマホ・タブレット用の解答欄
+                    className={styles.memorize_answers}
+                    sx={{ display: { xs: "block", md: "none" } }}
+                    >
+                        <List>
+                            {
+                            choiceArr.map((word: WordDBType, index: number) => (
+                                <ListItem 
+                                className={styles.memorize_choice}
+                                key={index}
+                                component={Paper}
+                                onClick={() => clickChoice(word)}
+                                >
+                                    { word ? word.japanese : "" }
+                                </ListItem>
+                            ))                        
+                            }
+                        </List>
+                    </Box>
+                ) : (<></>)
+            }
         </Box>
     );
 };

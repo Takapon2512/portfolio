@@ -21,7 +21,6 @@
 .memorize {
     &_resultDisplay {
         position: relative;
-        padding: 24px 32px;
         margin-bottom: 32px;
         background-color: #fff;
         border-radius: 4px;
@@ -38,12 +37,10 @@
         font-weight: 600;
         letter-spacing: 1px;
         margin-bottom: 16px;
-        @extend .font-l;
         @extend .text-color;
     }
 
     &_correctRateTitle {
-        font-size: 40px;
         user-select: none;
     }
 

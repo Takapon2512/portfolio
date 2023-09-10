@@ -27,27 +27,22 @@
         font-weight: 600;
         letter-spacing: 1px;
         margin-bottom: 16px;
-        @extend .font-l;
         @extend .text-color;
     }
 
     &_memoryCard {
         position: relative;
         padding: 24px 32px;
-        margin-bottom: 32px;
         cursor: pointer;     
     }
 
     &_memoryCardContainer {
-        height: 400px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
     &_memoryWord {
-        padding-bottom: 36px;
-        font-size: 78px;
         letter-spacing: 1px;
         user-select: none;
         @extend .text-color;
@@ -90,8 +85,6 @@
         justify-content: center;
         top: 0;
         left: 0;
-        width: 80px;
-        height: 32px;
         background-color: #d5d5d5;
         border-top-left-radius: 4px;
         user-select: none;

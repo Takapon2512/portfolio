@@ -76,6 +76,13 @@
         border-radius: 8px;
     }
 
+    &_choice {
+        background-color: #fff;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        padding: 16px;
+    }
+
     &_answerButtons, &_toResult {
         display: flex;
         justify-content: center;

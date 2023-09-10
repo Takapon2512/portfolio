@@ -11,7 +11,6 @@ import {
     Typography,
     TextField,
     Button,
-    Paper,
     styled,
     Table,
     TableBody,
@@ -37,14 +36,12 @@ import { WordDataType, WordDBType } from '@/types/globaltype';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: 'rgb(184, 184, 184)',
+        backgroundColor: 'rgb(240, 119, 49)',
         color: theme.palette.common.white,
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     }
@@ -210,25 +207,39 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
     return (
         <>        
         <Box className={styles.free_firstContents}>
-            <Typography className={styles.free_searchTitle}>
+            <Typography 
+            className={styles.free_searchTitle}
+            sx={{ fontSize: { xs: "18px", md: "20px" } }}
+            >
                 単語を検索する
             </Typography>
-            <Box className={styles.free_searchInputs}>
-                <Box className={styles.free_searchNumber}>
+            <Box 
+            className={styles.free_searchInputs}
+            sx={{ padding: { xs: "24px 16px", md: "24px 32px" } }}
+            >
+                <Box 
+                className={styles.free_searchNumber}
+                sx={{ display: { xs: "block", md: "flex" } }}
+                >
                     <TextField
                     label="最初の単語番号"
                     type='number'
                     className={styles.free_searchNumMin}
+                    sx={{ width: { xs: "100%", md: "calc(50% - 48px)" }, marginBottom: { xs: "16px"} }}
                     value={minText}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setMinText(e.target.value); setCurrentPage(1)}}
                     />
-                    <Typography className={`${styles.free_searchNumberMiddle} ${notoSansJP.className}`}>
+                    <Typography 
+                    className={`${styles.free_searchNumberMiddle} ${notoSansJP.className}`}
+                    sx={{ display: { xs: "none", md: "block" } }}
+                    >
                         ～
                     </Typography>
                     <TextField 
                     label="最後の単語番号"
                     type='number'
                     className={styles.free_searchNumMax}
+                    sx={{ width: { xs: "100%", md: "calc(50% - 48px)" } }}
                     value={maxText}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setMaxText(e.target.value); setCurrentPage(1)}}
                     />
@@ -242,10 +253,16 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     />
                 </Box>
                 <Box className={styles.free_correctRateButtons}>
-                    <Typography className={notoSansJP.className}>
+                    <Typography 
+                    className={notoSansJP.className}
+                    sx={{ display: { xs: "none", md: "block" } }}
+                    >
                         苦手度で検索：
                     </Typography>
-                    <Box className={styles.free_correctRateButtonsContainer}>
+                    <Box 
+                    className={styles.free_correctRateButtonsContainer}
+                    sx={{ paddingLeft: { md: "32px" } }}
+                    >
                         <Button 
                         className={`${notoSansJP.className} ${styles.free_weakButton}`}
                         sx={
@@ -291,14 +308,44 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     sliceArr.length !== 0 ? (                        
                         <Box className={styles.free_searchList}>
                             <TableContainer sx={{ borderRadius: "4px" }}>
-                                <Table>
+                                <Table sx={{ minWidth: "720px" }}>
                                     <TableHead sx={{border: "1px solid rgb(217, 217, 217)"}}>
                                         <TableRow>
-                                            <StyledTableCell className={notoSansJP.className} align='center'>単語番号</StyledTableCell>
-                                            <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
-                                            <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
-                                            <StyledTableCell className={notoSansJP.className} align='center'>正答率</StyledTableCell>
-                                            <StyledTableCell className={notoSansJP.className} align='center'>ステータス</StyledTableCell>
+                                            <StyledTableCell 
+                                            className={notoSansJP.className} 
+                                            align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                            >
+                                                単語番号
+                                            </StyledTableCell>
+                                            <StyledTableCell 
+                                            className={notoSansJP.className} 
+                                            align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                            >
+                                                英単語
+                                            </StyledTableCell>
+                                            <StyledTableCell 
+                                            className={notoSansJP.className} 
+                                            align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                            >
+                                                日本語訳
+                                            </StyledTableCell>
+                                            <StyledTableCell 
+                                            className={notoSansJP.className} 
+                                            align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                            >
+                                                正答率
+                                            </StyledTableCell>
+                                            <StyledTableCell 
+                                            className={notoSansJP.className} 
+                                            align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                            >
+                                                ステータス
+                                            </StyledTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
@@ -365,6 +412,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                 className={`${notoSansJP.className} ${styles.free_register}`}
                                 onClick={registerButton}
                                 disabled={registerButtonDisabed()}
+                                sx={{ width: { xs: "136px", md: "160px" } }}
                                 >
                                     暗記する
                                 </Button>
@@ -372,6 +420,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                     statusNotAskJudge(sliceArr) ? (
                                         <Button
                                         className={`${notoSansJP.className} ${styles.free_all}`}
+                                        sx={{ width: { xs: "136px", md: "160px" } }}
                                         onClick={handleAllStatusChange}
                                         >
                                             すべて出題
@@ -379,6 +428,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                     ) : (
                                         <Button
                                         className={`${notoSansJP.className} ${styles.free_all}`}
+                                        sx={{ width: { xs: "136px", md: "160px" } }}
                                         onClick={handleAllStatusChange}
                                         >
                                             すべて出題しない
