@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import multer, { Multer, StorageEngine, diskStorage } from "multer";
 import { PrismaClient } from "@prisma/client";
 import { hash, compare } from 'bcrypt';
 import { isAuthenticated } from "../middleware/isAuthenticated";
@@ -120,5 +119,25 @@ usersRouter.post("/mode_upload", isAuthenticated, async (req: Request, res: Resp
     } catch (err) {
         console.error(err);
         return res.status(ServerError).json({ message: "変更に失敗しました。" });
+    };
+});
+
+//暗記モードで学習した日を記録するAPI
+usersRouter.post("/learning_record", isAuthenticated, async (req: Request, res: Response) => {
+    //現在の時刻を取得
+    const now = new Date(Date.now());
+
+    try {
+        const userCalendar = await prisma.calendar.create({
+            data: { 
+                learning_date: now,
+                user_id: req.body.user_id
+            }
+        });
+
+        return res.status(OK).json(userCalendar);
+    } catch(err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg })
     };
 });

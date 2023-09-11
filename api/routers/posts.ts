@@ -181,6 +181,7 @@ postsRouter.get("/db_search", isAuthenticated, async (req: Request, res: Respons
     };
 });
 
+//本日分の単語を取得するAPI
 postsRouter.get("/db_search_memorize", isAuthenticated, async (req: Request, res: Response) => {
     try {
         const todayWords: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, today_learning: true } });
@@ -190,6 +191,16 @@ postsRouter.get("/db_search_memorize", isAuthenticated, async (req: Request, res
         return res.status(ServerError).json({ error: serverErrorMsg });
     };
 
+});
+
+//出題登録した単語を取得するAPI
+postsRouter.get("/db_search_free", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+        const questionWords: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, free_learning: true } });
+        return res.status(OK).json(questionWords);
+    } catch(err) {
+        return res.status(ServerError).json({ erroor: serverErrorMsg });
+    };
 });
 
 //時刻の取得
@@ -244,6 +255,36 @@ postsRouter.post("/db_learning", async (req: Request, res: Response) => {
     };
 });
 
+//フリーモードで出題する単語の「free_learning」をtrueにするAPI
+postsRouter.post("/db_free_register", isAuthenticated, async (req: Request, res: Response) => {
+    const wordsArr: Array<WordDBType> = req.body.freeWords;
+    const updatePromises = wordsArr.map(async (word: WordDBType) => {
+        const {
+            id, 
+            user_id, 
+            user_word_id,
+            free_learning
+        } = word;
+
+        return await prisma.wordData.updateMany({
+            where: {
+                id,
+                user_id,
+                user_word_id
+            },
+            data: { free_learning }
+        });
+    });
+    
+    try {
+        const updateResults = await Promise.all(updatePromises);
+        return res.status(OK).json(updateResults);
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+});
+
 //学習が完了した単語の状態をDBに登録するAPI
 postsRouter.post("/db_finish", async (req: Request, res: Response) => {
     const wordsArr: Array<WordDBType> = req.body.finishQuestionWords;
@@ -255,7 +296,8 @@ postsRouter.post("/db_finish", async (req: Request, res: Response) => {
             user_word_id, 
             user_answer,
             complete,
-            right_or_wrong
+            right_or_wrong,
+            free_learning
         } = word;
 
         return await prisma.wordData.updateMany({
@@ -267,7 +309,8 @@ postsRouter.post("/db_finish", async (req: Request, res: Response) => {
             data: {
                 user_answer,
                 complete,
-                right_or_wrong
+                right_or_wrong,
+                free_learning
             }
         });
     });
@@ -289,7 +332,8 @@ postsRouter.post("/db_reset", isAuthenticated, async (req: Request, res: Respons
             data: { 
                 complete: false,
                 user_answer: "",
-                right_or_wrong: false
+                right_or_wrong: false,
+                free_learning: false
             }
         });
 

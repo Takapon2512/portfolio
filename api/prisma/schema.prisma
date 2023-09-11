@@ -17,6 +17,7 @@ model User {
   password     String
   word_data    WordData[]
   setting_data Setting?
+  calendar_data Calendar?
   created_at   DateTime   @default(now())
   deleted_at   DateTime?
 }
@@ -30,6 +31,7 @@ model WordData {
   last_time_at      DateTime?
   complete          Boolean
   today_learning    Boolean   @default(false)
+  free_learning     Boolean   @default(false)
   user_answer       String
   right_or_wrong    Boolean
   correct_count     Int
@@ -48,6 +50,14 @@ model Setting {
   created_at      DateTime  @default(now())
   updated_at      DateTime?
   deleted_at      DateTime?
+  user_id         Int       @unique
+  user            User      @relation(fields: [user_id], references: [id])
+}
+
+model Calendar {
+  id              Int       @id @default(autoincrement())
+  learning_date   DateTime  
+  created_at      DateTime  @default(now())
   user_id         Int       @unique
   user            User      @relation(fields: [user_id], references: [id])
 }
