@@ -17,6 +17,7 @@ const Day = ({day, rowIndex}: {day: Dayjs, rowIndex: number}) => {
     const getCurrentDayStyle = () => {
         return day.format("YY-MM-DD") === dayjs().format("YY-MM-DD") ? true : false;
     };
+    console.log(day.date());
 
     return (
         <Box className={styles.calendar_days}>            
@@ -42,11 +43,11 @@ const Day = ({day, rowIndex}: {day: Dayjs, rowIndex: number}) => {
                     { day.format("DD") }
                 </Typography>
             </Box>
-            {/* <Box className={styles.calendar_memorize}>
+            <Box className={styles.calendar_memorize}>
                 <Typography className={styles.calendar_completion}>
                     済
                 </Typography>
-            </Box> */}
+            </Box>
         </Box>
     );
 };

@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
-//recoil
-import { useRecoilState } from 'recoil';
-import { fleeWordsState } from '@/store/freePageState';
-
 //MUI
 import{
     Box,
@@ -25,7 +21,7 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import styles from "./WordTest.module.scss";
 
 //type
-import { WordDBType, WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
@@ -34,11 +30,12 @@ import { notoSansJP } from '@/utils/font';
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
 import apiClient from '@/lib/apiClient';
 
-const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
+const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeWords: WordDBType[] }) => {
+  console.log(freeWords);
   //router
   const router: NextRouter = useRouter();
   //暗記カードで出題した英単語を取得
-  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(fleeWordsState);
+  const [dbWords, setDBWords] = useState<WordDBType[]>([...freeWords]);
   //現在の問題番号を管理
   const [problemNum, setProblemNum] = useState<number>(1);
   //テキストフィールドの監視
@@ -52,8 +49,8 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
   const [composing, setComposing] = useState<boolean>(false);
 
   //出題状態の単語のみを取得
-  const questionWords: Array<WordDataType> = 
-  dbWords.filter((word: WordDataType) => word.question_register === "出題" && word.complete === true);
+  const questionWords: Array<WordDBType> = 
+  dbWords.filter((word: WordDBType) => word.free_learning === true);
 
   //問題番号の配列を作成
   let intNumArr: Array<number> = [...Array(questionWords.length)].map((_, i: number) => i);
@@ -106,8 +103,8 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
 
   //ユーザーの解答状況を記録
   const userAnswerSituation = (answer: string, rightOrWrong: boolean) => {
-    const prevArr: Array<WordDataType> = [...dbWords];
-    const prevWord: WordDataType = questionWords[intNum[problemNum - 1]];
+    const prevArr: Array<WordDBType> = [...dbWords];
+    const prevWord: WordDBType = questionWords[intNum[problemNum - 1]];
 
     const dbIndex: number = prevArr.indexOf(prevWord);
 
@@ -118,7 +115,7 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
       question_count: prevWord.question_count + 1,
       correct_count: rightOrWrong ? prevWord.correct_count + 1 : prevWord.correct_count
     };
-    const newArr: Array<WordDataType> = [...prevArr];
+    const newArr: Array<WordDBType> = [...prevArr];
     setDBWords(newArr);
     console.log(dbWords);
   };
@@ -135,8 +132,7 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
       const response = await apiClient.get("/posts/get_time");
       const responseData: Date = response.data;
 
-      //型「WordDataType」を型「WordDBType」に変換する
-      const dbRequest: Array<WordDBType> = questionWords.map((word: WordDataType) => (
+      const dbRequest: Array<WordDBType> = questionWords.map((word: WordDBType) => (
         {
           ...word,
           last_time_at: responseData,
@@ -167,7 +163,7 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
   for (let i = 0; i < randomArr.length; i++) {
       let intIndex: number = (problemNum - 1) + randomArr[i];
       if (intNum.length <= intIndex) {
-          intIndex = intIndex - intNum.length;
+        intIndex -= intNum.length;
       };
 
       let word: WordDBType = questionWords[intNum[intIndex]];
@@ -179,19 +175,16 @@ const WordTest = ({ timeConstraint }: { timeConstraint: number }) => {
 
   //選択肢をクリックしたときの処理
   const clickChoice = (word: WordDBType) => {
-      console.log(word);
-      
-      if (questionWords[intNum[problemNum - 1]].japanese === word.japanese) {
-          console.log("正解");
-          userAnswerSituation(word.japanese, true);
-      } else {
-          console.log("不正解");
-          userAnswerSituation(word.japanese, false);
-      };
+    if (questionWords[intNum[problemNum - 1]].japanese === word.japanese) {
+      console.log("正解");
+      userAnswerSituation(word.japanese, true);
+    } else {
+      console.log("不正解");
+      userAnswerSituation(word.japanese, false);
+    };
 
-      setProblemNum(prev => prev + 1);
-      setRemainTime(settingTime);
-      console.log(questionWords);
+    setProblemNum(prev => prev + 1);
+    setRemainTime(settingTime);
   };
 
   // useEffect(() => {

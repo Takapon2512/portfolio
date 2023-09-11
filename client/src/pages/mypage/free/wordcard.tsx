@@ -1,5 +1,8 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
+import { GetServerSideProps } from 'next';
+
+//lib
+import apiClient from '@/lib/apiClient';
 
 //MUI
 import { Box } from "@mui/material";
@@ -11,12 +14,39 @@ import styles from "./wordcard.module.scss";
 import Layout from '@/components/Layout/layout';
 import WordCard from '@/components/freeComponent/WordCard/WordCard';
 
-const WordCardPage = () => {
+//type
+import { WordDBType } from '@/types/globaltype';
+
+//SSR
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const token: string | undefined = context.req.headers.cookie?.split("=")[1];
+    const responseWords = await apiClient.get("/posts/db_search_free", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    return {
+      props: { 
+        freeWords: responseWords.data
+      }
+    }
+
+  } catch (err) {
+    console.error(err);
+    return {
+      notFound: true
+    }
+  };
+};
+
+const WordCardPage = ({ freeWords }: { freeWords: WordDBType[] }) => {
   return (
     <Layout>
       <Box className={styles.free}>
         <Box className={styles.free_container}>
-          <WordCard />
+          <WordCard freeWords={freeWords} />
         </Box>
       </Box>
     </Layout>

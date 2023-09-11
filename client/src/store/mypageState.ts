@@ -30,3 +30,8 @@ export const wordsState = atom<WordDataType[]>({
     key: 'wordsState',
     default: []
 });
+
+export const alertState = atom<string>({
+    key: "alertState",
+    default: ""
+});

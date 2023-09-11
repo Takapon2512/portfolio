@@ -37,14 +37,12 @@ import apiClient from '@/lib/apiClient';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: 'rgb(184, 184, 184)',
+        backgroundColor: 'rgb(240, 119, 49)',
         color: theme.palette.common.white,
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     }
@@ -97,7 +95,8 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 ...word,
                 complete: false,
                 user_answer: "",
-                right_or_wrong: false
+                right_or_wrong: false,
+                free_learning: false
             }
         ));
 
@@ -111,29 +110,65 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     return (
         <Box className={styles.free_firstContents}>
-            <Typography className={`${notoSansJP.className} ${styles.free_resultTitle}`}>
+            <Typography 
+            className={`${notoSansJP.className} ${styles.free_resultTitle}`}
+            sx={{ fontSize: { xs: "18px", md: "20px" } }}
+            >
                 確認テストの結果
             </Typography>
             <Box className={styles.free_resultDisplay}>
-                <Typography className={`${notoSansJP.className} ${styles.free_correctRateTitle}`}>
+                <Typography 
+                className={`${notoSansJP.className} ${styles.free_correctRateTitle}`}
+                sx={{ fontSize: { xs: "24px", md: "40px" } }}
+                >
                     あなたの正答率は...
                 </Typography>
                 <Box className={styles.free_resultDisplayContainer}>
                     <CircularResultLabel correct={correctWordsNum} questionNum={questionWordsNum} />
                 </Box>
                 <Box className={styles.free_resultDetail}>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
+                    <TableContainer sx={{ borderRadius: "4px" }}>
+                        <Table sx={{ minWidth: "720px" }}>
+                            <TableHead sx={{border: "1px solid rgb(240, 119, 49)"}}>
                                 <TableRow>
-                                    <StyledTableCell align='center'>単語番号</StyledTableCell>
-                                    <StyledTableCell align='center'>英単語</StyledTableCell>
-                                    <StyledTableCell align='center'>日本語訳</StyledTableCell>
-                                    <StyledTableCell align='center'>あなたの解答</StyledTableCell>
-                                    <StyledTableCell align='center'>正誤</StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className}
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        単語番号
+                                    </StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className}
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        英単語
+                                    </StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className}
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        日本語訳
+                                    </StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className}
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        あなたの解答
+                                    </StyledTableCell>
+                                    <StyledTableCell 
+                                    className={notoSansJP.className}
+                                    align='center'
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                                    >
+                                        正誤
+                                    </StyledTableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody>
+                            <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
                                 {
                                     sliceArr.map((word, index) => (
                                         <StyledTableRow
@@ -142,34 +177,44 @@ const TestResult = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                             <StyledTableCell
                                             className={notoSansJP.className}
                                             align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                             >
                                                 {word.id}
                                             </StyledTableCell>
                                             <StyledTableCell
                                             className={notoSansJP.className}
                                             align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                             >
                                                 {word.english}
                                             </StyledTableCell>
                                             <StyledTableCell
                                             className={notoSansJP.className}
                                             align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                             >
                                                 {word.japanese}
                                             </StyledTableCell>
                                             <StyledTableCell
-                                                className={notoSansJP.className}
-                                                align='center'
+                                            className={notoSansJP.className}
+                                            align='center'
+                                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                             >
                                                 {word.user_answer}
                                             </StyledTableCell>
                                             <StyledTableCell
-                                                className={notoSansJP.className}
-                                                align='center'
-                                                sx={
-                                                    word.right_or_wrong ? 
-                                                    { color: "rgb(48, 48, 48)"} : { color: "rgb(236, 75, 18)"}
+                                            className={notoSansJP.className}
+                                            align='center'
+                                            sx={
+                                                word.right_or_wrong ? 
+                                                { 
+                                                    color: "rgb(48, 48, 48)", 
+                                                    fontSize: { xs: "14px", md: "16px" }
+                                                } : { 
+                                                    color: "rgb(236, 75, 18)",
+                                                    fontSize: { xs: "14px", md: "16px" }
                                                 }
+                                            }
                                             >
                                                 {word.right_or_wrong ? "正解" : "誤答"}
                                             </StyledTableCell>                                          

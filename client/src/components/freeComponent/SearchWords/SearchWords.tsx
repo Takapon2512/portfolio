@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
+//lib
+import apiClient from '@/lib/apiClient';
+
 //recoil
 import { useSetRecoilState } from 'recoil';
 import { fleeWordsState } from '@/store/freePageState';
@@ -32,7 +35,7 @@ import styles from './SearchWords.module.scss';
 import { notoSansJP } from '@/utils/font';
 
 //type
-import { WordDataType, WordDBType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -94,16 +97,11 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //データベースに入っている単語配列を複製
     const wordsArr: Array<WordDBType> = [...dbWords];
-    //取得したデータを型「WordDataType」にする
-    const newWordsArr: Array<WordDataType> = wordsArr.map((word: WordDBType) => (
-        { ...word, question_register: "出題しない", editing: false }
-    ));
-    const [wordDataWords, setWordDataWords] = useState<WordDataType[]>([...newWordsArr]);
-    const setRecoilWords = useSetRecoilState<WordDataType[]>(fleeWordsState);
+    const [wordDataWords, setWordDataWords] = useState<WordDBType[]>([...wordsArr]);
 
     //単語番号で絞る
-    const numWordsArr: Array<WordDataType> = wordDataWords
-        .filter((word: WordDataType) => 
+    const numWordsArr: Array<WordDBType> = wordDataWords
+        .filter((word: WordDBType) => 
         word.user_word_id >= numMin  && numMax >= word.user_word_id);
 
     //正答率の基準
@@ -111,7 +109,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const goodBorder = 80;
 
     //単語番号で絞った後、苦手度で絞る
-    const weakWordsArr: Array<WordDataType> = numWordsArr.filter((word: WordDataType, index: number) => {
+    const weakWordsArr: Array<WordDBType> = numWordsArr.filter((word: WordDBType, index: number) => {
         if (word.correct_rate !== null) {
             if (isActive.weak) {
                 return word.correct_rate < normalBorder;
@@ -125,60 +123,65 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
     });
 
     //苦手度で絞った後、キーワードで絞る
-    const keyWordsArr: Array<WordDataType> = weakWordsArr
-        .filter((word: WordDataType, index: number) => 
+    const keyWordsArr: Array<WordDBType> = weakWordsArr
+        .filter((word: WordDBType, index: number) => 
         word.english.includes(keyword));
 
     //最後のページ番号を求める
     const lastPage: number = Math.ceil(keyWordsArr.length / perPageItemNum); 
 
     //sliceArr配列のステータスに「出題しない」が1つでもあるかを判定
-    const statusNotAskJudge = (wordsArr: WordDataType[]) => {
-        const notAskArr: Array<WordDataType> = 
-            wordsArr.filter((word: WordDataType) => word.question_register === "出題しない");
+    const statusNotAskJudge = (wordsArr: WordDBType[]) => {
+        const notAskArr: Array<WordDBType> = 
+            wordsArr.filter((word: WordDBType) => word.free_learning === false);
         if (notAskArr.length > 0) return true;
         return false;
     };
 
     //一度に表示する単語を10個に制限する
-    const sliceArr: Array<WordDataType> = keyWordsArr.filter((word: WordDataType, index: number) => (
+    const sliceArr: Array<WordDBType> = keyWordsArr.filter((word: WordDBType, index: number) => (
         index >= perPageItemNum * (currentPage - 1) 
         && perPageItemNum * currentPage > index 
     ));
 
     //ステータスを切り替える
-    const handleChangeStatus = (word: WordDataType) => {
-        const wordsArr: Array<WordDataType> = [...wordDataWords];
-        const prevWord: WordDataType = word;
+    const handleChangeStatus = (word: WordDBType) => {
+        const wordsArr: Array<WordDBType> = [...wordDataWords];
+        const prevWord: WordDBType = word;
         const dbWordsIndex: number = word.user_word_id - 1;
 
-        const newWord: WordDataType = 
-        word.question_register === "出題" 
-        ? { ...prevWord, question_register: "出題しない" }
-        : { ...prevWord, question_register: "出題" };
+        const newWord: WordDBType = 
+        word.free_learning 
+        ? { ...prevWord, free_learning: false }
+        : { ...prevWord, free_learning: true };
 
         wordsArr[dbWordsIndex] = newWord;
         setWordDataWords(wordsArr);
-        setRecoilWords(wordsArr);
     };
 
     //「すべて出題」ボタンを押すとステータスを「出題」にし、「すべて出題しない」ボタンを押すとステータスを「出題しない」にする
     const handleAllStatusChange = () => {
-        const prevQuestions: Array<WordDataType> = [...keyWordsArr];
-        const newQuestions: Array<WordDataType> = prevQuestions.map((word: WordDataType) => (
+        const prevQuestions: Array<WordDBType> = [...keyWordsArr];
+        const newQuestions: Array<WordDBType> = prevQuestions.map((word: WordDBType) => (
             statusNotAskJudge(wordDataWords) ?
-            { ...word, question_register: "出題" } : { ...word, question_register: "出題しない" }
+            { ...word, free_learning: true } : { ...word, free_learning: false }
     ));
         setWordDataWords(newQuestions);
-        setRecoilWords(newQuestions);
     };
 
     //「暗記する」ボタンを押したとき
-    const registerButton = () => router.push("/mypage/free/wordcard");
+    const registerButton = async () => {
+        try {
+            await apiClient.post("/posts/db_free_register", { freeWords: wordDataWords });
+            router.push("/mypage/free/wordcard");
+        } catch (err) {
+            console.error(err);
+        };
+    };
 
     const registerButtonDisabed = () => {
-        const questonArr: Array<WordDataType> = wordDataWords
-            .filter((word: WordDataType) => word.question_register === "出題");
+        const questonArr: Array<WordDBType> = wordDataWords
+            .filter((word: WordDBType) => word.free_learning === true);
         if (questonArr.length === 0) return true;
         return false;
     };
@@ -350,7 +353,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                     </TableHead>
                                     <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
                                         {
-                                            sliceArr.map((word: WordDataType, index: number) => (
+                                            sliceArr.map((word: WordDBType, index: number) => (
                                                 <StyledTableRow 
                                                 key={index}
                                                 onClick={() => handleChangeStatus(word)}
@@ -383,7 +386,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
                                                     className={notoSansJP.className}
                                                     align='center'
                                                     >
-                                                        {word.question_register}
+                                                        {word.free_learning ? "出題" : "出題しない"}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             ))

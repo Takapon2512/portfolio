@@ -16,6 +16,9 @@ import styles from "./test.module.scss";
 import Layout from '@/components/Layout/layout';
 import WordTest from '@/components/freeComponent/WordTest/WordTest';
 
+//type
+import { WordDBType } from '@/types/globaltype';
+
 //SSR
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
@@ -26,9 +29,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     });
 
+    const responseWords = await apiClient.get("/posts/db_search_free", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+
     return {
       props: { 
-        timeConstraint: response.data.time_constraint
+        timeConstraint: response.data.time_constraint,
+        freeWords: responseWords.data
       }
     }
 
@@ -40,13 +51,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-const Test = ({ timeConstraint }: { timeConstraint: number }) => {
+const Test = ({ timeConstraint, freeWords }: { timeConstraint: number, freeWords: WordDBType[] }) => {
 
   return (
     <Layout>
         <Box className={styles.free}>
             <Box className={styles.free_container}>
-                <WordTest timeConstraint={timeConstraint} />
+                <WordTest timeConstraint={timeConstraint} freeWords={freeWords} />
             </Box>
         </Box>
     </Layout>

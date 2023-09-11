@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter, NextRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
-//recoil
-import { useRecoilState } from 'recoil';
-import { fleeWordsState } from '@/store/freePageState';
+//lib
+import apiClient from '@/lib/apiClient';
 
 //MUI
 import {
@@ -22,24 +21,24 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import styles from "./WordCard.module.scss";
 
 //type
-import { WordDataType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
 
-const WordCard = () => {
+const WordCard = ({ freeWords }: { freeWords: WordDBType[] }) => {
   //router
   const router = useRouter();
 
   //型変換後の英単語を管理
-  const [dbWords, setDBWords] = useRecoilState<WordDataType[]>(fleeWordsState);
+  const [dbWords, setDBWords] = useState<WordDBType[]>([...freeWords]);
 
   //英単語と日本語訳の切替を管理
   const [ejSwitch, setEJSwitch] = useState<boolean>(true);
 
   //出題状態の単語のみを取得
-  const questionWords: Array<WordDataType> = 
-    dbWords.filter((word: WordDataType) => word.question_register === "出題" && word.complete === false);
+  const questionWords: Array<WordDBType> = 
+    dbWords.filter((word: WordDBType) => word.free_learning === true && word.complete === false);
 
   //現在の問題番号を管理
   const [problemNum, setProblemNum] = useState<number>(1);
@@ -49,10 +48,10 @@ const WordCard = () => {
   //「覚えた！」ボタンをクリックしたときの処理
   const handleRemember = () => {
 
-    const dbWordsArr: Array<WordDataType> = [...dbWords];
-    const questionWordsArr: Array<WordDataType> = [...questionWords];
-    const prevWord: WordDataType = questionWordsArr[0 + incompleteCount];
-    const newWord: WordDataType = {
+    const dbWordsArr: Array<WordDBType> = [...dbWords];
+    const questionWordsArr: Array<WordDBType> = [...questionWords];
+    const prevWord: WordDBType = questionWordsArr[0 + incompleteCount];
+    const newWord: WordDBType = {
       ...prevWord,
       complete: true
     };
@@ -106,15 +105,16 @@ const WordCard = () => {
     };
   };
 
-  const handleToTestPage = () => {
-    router.push("/mypage/free/test")
+  const handleToTestPage = async () => {
+    await apiClient.post("/posts/db_learning", { dbRequest: dbWords });
+    router.push("/mypage/free/test");
   };
   console.log(dbWords);
 
   //テストモードに遷移した後に、フリーモードのトップ画面に戻り「暗記する」ボタンを押しても暗記カードで学習に取り組めるようにする
   useEffect(() => {
-    const prevArr: Array<WordDataType> = [...dbWords];
-    const newArr: Array<WordDataType> = prevArr.map((word: WordDataType) => (
+    const prevArr: Array<WordDBType> = [...dbWords];
+    const newArr: Array<WordDBType> = prevArr.map((word: WordDBType) => (
       {
         ...word,
         complete: false

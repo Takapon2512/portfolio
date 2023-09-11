@@ -1,20 +1,17 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 
-//context
-import { useAuth } from '@/context/auth';
-
 //lib
 import apiClient from '@/lib/apiClient';
 
 //MUI
-import { Box, createTheme } from '@mui/material';
+import { Box } from '@mui/material';
 
 //CSS
 import styles from './index.module.scss';
 
 //type
-import { WordDBType, ResUserType } from '@/types/globaltype';
+import { WordDBType } from '@/types/globaltype';
 type Props = {
   words: WordDBType[];
   todayWords: WordDBType[];
@@ -25,6 +22,7 @@ import Layout from '@/components/Layout/layout';
 import WordRegisterInput from '@/components/mypageComponent/WordRegisterInput/WordRegisterInput';
 import RegisterList from '@/components/mypageComponent/RegisterList/RegisterList';
 import TodayList from '@/components/mypageComponent/TodayList/TodayList';
+import AlertComponent from '@/components/mypageComponent/alert/alert';
 
 //SSRでDBの単語を取得
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -60,19 +58,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const Mypage = ({ words, todayWords }: Props) => {
-  createTheme({
-    breakpoints: {
-        values: {
-            xs: 0,
-            sm: 600,
-            md: 768,
-            lg: 1025,
-            xl: 1536
-        }
-    }
-});
-
-
   return (
       <>
       <Layout>
@@ -83,9 +68,10 @@ const Mypage = ({ words, todayWords }: Props) => {
           }}
           >
               <Box className={styles.home_container}>
-                  <WordRegisterInput dbWords={words}/>
-                  <RegisterList dbWords={words} />
-                  <TodayList dbWords={todayWords} />
+                <AlertComponent />
+                <WordRegisterInput dbWords={words}/>
+                <RegisterList dbWords={words} />
+                <TodayList dbWords={todayWords} />
               </Box>
           </Box>
       </Layout>

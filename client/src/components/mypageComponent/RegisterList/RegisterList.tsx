@@ -6,7 +6,7 @@ import apiClient from '@/lib/apiClient';
 
 //Recoil
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { remainNumState, wordsState } from '@/store/mypageState';
+import { remainNumState, wordsState, alertState } from '@/store/mypageState';
 
 //MUI
 import {
@@ -75,7 +75,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
         japanese: '',
         created_at: new Date(),
         editing: false,
-        question_register: "出題しない",
+        free_learning: false,
         today_learning: false,
         complete: false,
         user_answer: "",
@@ -106,6 +106,9 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //登録リストを削除
     const RegisterListDelete = () => setRegisterWords([]);
+
+    //アラート発報管理
+    const [alertFlag, setAlertFlag] = useState<string>("");
 
     //編集モードにする 
     const handleWordEditing = (word: WordDataType, index: number) => {
@@ -189,6 +192,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 last_time_at: null,
                 complete: false,
                 today_learning: false,
+                free_learning: false,
                 user_answer: "",
                 right_or_wrong: false,
                 correct_count: 0,
@@ -202,10 +206,10 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 await apiClient.post("/posts/db_register", { dbRegisterWords: dbRegisterWords});
     
                 setRegisterWords([]);
-                alert("登録に成功しました。");
+                setAlertFlag("成功");
             } catch (err) {
                 console.error(err);
-                alert("登録に失敗しました。");
+                setAlertFlag("失敗");
             };
         } else {
             alert("再度ログインお願いします。");

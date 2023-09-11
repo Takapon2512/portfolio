@@ -39,7 +39,7 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
     const router = useRouter();
 
     //本日分の英単語を取得・管理
-    const [todayWords, setTodayWords] = useRecoilState<WordDBType[]>(memorizeWordsState);
+    const [todayWords, setTodayWords] = useState<WordDBType[]>([...targetWords]);
 
     //現在の問題番号を管理
     const [problemNum, setProblemNum] = useState<number>(1);
@@ -68,7 +68,6 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
         intNumArr[index] = intNumArr[randomNum];
         intNumArr[randomNum] = tmpNum;
     });
-    console.log(intNumArr);
     const [intNum, setIntNum] = useState<number[]>(intNumArr);
 
     //画面に問題文を表示する
@@ -135,30 +134,22 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
             const response = await apiClient.get("/posts/get_time");
             const responseData: Date = response.data;
 
-            //型「WordDataType」を型「WordDBType」に変換する
             const dbRequest: Array<WordDBType> = todayWords.map((word: WordDBType) => (
                 {
-                id: word.id,
-                english: word.english,
-                japanese: word.japanese,
-                created_at: word.created_at,
-                deleted_at: null,
-                last_time_at: responseData,
-                complete: word.complete,
-                today_learning: word.today_learning,
-                user_answer: word.user_answer,
-                right_or_wrong: word.right_or_wrong,
-                correct_count: word.correct_count,
-                question_count: word.question_count,
-                correct_rate: Math.round((word.correct_count / word.question_count) * 100),
-                user_word_id: word.user_word_id,
-                user_id: word.user_id
+                    ...word,
+                    last_time_at: responseData,
+                    correct_rate: Math.round((word.correct_count / word.question_count) * 100)
                 }
             ));
 
             await apiClient.post("/posts/db_learning", {
                 dbRequest: dbRequest
             });
+
+            //満点を取ったときのみ暗記ができているとし、現在時刻を記録する
+            const currentWords: Array<WordDBType> = todayWords.filter((word) => word.right_or_wrong === true);
+            if (currentWords.length === todayWords.length) await apiClient.post("/users/learning_record");
+
         } catch(err) {
             console.error(err);
         };
@@ -193,10 +184,8 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
         console.log(word);
         
         if (todayWords[intNum[problemNum - 1]].japanese === word.japanese) {
-            console.log("正解");
             userAnswerSituation(word.japanese, true);
         } else {
-            console.log("不正解");
             userAnswerSituation(word.japanese, false);
         };
 

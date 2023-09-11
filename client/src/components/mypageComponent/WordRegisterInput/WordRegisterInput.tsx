@@ -48,9 +48,9 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
             created_at: now,
             deleted_at: null,
             editing: false,
-            question_register: "出題しない",
             complete: false,
             today_learning: false,
+            free_learning: false,
             user_answer: "",
             right_or_wrong: false,
             correct_count: 0,
@@ -97,23 +97,6 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 handleWordsAdd();
         }
     };
-
-    // //日付の生成
-    // const createDate = () => {
-    //     const date = new Date();
-    //     const year = date.getFullYear();
-    //     const month = date.getMonth() + 1;
-    //     const today = date.getDate();
-
-    //     let strYear = String(year);
-    //     let strMonth = String(month);
-    //     let strToday = String(today);
-
-    //     if (month < 10) strMonth = '0' + strMonth;
-    //     if (today < 10) strToday = '0' + strToday;
-
-    //     return `${strYear}/${strMonth}/${strToday}`;
-    // }
 
     return (
         <Box className={styles.home_firstContents}>
