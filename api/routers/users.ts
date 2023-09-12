@@ -141,3 +141,15 @@ usersRouter.post("/learning_record", isAuthenticated, async (req: Request, res: 
         return res.status(ServerError).json({ error: serverErrorMsg })
     };
 });
+
+//暗記モードで学習した日を取得するAPI
+usersRouter.get("/get_learning_record", isAuthenticated, async (req: Request, res: Response) => {
+    const userCalendars = await prisma.calendar.findMany({ where: { user_id: req.body.user_id }});
+
+    try {
+        return res.status(OK).json(userCalendars);
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+});
