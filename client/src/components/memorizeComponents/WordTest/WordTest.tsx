@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-//recoil
-import { useRecoilState } from 'recoil';
-import { memorizeWordsState } from '@/store/memorizePageState';
+//lib
+import apiClient from '@/lib/apiClient';
 
 //MUI
 import{
@@ -32,7 +31,7 @@ import { notoSansJP } from '@/utils/font';
 
 //Components
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
-import apiClient from '@/lib/apiClient';
+import AlertComponent from '../alert/alert';
 
 const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, targetWords: WordDBType[] }) => {
     //router
@@ -58,6 +57,9 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
 
     //入力を検知
     const [composing, setComposing] = useState<boolean>(false);
+
+    //アラートの管理
+    const [alert, setAlert] = useState<string>("");
 
     //問題番号の配列を作成
     let intNumArr: Array<number> = [...Array(todayWords.length)].map((_, i) => i);
@@ -150,8 +152,12 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
             const currentWords: Array<WordDBType> = todayWords.filter((word) => word.right_or_wrong === true);
             if (currentWords.length === todayWords.length) await apiClient.post("/users/learning_record");
 
+            //結果を正常に登録できたことをアラートで知らせる
+            setAlert("成功");
+
         } catch(err) {
             console.error(err);
+            setAlert("失敗");
         };
 
         router.push("/mypage/memorization/result");
@@ -193,26 +199,30 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
         setRemainTime(settingTime);
         console.log(todayWords);
     };
-    
+
     useEffect(() => {
         if (todayWords.length === 0) router.push("/mypage");
+        setAlert("");
     }, []);
 
-    // useEffect(() => {
-    //     //次の問題に遷移し、解答状況を反映する
-    //     if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
 
-    //     if (problemNum < todayWords.length + 1) {
-    //       const timer: NodeJS.Timer = setInterval(() => {
-    //         setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
-    //       }, 1000);
-    //       return () => {
-    //         clearInterval(timer);
-    //       };
-    //     };
-    // }, [remainTime]);
+    useEffect(() => {
+        //次の問題に遷移し、解答状況を反映する
+        if (remainTime < 0 && problemNum <= todayWords.length) handlePass();
+
+        if (problemNum < todayWords.length + 1) {
+          const timer: NodeJS.Timer = setInterval(() => {
+            setRemainTime(prev => prev >= -1 ? prev - 1 : settingTime);
+          }, 1000);
+          return () => {
+            clearInterval(timer);
+          };
+        };
+    }, [remainTime]);
 
     return (
+        <>
+        <AlertComponent alertFlag={alert} />
         <Box className={styles.memorize_firstContents}>
             <Typography 
             className={`${notoSansJP.className} ${styles.memorize_testTitle}`}
@@ -244,6 +254,7 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
                 >
                     <Typography 
                     className={`${notoSansJP.className} ${styles.memorize_questionWord}`}
+                    suppressHydrationWarning={true}
                     sx={{ 
                         fontSize: { xs: "48px", md: "78px" },
                         paddingBottom: { xs: "16px", md: "36px" }
@@ -352,6 +363,7 @@ const WordTest = ({ timeConstraint, targetWords }: { timeConstraint: number, tar
                 ) : (<></>)
             }
         </Box>
+        </>
     );
 };
 

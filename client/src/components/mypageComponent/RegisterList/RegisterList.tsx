@@ -6,7 +6,7 @@ import apiClient from '@/lib/apiClient';
 
 //Recoil
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { remainNumState, wordsState, alertState } from '@/store/mypageState';
+import { remainNumState, wordsState } from '@/store/mypageState';
 
 //MUI
 import {
@@ -34,6 +34,7 @@ import { WordDBType, WordDataType } from '@/types/globaltype';
 
 //context
 import { useAuth } from '@/context/auth';
+import AlertComponent from '../alert/alert';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -212,7 +213,6 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 setAlertFlag("失敗");
             };
         } else {
-            alert("再度ログインお願いします。");
             router.push("/login");
         }
     };
@@ -222,8 +222,13 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [remain]);
 
+    useEffect(() => {
+        setAlertFlag("");
+    }, []);
+
     return (
         <>
+        <AlertComponent alertFlag={alertFlag} />
         {
             remain < registerWordsMax ? (
                 <Box className={styles.home_secondContents}>

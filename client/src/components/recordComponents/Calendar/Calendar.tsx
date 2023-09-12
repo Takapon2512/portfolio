@@ -9,16 +9,20 @@ import styles from "./Calendar.module.scss";
 //Component
 import Month from './Month';
 
+//utils
 import { notoSansJP } from '@/utils/font';
 
-const Calendar = () => {
+//type
+import { CalendarType } from '@/types/globaltype';
+
+const Calendar = ({ calendars }: { calendars: CalendarType[] }) => {
     return (
 
         <Box className={styles.record}>
             <Typography className={`${styles.record_title} ${notoSansJP.className}`}>
                 学習日の記録
             </Typography>
-            <Month />
+            <Month calendars={calendars} />
         </Box>
 
     );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -12,12 +12,18 @@ import styles from "./Address.module.scss";
 //utils
 import { notoSansJP } from '@/utils/font';
 
+//component
+import AlertComponent from '../alert/alert';
+
 const Address = () => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [currentPassword, setCurrentPassword] = useState<string>("");
     const [newPassWord, setNewPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+    
+    //アラート管理
+    const [alertFlag, setAlertFlag] = useState<string>("");
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
     const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
@@ -27,12 +33,19 @@ const Address = () => {
 
     //ユーザー情報をサーバーに送信
     const handleUserInfoSend = async () => {
-        if (!disabledJudge()) {
-            const userInfo = { name, email, currentPassword, newPassWord, confirmPassword };
-            const response = await apiClient.post("/users/user_upload", userInfo);
 
-            alert(response.data.message);
+        try {
+            if (!disabledJudge()) {
+                const userInfo = { name, email, currentPassword, newPassWord, confirmPassword };
+                await apiClient.post("/users/user_upload", userInfo);
+
+                setAlertFlag("成功");
+            };
+        } catch (err) {
+            console.error(err);
+            setAlertFlag("失敗");
         };
+
         setName("");
         setEmail("");
         setCurrentPassword("");
@@ -49,7 +62,13 @@ const Address = () => {
         return false;
     };
 
+    useEffect(() => {
+        setAlertFlag("");
+    }, []);
+
     return (
+        <>        
+        <AlertComponent alertFlag={alertFlag} />
         <Box className={styles.address}>
             <Typography className={styles.address_title}>
                 ユーザー情報
@@ -124,6 +143,7 @@ const Address = () => {
                 </Box>
             </Box>
         </Box>
+        </>
     );
 };
 

@@ -36,11 +36,11 @@ const AlertComponent = ({ alertFlag }: { alertFlag: string }) => {
                     {
                         alertFlag === "失敗" ? (
                             <Alert variant='filled' severity='error' id='alert' className={styles.alert_error}>
-                                登録に失敗しました。
+                                テスト結果の記録に失敗しました。
                             </Alert>
                         ) : (
                             <Alert variant='filled' severity='success' id='alert' className={styles.alert_success}>
-                                登録に成功しました！
+                                テスト結果の記録に成功しました！
                             </Alert>
                         )
                     }

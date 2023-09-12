@@ -14,8 +14,10 @@ import styles from './index.module.scss';
 
 //type
 import { WordDBType } from '@/types/globaltype';
+import { CalendarType } from '@/types/globaltype';
 type Props = {
-  words: WordDBType[]
+  words: WordDBType[],
+  calendars: CalendarType[]
 }
 
 //Component
@@ -33,8 +35,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     });
 
+    const responseCalendars = await apiClient.get("/users/get_learning_record", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     return {
-      props: { words: response.data }
+      props: { words: response.data, calendars: responseCalendars.data }
     }
   } catch (err) {
     console.error(err);
@@ -44,13 +52,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-const Record = ({ words }: Props) => {
+const Record = ({ words, calendars }: Props) => {
+
   return (
     <Layout>
         <Box className={styles.record}>
           <Box className={styles.record_container}>
             <WordSearch recordWords={words} />
-            <Calendar />
+            <Calendar calendars={calendars} />
           </Box>
         </Box>
     </Layout>

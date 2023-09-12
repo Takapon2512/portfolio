@@ -71,3 +71,10 @@ export type SettingType = {
     work_on_count: number;
     time_constraint: number;
 }
+
+export type CalendarType = {
+    id: number;
+    learning_date: Date;
+    created_at: Date;
+    user_id: number;
+}

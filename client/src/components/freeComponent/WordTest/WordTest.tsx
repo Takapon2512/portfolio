@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
+//lib
+import apiClient from '@/lib/apiClient';
+
 //MUI
 import{
     Box,
@@ -28,7 +31,7 @@ import { notoSansJP } from '@/utils/font';
 
 //Components
 import CircularWithValueLabel from '@/components/CircularProgressWithLabel/CirculerProgressWithLabel';
-import apiClient from '@/lib/apiClient';
+import AlertComponent from '../alert/alert';
 
 const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeWords: WordDBType[] }) => {
   console.log(freeWords);
@@ -47,6 +50,9 @@ const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeW
 
   //入力を検知
   const [composing, setComposing] = useState<boolean>(false);
+
+  //アラートの管理
+  const [alert, setAlert] = useState<string>("");
 
   //出題状態の単語のみを取得
   const questionWords: Array<WordDBType> = 
@@ -144,7 +150,11 @@ const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeW
         dbRequest: dbRequest
       });
 
+      //結果を正常に登録できたことをアラートで知らせる
+      setAlert("成功");
+
     } catch (err) {
+      setAlert("失敗");
       console.error(err);
     };
 
@@ -203,6 +213,7 @@ const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeW
 
   return (
     <>
+    <AlertComponent alertFlag={alert} />
     <Box className={styles.free_firstContents}>
         <Typography 
         className={`${styles.free_testTitle} ${notoSansJP.className}`} 
@@ -238,6 +249,7 @@ const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeW
               fontSize: { xs: "48px", md: "78px" },
               paddingBottom: { xs: "16px", md: "36px" }
             }}
+            suppressHydrationWarning={true}
             >
               { englishDisplay() }
             </Typography>
@@ -334,6 +346,7 @@ const WordTest = ({ timeConstraint, freeWords }: { timeConstraint: number, freeW
                           key={index}
                           component={Paper}
                           onClick={() => clickChoice(word)}
+                          suppressHydrationWarning={true}
                           >
                               { word ? word.japanese : "" }
                           </ListItem>

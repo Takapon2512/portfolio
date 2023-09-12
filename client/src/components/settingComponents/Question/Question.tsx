@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //MUI
 import { Box, Typography, TextField, Button } from '@mui/material';
@@ -14,6 +14,7 @@ import { SettingType } from '@/types/globaltype';
 
 //lib
 import apiClient from '@/lib/apiClient';
+import AlertComponent from '../alert/alert';
 
 const Question = ({ setting }: { setting: SettingType }) => {
   const num_timeLimitInit = setting.time_constraint;
@@ -22,12 +23,14 @@ const Question = ({ setting }: { setting: SettingType }) => {
   //下限・上限の値
   const num_timeLimitMin = 5;
   const num_timeLimitMax = 15;
-
   const num_questionsMin = 10;
   const num_questionsMax = 300;
 
   const [timeLimit, setTimeLimit] = useState<string>(String(num_timeLimitInit));
   const [questions, setQuestions] = useState<string>(String(num_questionsInit));
+
+  //アラート管理
+  const [alertFlag, setAlertFlag] = useState<string>("");
 
   const handleTimeLimit = (e: React.ChangeEvent<HTMLInputElement>) => setTimeLimit(e.target.value);
   const handleQuestions = (e: React.ChangeEvent<HTMLInputElement>) => setQuestions(e.target.value);
@@ -45,12 +48,23 @@ const Question = ({ setting }: { setting: SettingType }) => {
     const num_questions = Number(questions);
 
     const updateData = { num_timeLimit, num_questions };
-    const response = await apiClient.post("/users/mode_upload", updateData);
 
-    alert(response.data.message);
+    try {
+      await apiClient.post("/users/mode_upload", updateData);
+      setAlertFlag("成功");
+    } catch (err) {
+      console.error(err);
+      setAlertFlag("失敗");
+    };
   };
 
+  useEffect(() => {
+    setAlertFlag("");
+  }, []);
+
   return (
+    <>    
+    <AlertComponent alertFlag={alertFlag} />
     <Box className={styles.question}>
       <Typography className={`${notoSansJP.className} ${styles.question_title}`}>
         モード設定
@@ -72,7 +86,7 @@ const Question = ({ setting }: { setting: SettingType }) => {
           <Typography className={`${notoSansJP.className} ${styles.question_amountTitle}`}>
             取り組む問題数
           </Typography>
-          <Box sx={{ width: "100%",  }}>
+          <Box sx={{ width: "100%" }}>
             <TextField 
             fullWidth
             value={questions}
@@ -98,6 +112,7 @@ const Question = ({ setting }: { setting: SettingType }) => {
         </Box>
       </Box>
     </Box>
+    </>
   );
 };
 

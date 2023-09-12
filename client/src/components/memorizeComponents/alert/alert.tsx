@@ -13,15 +13,20 @@ import styles from "./alert.module.scss";
 const AlertComponent = ({ alertFlag }: { alertFlag: string }) => {
 
     useEffect(() => {
-        //アラートボックスのアニメーション
-        const alertAnimation = gsap.timeline();
+        const alertBox = document.querySelector("#alertBox");
 
-        alertAnimation.to("#alertBox", 0.5, {
-            opacity: 1
-        }, 0)
-        .to('#alertBox', 1, {
-            opacity: 0
-        }, 4);
+        if(alertBox) {
+            //アラートボックスのアニメーション
+            const alertAnimation = gsap.timeline();
+    
+            alertAnimation.to("#alertBox", 0.5, {
+                opacity: 1
+            }, 0)
+            .to('#alertBox', 1, {
+                opacity: 0
+            }, 4);
+        };
+        
     }, [alertFlag]);
 
     return (
@@ -36,11 +41,11 @@ const AlertComponent = ({ alertFlag }: { alertFlag: string }) => {
                     {
                         alertFlag === "失敗" ? (
                             <Alert variant='filled' severity='error' id='alert' className={styles.alert_error}>
-                                登録に失敗しました。
+                                テスト結果の記録に失敗しました。
                             </Alert>
                         ) : (
                             <Alert variant='filled' severity='success' id='alert' className={styles.alert_success}>
-                                登録に成功しました！
+                                テスト結果の記録に成功しました！
                             </Alert>
                         )
                     }

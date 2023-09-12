@@ -13,12 +13,13 @@ import styles from "./Month.module.scss";
 
 //type
 import dayjs, { Dayjs } from 'dayjs';
+import { CalendarType } from '@/types/globaltype';
 
 //utils
 import { getMonth } from '@/utils/days';
 import { notoSansJP } from '@/utils/font';
 
-const Month = () => {
+const Month = ({ calendars }: { calendars: CalendarType[] }) => {
     const [monthNum, setMonthNum] = useState<number>(dayjs().month());
 
     return (
@@ -42,7 +43,7 @@ const Month = () => {
                         <React.Fragment key={i}>
                             {
                                 row.map((day: Dayjs, index: number) => (
-                                    <Day day={day} key={index} rowIndex={i} />
+                                    <Day day={day} key={index} rowIndex={i} calendars={calendars} />
                                 ))
                             }
                         </React.Fragment>

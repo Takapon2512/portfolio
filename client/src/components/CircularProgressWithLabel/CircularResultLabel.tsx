@@ -20,16 +20,16 @@ const CircularResultLabel = ({ correct, questionNum }: { correct: number, questi
     //正答率
     const correctRate: number = Math.ceil((correct / (questionNum === 0 ? 1 : questionNum)) * 100);
 
-    // useEffect(() => {
-    //     if (displayRate <= correctRate) {
-    //         const timer: NodeJS.Timer = setInterval(() => {
-    //             setDisplayRate((prev) => prev < correctRate ? prev + 1 : correctRate);
-    //         }, 40);
-    //         return () => {
-    //             clearInterval(timer);
-    //         };
-    //     };
-    // }, []);
+    useEffect(() => {
+        if (displayRate <= correctRate) {
+            const timer: NodeJS.Timer = setInterval(() => {
+                setDisplayRate((prev) => prev < correctRate ? prev + 1 : correctRate);
+            }, 40);
+            return () => {
+                clearInterval(timer);
+            };
+        };
+    }, []);
 
     return (
         <>

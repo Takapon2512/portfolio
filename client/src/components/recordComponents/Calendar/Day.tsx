@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 //MUI
 import { Box, Typography } from '@mui/material';
@@ -8,16 +9,29 @@ import styles from "./Day.module.scss";
 
 //type
 import dayjs, { Dayjs } from 'dayjs';
+import { CalendarType } from '@/types/globaltype';
 
 //utils
 import { notoSansJP } from '@/utils/font';
 
-const Day = ({day, rowIndex}: {day: Dayjs, rowIndex: number}) => {
+const Day = ({day, rowIndex, calendars}: {day: Dayjs, rowIndex: number, calendars: CalendarType[]}) => {
     //今日の日付に色をつける
     const getCurrentDayStyle = () => {
         return day.format("YY-MM-DD") === dayjs().format("YY-MM-DD") ? true : false;
     };
-    console.log(day.date());
+
+    //暗記モードで本日分の学習に取り組んだかどうかを判断する処理
+    const learningJudge = (calendars: CalendarType[]) => {
+        const today: Dayjs = dayjs(day.toDate());
+        const tommorow: Dayjs = dayjs(day.add(1, "d").toDate());
+
+        const learning: Array<CalendarType> = 
+        calendars.filter((calendar: CalendarType) => 
+        ((today.isSame(calendar.learning_date) || today.isBefore(calendar.learning_date)) && tommorow.isAfter(calendar.learning_date)));
+
+        if (learning.length > 0) return true;
+        return false;
+    };
 
     return (
         <Box className={styles.calendar_days}>            
@@ -43,11 +57,19 @@ const Day = ({day, rowIndex}: {day: Dayjs, rowIndex: number}) => {
                     { day.format("DD") }
                 </Typography>
             </Box>
-            <Box className={styles.calendar_memorize}>
-                <Typography className={styles.calendar_completion}>
-                    済
-                </Typography>
-            </Box>
+            {
+                learningJudge(calendars) ? (
+                    <Box className={styles.calendar_memorize}>
+                        <Image 
+                        className={styles.calendar_completion}
+                        width={96}
+                        height={32}
+                        src="/images/complete.jpeg"
+                        alt='完了'
+                        />
+                    </Box>
+                ) : (<></>)
+            }
         </Box>
     );
 };

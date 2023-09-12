@@ -52,7 +52,7 @@
 
     &_memorize {
         display: flex;
-        padding: 16px 0;
+        padding: 24px 0 16px;
         justify-content: center;
     }
 
@@ -64,12 +64,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background-color: rgb(255, 68, 19);
-        color: #fff;
-        font-weight: 600;
+        padding-top: 4px;
+        transform: rotate(-12deg);
+        pointer-events: none;
         @extend .font-l;
     }
 }

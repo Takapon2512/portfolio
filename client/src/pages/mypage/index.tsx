@@ -22,7 +22,6 @@ import Layout from '@/components/Layout/layout';
 import WordRegisterInput from '@/components/mypageComponent/WordRegisterInput/WordRegisterInput';
 import RegisterList from '@/components/mypageComponent/RegisterList/RegisterList';
 import TodayList from '@/components/mypageComponent/TodayList/TodayList';
-import AlertComponent from '@/components/mypageComponent/alert/alert';
 
 //SSRでDBの単語を取得
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -68,7 +67,6 @@ const Mypage = ({ words, todayWords }: Props) => {
           }}
           >
               <Box className={styles.home_container}>
-                <AlertComponent />
                 <WordRegisterInput dbWords={words}/>
                 <RegisterList dbWords={words} />
                 <TodayList dbWords={todayWords} />

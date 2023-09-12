@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -36,6 +36,7 @@ import apiClient from "@/lib/apiClient";
 
 //context
 import { useAuth } from "@/context/auth";
+import AlertComponent from "./alert/alert";
 
 //schema
 const schema = yup.object({
@@ -55,19 +56,20 @@ const schema = yup.object({
 })
 
 const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonTitle: string, changeTitle: string}) => {
+    //useRouter
+    const router = useRouter()
+    //ユーザー情報の管理
+    const { login, user } = useAuth();
 
-    //useState
+    //入力内容の管理
     const [formText, setFormText] = useState<LoginType>({
         email: '',
         name: '',
         password: ''
     });
 
-    //useRouter
-    const router = useRouter()
-
-    //useAuth
-    const { login } = useAuth();
+    //アラートの管理
+    const [alertFlag, setAlertFlag] = useState<string>("");
 
     //テキストフィールドの変化を追跡
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormText((text) => ({...text, email: e.target.value}));
@@ -107,10 +109,11 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
             const token: string = response.data.token;
             login(token);
 
+            setAlertFlag("成功");
             router.push("./mypage");
         } catch (err) {
             console.error(err);
-            alert("入力内容が正しくありません。");
+            setAlertFlag("失敗");
         };
     };
 
@@ -122,8 +125,13 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
         };
     };
 
+    useEffect(() => {
+        if (user) router.push("/mypage");
+    }, []);
+
     return (
         <>
+        <AlertComponent alertFlag={alertFlag} />
         <Box className={styles.form}>
             <Box className={styles.form_container}>
                 <Typography
