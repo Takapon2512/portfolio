@@ -22,6 +22,7 @@
     background-color: rgb(240, 119, 49);
     min-height: calc(100vh - 72px);
     padding-top: 120px;
+    overflow: hidden;
     
     &_container {
         max-width: 960px;
@@ -78,6 +79,7 @@
 
     &_vocabulary {
         z-index: 3;
+        user-select: none;
     }
 
     &_vocabulary_shadow {
@@ -95,17 +97,7 @@
         position: absolute;
         top: -93px;
         left: 313px;
-    }
-
-    &_circle1 {
-        width: 400px;
-        height: 400px;
-        border-radius: 50%;
-        background-color: rgb(245, 158, 40);
-        position: absolute;
-        top: 270px;
-        left: -32px;
-        z-index: 2;
+        z-index: 10;
     }
 
     &_circle1 {
@@ -137,6 +129,7 @@
         position: absolute;
         top: 40px;
         right: -70px;
+        z-index: 10;
     }
 
     &_circle4 {
@@ -147,6 +140,7 @@
         position: absolute;
         top: 0;
         left: 0;
+        z-index: 10;
     }
 
     &_sideCircle4 {
@@ -154,6 +148,7 @@
         transform: rotate(-20deg);
         top: -20px;
         left: -111px;
+        z-index: 11;
     }
 
     &_sideCircle0 {
@@ -161,12 +156,167 @@
         transform: rotate(-45deg);
         top: -22px;
         left: 184px;
+        z-index: 11;
     }
 
+    
     &_sideCircle0_2 {
         position: absolute;
         transform: rotate(45deg);
         top: -22px;
         left: 184px;
+        z-index: 11;
+    }
+    
+    &_sideCircle1 {
+        position: absolute;
+        transform: rotate(45deg);
+        bottom: 38px;
+        left: -146px;
+        z-index: 11;
+    }
+
+    &_sideCircle2 {
+        position: absolute;
+        transform: rotate(150deg);
+        bottom: -240px;
+        right: -40px;
+        z-index: 11;
+    }
+
+    &_sideCircle3 {
+        position: absolute;
+        transform: rotate(25deg);
+        top: 48px;
+        right: -164px;
+        z-index: 11;
+    }
+
+    &_smallCircle4 {
+        width: 24px;
+        height: 24px;
+        background-color: #fff;
+        position: absolute;
+        border-radius: 50%;
+        top: 108px;
+        left: 0;
+        z-index: 12;
+    }
+
+    &_smallCircle0_1 {
+        width: 24px;
+        height: 24px;
+        background-color: #fff;
+        position: absolute;
+        border-radius: 50%;
+        top: 22px;
+        left: 388px;
+        z-index: 12;
+    }
+
+    &_smallCircle0_2 {
+        width: 16px;
+        height: 16px;
+        background-color: #fff;
+        position: absolute;
+        border-radius: 50%;
+        top: -50px;
+        left: 560px;
+        z-index: 12;
+    }
+
+    &_smallCircle1 {
+        width: 28px;
+        height: 28px;
+        background-color: #fff;
+        position: absolute;
+        border-radius: 50%;
+        bottom: 0;
+        left: 228px;
+        z-index: 12;
+    }
+
+    &_smallCircle2 {
+        width: 20px;
+        height: 20px;
+        background-color: #fff;
+        position: absolute;
+        border-radius: 50%;
+        bottom: -102px;
+        right: 228px;
+        z-index: 12;
+    }
+
+    &_smallCircle3 {
+        width: 16px;
+        height: 16px;
+        background-color: #fff;
+        position: absolute;
+        border-radius: 50%;
+        top: 133px;
+        right: 0;
+        z-index: 12;
+    }
+
+    &_horizontal {
+        position: absolute;
+        width: 100vw;
+        height: 96px;
+        background-color: rgb(239, 180, 143);
+        top: 360px;
+        left: -15px;
+    }
+
+    &_vertical {
+        position: absolute;
+        width: 96px;
+        height: 100vh;
+        background-color: rgb(239, 180, 143);
+        top: 0;
+        left: 270px;
+    }
+
+    &_scroll {
+        position: absolute;
+        bottom: 32px;
+        left: 50vw;
+        width: 2px;
+        height: 0px;
+        background-color: #fff;
+
+        &Circle {
+            position: absolute;
+            bottom: 12px;
+            left: calc(50vw - 23px);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            transition: transform 0.3s ease-in-out;
+            z-index: 10;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.2);
+            }
+        }
+
+        &SmallCircle {
+            position: absolute;
+            bottom: 27px;
+            left: calc(50vw - 7px);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+    }
+
+    &_vocabulary {
+        position: absolute;
+        bottom: 300px;
+        transform: rotate(90deg);
+        font-size: 120px;
+        color: #fca262;
     }
 }

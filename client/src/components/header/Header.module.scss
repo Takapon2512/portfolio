@@ -33,6 +33,7 @@
         @extend .font-m;
         @extend .text-color;
         font-weight: 600;
+        z-index: 15;
     }
 
     &_buttons {
