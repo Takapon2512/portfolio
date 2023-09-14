@@ -5,8 +5,13 @@ import Image from "next/image";
 import { 
     Box,
     Typography,
-    Link
+    Link,
+    List,
+    ListItem
 } from '@mui/material';
+
+//MUIIcon
+
 
 //Font
 import { notoSansJP } from "@/utils/font";
@@ -17,7 +22,28 @@ import styles from './secondcontent.module.scss';
 //Image
 import eStudy01 from '../../../../public/e-study_img01.jpg';
 
+//type
+type ChallengesType = {
+    icon: React.JSX.Element,
+    text: string
+}
+
 const SecondContent = () => {
+    //#66530B
+    const challenges: ChallengesType[] = [
+        {
+            icon: <Image className={styles.secC_image} width={72} height={72} src="/images/cry_man.png" alt="英単語が多くて覚えられない" />,
+            text: "英単語が多くて覚えられない..."
+        },
+        {
+            icon: <Image className={styles.secC_image} width={72} height={72} src="/images/study_woman.png" alt="覚えた単語と覚えていない単語の管理ができない" />,
+            text: "覚えた単語と覚えていない単語の管理ができない..."
+        },
+        {
+            icon: <Image className={styles.secC_image} width={72} height={72} src="/images/pc_man.png" alt="実際は暗記できていないのにアプリでは暗記済みになっている" />,
+            text: "実際は暗記できていないのにアプリでは暗記済みになっている..."
+        }
+    ]
 
     return (
         <>
@@ -27,28 +53,24 @@ const SecondContent = () => {
                 variant="h2"
                 className={`${notoSansJP.className} ${styles.secC_title}`}
                 >
-                    苦手な暗記を得意に
+                    このような<Box className={styles.secC_emphasis} component={'span'}>課題</Box>はありませんか？
                 </Typography>
-                <Image 
-                className={styles.secC_image}
-                src={eStudy01}
-                width={1280}
-                height={905}
-                alt='苦手な暗記を得意に'
-                />
-                <Typography
-                variant="h3"
-                className={`${notoSansJP.className} ${styles.secC_subtitle}`}
-                >
-                    シンプルな単語帳
-                </Typography>
-                <Typography
-                className={`${notoSansJP.className} ${styles.secC_subDescription}`}
-                >
-                    ひと目で英単語と日本語訳を確認できるシンプルなデザイン構成です。
-                    <br></br>
-                    ボタン1つで次の単語に進めるようになっており、操作が簡単です。
-                </Typography>
+                <List className={styles.secC_Lists}>
+                    {
+                        challenges.map((item: ChallengesType, index: number) => (
+                            <ListItem key={index} className={styles.secC_Item}>
+                                <Typography className={`${notoSansJP.className} ${styles.secC_case}`}>
+                                    {`Case 0${index + 1}`}
+                                </Typography>
+                                { item.icon }
+                                <Typography className={`${notoSansJP.className} ${styles.secC_Text}`}>
+                                    { item.text }
+                                </Typography>
+                            </ListItem>
+                        ))
+                    }
+                </List>
+                <Box className={styles.secC_triangle}></Box>
             </Box>
         </Box>
         </>

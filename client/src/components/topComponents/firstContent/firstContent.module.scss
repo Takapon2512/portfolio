@@ -303,8 +303,9 @@
 
         &SmallCircle {
             position: absolute;
-            bottom: 27px;
+            transform: translateY(337px);
             left: calc(50vw - 7px);
+            bottom: 136px;
             width: 16px;
             height: 16px;
             border-radius: 50%;
@@ -314,9 +315,19 @@
 
     &_vocabulary {
         position: absolute;
-        bottom: 300px;
-        transform: rotate(90deg);
-        font-size: 120px;
+        bottom: -320px;
+        right: -230px;
+        font-size: 140px;
         color: #fca262;
+    }
+
+    &_english {
+        position: absolute;
+        bottom: -150px;
+        left: 100px;
+        font-size: 140px;
+        color: #fca262;
+        z-index: 12;
+        user-select: none;
     }
 }
