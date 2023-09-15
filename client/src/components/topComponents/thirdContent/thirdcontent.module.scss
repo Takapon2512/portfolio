@@ -1,5 +1,5 @@
 .text-color {
-    color: rgb(243, 235, 235);
+    color: rgb(86, 59, 37);
 }
 
 .font-s {
@@ -20,18 +20,20 @@
 
 .thiC {
     padding: 64px 0;
-    background-color: rgb(240, 119, 49);
+    background-color: rgb(250, 202, 104);
+    position: relative;
 
     &_container {
-        width: 96%;
-        max-width: 960px;
+        position: relative;
+        width: 99vw;
+        min-height: calc(100vh - 128px);
         margin: auto;
     }
 
     &_title {
         text-align: center;
         font-weight: 600;
-        margin-bottom: 64px;
+        margin-bottom: 48px;
         letter-spacing: 1px;
         @extend .font-xl;
         @extend .text-color;
@@ -48,13 +50,83 @@
         font-weight: 600;
         letter-spacing: 1px;
         margin-bottom: 16px;
-        @extend .font-l;
+        @extend .font-xl;
         @extend .text-color;
     }
 
     &_subDescription {
         text-align: center;
         @extend .text-color;
+    }
+
+    &_ImageContainer {
+        position: relative;
+        right: 6px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background-color: rgb(247, 148, 91);
+        min-height: 480px;
+        width: 53vw;
+        padding-right: 24px;
+        border-top-right-radius: 40px;
+        border-bottom-right-radius: 40px;
+        z-index: 15;
+
+        &Back {
+            position: absolute;
+            top: 164px;
+            left: -13px;
+            width: 53vw;
+            min-height: 470px;
+            background-color: rgb(97, 47, 19);
+            box-shadow: 2px 2px 22px 2px rgb(97, 47, 19);
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+            z-index: 12;
+        }
+    }
+
+    &_Image {
+        top: 21px;
+        right: 25px;
+        border-radius: 28px;
+    }
+
+    &_TextContainer {
+        display: flex;
+        margin-right: -4px;
+        align-items: center;
+        background-color: #fff;
+        min-height: 560px;
+        width: 64vw;
+        border-top-left-radius: 40px;
+        border-bottom-left-radius: 40px;
+    }
+
+    &_TextBox {
+        width: 60%;
+        padding-left: 40px;
+
+        &Right {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            z-index: 11;
+            bottom: 84px;
+        }
+    }
+
+    &_textTitle {
+        font-size: 32px;
+        font-weight: 600;
+        color: rgb(37, 35, 35);
+        margin-bottom: 32px;
+    }
+
+    &_description {
+        line-height: 1.8;
+        font-size: 18px;
     }
 
 }

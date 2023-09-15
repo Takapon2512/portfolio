@@ -64,7 +64,9 @@
     }
 
     &_Item {
-        border: 2px solid rgb(187, 187, 187);
+        display: flex;
+        position: relative;
+        align-items: center;
         margin-bottom: 32px;
         border-radius: 8px;
         padding: 16px 24px;
