@@ -37,7 +37,7 @@ const SecondContent = () => {
             text: "英単語が多くて覚えられない..."
         },
         {
-            icon: <Image className={styles.secC_image} width={72} height={72} src="/images/study_woman.png" alt="覚えた単語と覚えていない単語の管理ができない" />,
+            icon: <Image className={styles.secC_image} width={72} height={72} src="/images/study_woman1.png" alt="覚えた単語と覚えていない単語の管理ができない" />,
             text: "覚えた単語と覚えていない単語の管理ができない..."
         },
         {
@@ -66,9 +66,7 @@ const SecondContent = () => {
                 window.removeEventListener('scroll', onScroll);
             };
         };
-
         window.addEventListener('scroll', onScroll);
-
     }, []);
 
     return (

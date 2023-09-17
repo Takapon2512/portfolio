@@ -26,15 +26,16 @@
     &_container {
         position: relative;
         width: 99vw;
-        min-height: calc(100vh - 128px);
         margin: auto;
+        overflow-x: hidden;
     }
 
     &_title {
         text-align: center;
         font-weight: 600;
-        margin-bottom: 48px;
-        letter-spacing: 1px;
+        margin-bottom: 24px;
+        letter-spacing: 2px;
+        line-height: 1.25;
         @extend .font-xl;
         @extend .text-color;
     }
@@ -75,7 +76,7 @@
 
         &Back {
             position: absolute;
-            top: 164px;
+            top: 28px;
             left: -13px;
             width: 53vw;
             min-height: 470px;
@@ -126,7 +127,51 @@
 
     &_description {
         line-height: 1.8;
-        font-size: 18px;
+        font-size: 16px;
     }
 
+    &_contents {
+        position: relative;
+        overflow-x: hidden;
+        padding: 24px 0 0;
+        width: 100%;
+    }
+
+    &_support {
+        position: absolute;
+        font-size: 136px;
+        font-weight: 600;
+        top: 230px;
+        right: 60px;
+        letter-spacing: 4px;
+        color: rgb(255, 230, 215);
+    }
+
+    &_function {
+        position: absolute;
+        font-size: 136px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        color: rgb(255, 230, 215);
+        bottom: 196px;
+        left: 48px;
+    }
+
+    &_next {
+        position: absolute;
+        bottom: 84px;
+        right: 142px;
+        width: 0px;
+        height: 40px;
+        background-color: rgb(250, 202, 104);
+        color: #fff;
+        transition: all 0.2s;
+        letter-spacing: 2px;
+        border-radius: 24px;
+
+        &:hover {
+            background-color: rgb(250, 190, 70);
+            transform: scale(1.05);
+        }
+    }
 }
