@@ -18,7 +18,6 @@ const Top = () => {
     <FirstContent />
     <SecondContent />
     <ThirdContent />
-    <ForthContent />
     <FifthContent />
     <SixthContent />
     <SeventhContent />

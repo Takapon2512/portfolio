@@ -15,8 +15,12 @@
 }
 
 .header {
-    height: 72px;
+    position: fixed;
+    height: 56px;
+    width: 100vw;
     background-color: rgb(240, 119, 49);
+    z-index: 20;
+    left: -16px;
 
     &_container {
         width: 96%;
@@ -44,7 +48,7 @@
     &_register {
         display: block;
         text-decoration: none;
-        padding: 8px 12px;
+        padding: 4px 12px;
         border: 1px solid rgb(243, 235, 235);
         border-radius: 4px;
         @extend .text-color;

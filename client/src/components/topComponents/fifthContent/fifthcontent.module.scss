@@ -1,5 +1,5 @@
 .text-color {
-    color: rgb(163, 91, 23);
+    color: rgb(48, 48, 48);
 }
 
 .font-s {
@@ -19,10 +19,12 @@
 }
 
 .fifC {
-    padding: 64px 0;
-    background-color: rgb(248, 208, 31);
+    padding: 64px 0 88px;
+    background-color: rgb(234, 234, 234);
+    overflow: hidden;
 
     &_container {
+        position: relative;
         width: 96%;
         max-width: 960px;
         margin: auto;
@@ -31,10 +33,9 @@
     &_title {
         text-align: center;
         font-weight: 600;
+        font-size: 48px;
         margin-bottom: 64px;
         letter-spacing: 1px;
-        color: rgb(48, 48, 48);
-        @extend .font-l;
     }
 
     &_boxs {
@@ -43,10 +44,13 @@
     }
 
     &_function {
+        position: relative;
         width: calc(50% - 12px);
         padding: 24px;
         background-color: rgb(240, 240, 240);
         border-radius: 8px;
+        z-index: 15;
+        overflow: hidden;
 
         &:nth-child(1), &:nth-child(3) {
             margin-right: 24px;
@@ -89,5 +93,23 @@
     &_fcDescription {
         letter-spacing: 1px;
         color: rgb(48, 48, 48);
+    }
+
+    &_leftImage {
+        position: absolute;
+        bottom: -120px;
+        left: -260px;
+        z-index: 8;
+        opacity: 0.2;
+        transform: rotate(90deg);
+    }
+
+    &_rightImage {
+        position: absolute;
+        top: -105px;
+        right: -240px;
+        z-index: 8;
+        opacity: 0.2;
+        transform: rotate(-90deg);
     }
 }

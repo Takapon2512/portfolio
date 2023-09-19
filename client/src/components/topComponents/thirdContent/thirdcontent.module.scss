@@ -20,8 +20,8 @@
 
 .thiC {
     padding: 64px 0;
-    background-color: rgb(250, 202, 104);
     position: relative;
+    background: linear-gradient(to bottom right, rgb(255, 230, 148) , rgb(252, 179, 33));
 
     &_container {
         position: relative;
@@ -123,6 +123,7 @@
         font-weight: 600;
         color: rgb(37, 35, 35);
         margin-bottom: 32px;
+        letter-spacing: 1px;
     }
 
     &_description {
@@ -172,6 +173,23 @@
         &:hover {
             background-color: rgb(250, 190, 70);
             transform: scale(1.05);
+        }
+    }
+
+    &_page {
+        position: absolute;
+        bottom: 92px;
+        right: 500px;
+        display: flex;
+        justify-content: center;
+
+        &Circle {
+            padding: 0;
+            width: 8px;
+            height: 8px;
+            background-color: rgb(199, 199, 199);
+            margin-right: 24px;
+            border-radius: 50%;
         }
     }
 }
