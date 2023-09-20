@@ -1,5 +1,7 @@
-import react, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 
 //MUI
 import { 
@@ -20,6 +22,7 @@ import googleBtn from '../../../../public/google_btn.png';
 import googleBtn_focus from '../../../../public/google_btn_focus.png';
 
 const SeventhContent = () => {
+    gsap.registerPlugin(ScrollTrigger)
     //Googleボタンの画像切り替え
     const [googleFocus, setGoogleFocus] = useState(false);
 
@@ -39,17 +42,73 @@ const SeventhContent = () => {
         };
     };
     
+    useEffect(() => {
+        //要素取得
+        const sevCBoxEl = document.getElementById("sevC_Box");
+        const titleEl = document.getElementById("sevC_title");
+        const descriptionEl = document.getElementById("sevC_description");
+        const buttonsEl = document.getElementById("sevC_buttons");
+
+        if (!sevCBoxEl || !titleEl || !descriptionEl || !buttonsEl) return;
+
+        gsap.fromTo(titleEl, {
+            opacity: 0,
+            transform: "translateY(16px)"
+        }, {
+            opacity: 1,
+            transform: "translateY(0)",
+            duration: 0.5,
+            scrollTrigger: {
+                trigger: sevCBoxEl,
+                start: 'top 70%',
+                end: "bottom"
+            }
+        });
+
+        gsap.fromTo(descriptionEl, {
+            opacity: 0,
+            transform: "translateY(16px)"
+        }, {
+            opacity: 1,
+            transform: "translateY(0)",
+            duration: 0.5,
+            delay: 0.4,
+            scrollTrigger: {
+                trigger: sevCBoxEl,
+                start: 'top 70%',
+                end: "bottom"
+            }
+        });
+
+        gsap.fromTo(buttonsEl, {
+            opacity: 0,
+            transform: "translateY(16px)"
+        }, {
+            opacity: 1,
+            transform: "translateY(0)",
+            duration: 0.5,
+            delay: 0.4,
+            scrollTrigger: {
+                trigger: sevCBoxEl,
+                start: 'top 70%',
+                end: "bottom"
+            }
+        });
+    }, []);
+    
     return (
         <>
-        <Box className={styles.sevC}>
+        <Box id="sevC_Box" className={styles.sevC}>
             <Box className={styles.sevC_container}>
             <Typography
+            id="sevC_title"
             variant="h3"
             className={`${notoSansJP.className} ${styles.sevC_subtitle}`}
             >
-                今すぐはじめよう
+                今すぐ学習しよう！
             </Typography>
             <Typography
+            id="sevC_description"
             className={`${notoSansJP.className} ${styles.sevC_subDescription}`}
             >
                 メールアドレス、ユーザー名、パスワードで登録できます。
@@ -58,7 +117,7 @@ const SeventhContent = () => {
                 <br></br>
                 そちらで認証をとることも可能です。
             </Typography>
-            <Box className={styles.sevC_buttons}>
+            <Box id="sevC_buttons" className={styles.sevC_buttons}>
                 <Link 
                 href="/register"
                 className={`${notoSansJP.className} ${styles.sevC_mail}`}

@@ -24,6 +24,9 @@ import styles from "./WordList.module.scss";
 //utils
 import { notoSansJP } from '@/utils/font';
 
+//Components
+import WordEditing from '../WordEditing/WordEditing';
+
 //type
 import { WordDBType } from '@/types/globaltype';
 
@@ -48,6 +51,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
     '&:last-child td, &:last-child th': {
         border: 0,
+    },
+    '&:hover': {
+        cursor: 'pointer',
+        backgroundColor: 'rgb(231, 231, 231)',
     }
 }));
 
@@ -67,6 +74,8 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
     //stringをnumberに変換
     const minNum: number = Number(minText);
     const maxNum: number = Number(maxText);
+    //クリックした単語の情報を管理
+    const [selectWord, setSelectWord] = useState<WordDBType | null>(null);
 
     //単語番号で絞る
     const numWordsArr: Array<WordDBType> = wordsArr.filter((word: WordDBType, index: number) => 
@@ -85,6 +94,9 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
 
     //最後のページ番号を求める
     const lastPage: number = Math.ceil(keyWordsArr.length / perPageItemNum);
+
+    //クリックした単語の情報を表示する
+    const handleWordDisplay = (word: WordDBType) => setSelectWord(word);
     
     return (
         <>        
@@ -109,36 +121,42 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         {word.user_word_id}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         {word.english}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         {word.japanese}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         {`${word.question_count} 回`}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         {`${word.correct_rate} %`}
                                     </StyledTableCell>
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         {
                                             word.last_time_at === null 
@@ -149,6 +167,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     <StyledTableCell
                                     className={notoSansJP.className}
                                     align='center'
+                                    onClick={() => handleWordDisplay(word)}
                                     >
                                         { new Date(word.created_at).toLocaleDateString() }
                                     </StyledTableCell>
@@ -175,6 +194,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                 <NavigateNextIcon />
             </Button>
         </Box>
+        <WordEditing wordData={selectWord} />
         </>
     );
 };

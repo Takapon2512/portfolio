@@ -20,7 +20,7 @@
 
 .sevC {
     padding: 64px 0;
-    background-color: rgb(255, 60, 34);
+    background-color: rgb(240, 119, 49);
 
     &_container {
         width: 96%;
@@ -47,8 +47,8 @@
         text-align: center;
         font-weight: 600;
         letter-spacing: 1px;
-        margin-bottom: 16px;
-        @extend .font-l;
+        margin-bottom: 64px;
+        font-size: 48px;
         @extend .text-color;
     }
 

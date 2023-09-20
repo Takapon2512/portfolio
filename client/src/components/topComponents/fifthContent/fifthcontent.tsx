@@ -71,20 +71,20 @@ const FifthContent = () => {
 
         gsap.fromTo(funcEl0, {
             opacity: 0,
-            transform: "translateY(12px)"
+            transform: "translateY(16px)"
         }, {
             opacity: 1,
             transform: "translateY(0)",
             scrollTrigger: {
                 trigger: fifCBoxEl,
                 start: 'top center',
-                end: "bottom",
+                end: "bottom"
             }
         });
 
         gsap.fromTo(funcEl1, {
             opacity: 0,
-            transform: "translateY(12px)"
+            transform: "translateY(16px)"
         }, {
             opacity: 1,
             transform: "translateY(0)",
@@ -92,13 +92,13 @@ const FifthContent = () => {
             scrollTrigger: {
                 trigger: fifCBoxEl,
                 start: 'top center',
-                end: "bottom",
+                end: "bottom"
             }
         });
 
         gsap.fromTo(funcEl2, {
             opacity: 0,
-            transform: "translateY(12px)"
+            transform: "translateY(16px)"
         }, {
             opacity: 1,
             transform: "translateY(0)",
@@ -106,13 +106,13 @@ const FifthContent = () => {
             scrollTrigger: {
                 trigger: fifCBoxEl,
                 start: 'top center',
-                end: "bottom",
+                end: "bottom"
             }
         });
 
         gsap.fromTo(funcEl3, {
             opacity: 0,
-            transform: "translateY(12px)"
+            transform: "translateY(16px)"
         }, {
             opacity: 1,
             transform: "translateY(0)",
@@ -120,7 +120,7 @@ const FifthContent = () => {
             scrollTrigger: {
                 trigger: fifCBoxEl,
                 start: 'top center',
-                end: "bottom",
+                end: "bottom"
             }
         });
 
