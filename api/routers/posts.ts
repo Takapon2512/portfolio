@@ -74,7 +74,7 @@ scheduleJob('0 0 * * *', async () => {
     try {
         let i = 1;
         while (true) {
-            const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: i } });
+            const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: i, deleted_at: null } });
             const setting: SettingType | null = await prisma.setting.findUnique({ where: { user_id: i } });
             //データが取れなくなったら、While文を抜ける
             if (words.length === 0) break;
@@ -174,7 +174,7 @@ postsRouter.post("/db_register", isAuthenticated, async (req: Request, res: Resp
 //DBの単語を取得するAPI
 postsRouter.get("/db_search", isAuthenticated, async (req: Request, res: Response) => {
     try {
-        const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id } });
+        const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: req.body.user_id, deleted_at: null } });
         return res.status(OK).json(words);
     } catch (err) {
         return res.status(ServerError).json({ error: serverErrorMsg });
@@ -364,4 +364,62 @@ postsRouter.get("/db_sp_memorize_answer", isAuthenticated, async (req: Request, 
         console.error(err);
         return res.status(ServerError).json({ error: serverErrorMsg });
     }
+});
+
+//単語を編集するAPI
+postsRouter.post("/edit_word", async (req: Request, res: Response) => {
+    try {
+        const targetWord: WordDBType = req.body.editWord;
+        console.log(targetWord);
+    
+        //同じ単語がないかを調べる処理
+        const wordSearch: WordDBType | null = await prisma.wordData.findUnique({ 
+            where: { 
+                id: targetWord.id, 
+                user_id: targetWord.user_id, 
+                user_word_id: targetWord.user_word_id,
+                english: targetWord.english
+            }
+        });
+        if (wordSearch !== null) return res.status(ServerError).json({ error: serverErrorMsg });
+        
+        //編集した単語をDBに反映する
+        await prisma.wordData.update({
+            where: {
+                id: targetWord.id, 
+                user_id: targetWord.user_id, 
+                user_word_id: targetWord.user_word_id,
+            },
+            data: {
+                english: targetWord.english,
+                japanese: targetWord.japanese
+            }
+        });
+        return res.status(OK).json({ message: "更新に成功しました。" });
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+});
+
+//単語を削除するAPI
+postsRouter.post("/delete_word", async (req: Request, res: Response) => {
+    try {
+        const targetWord: WordDBType = req.body.deleteWord;
+        const now = new Date(Date.now());
+
+        await prisma.wordData.update({
+            where: {
+                id: targetWord.id,
+                user_id: targetWord.user_id,
+                user_word_id: targetWord.user_word_id
+            },
+            data: { deleted_at: now }
+        });
+
+        return res.status(OK).json({ message: "削除に成功しました。" })
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
 });
