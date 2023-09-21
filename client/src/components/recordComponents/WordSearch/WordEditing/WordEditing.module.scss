@@ -13,7 +13,7 @@
     &_EnglishTitle, &_JapaneseTitle {
         display: flex;
         align-items: center;
-        width: 120px;
+        min-width: 120px;
     }
 
     &_buttons {
@@ -32,6 +32,10 @@
         &:hover {
             background-color: rgb(60, 139, 255);
         }
+
+        &:disabled {
+            background-color: rgb(218, 206, 200);
+        }
     }
 
     &_delete {
@@ -44,7 +48,8 @@
 
     &_close {
         position: relative;
-        top: -8px;
+        top: 0;
+        right: 0;
 
         &:hover {
             background-color: #fff;
@@ -67,5 +72,24 @@
             transform: rotate(-45deg);
             border-radius: 4px;
         }
+    }
+
+    &_targetBox {
+        display: flex;
+        margin-bottom: 16px;
+    }
+
+    &_targetTitle {
+        display: flex;
+        align-items: center;
+        width: 120px;
+        font-size: 16px;
+    }
+    &_targetWord {
+        font-size: 16px;
+        padding: 8px 12px;
+        background-color: rgb(255, 240, 211);
+        border-radius: 4px;
+        color: rgb(48, 48, 48);
     }
 }

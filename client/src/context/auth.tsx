@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { ResUserType } from "@/types/globaltype";
 
 //lib
-import { apiClient_multi } from "@/lib/apiClient";
 import apiClient from "@/lib/apiClient";
 
 interface AuthContextType {
@@ -33,9 +32,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     useEffect(() => {
         const cookie: string = document.cookie;
         const token: string = cookie.split("=")[1];
+
         if (token) {
             apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-            apiClient_multi.defaults.headers["Authorization"] = `Bearer ${token}`;
             apiClient.get("/users/find").then((res) => {
                 setUser(res.data.user);
             }).catch((err) => {
@@ -43,25 +42,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             });
 
             apiClient.get("/posts/db_search");
-        }
+        };
+        
     }, []);
 
     const login = async (token: string) => {
+        
         document.cookie = `auth_token=${token};`;
 
         try {
             apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-            apiClient_multi.defaults.headers["Authorization"] = `Bearer ${token}`;
             apiClient.get("/users/find").then(res => setUser(res.data.user));
         } catch (err) {
             console.error(err);
-        }
+        };
     };
 
     const logout = () => {
-        document.cookie = "auth_token=; max-age=0"
-        delete apiClient.defaults.headers["Authorization"];
-        setUser(null);
+        if (user) {
+            //cookieをすべて削除（たまに2つ以上トークンが生成されるため）
+            document.cookie.split(';')
+            .forEach(cookie => document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;max-age=${0};`));
+    
+            delete apiClient.defaults.headers["Authorization"];
+            setUser(null);
+        };
     };
 
     const value: AuthContextType = {

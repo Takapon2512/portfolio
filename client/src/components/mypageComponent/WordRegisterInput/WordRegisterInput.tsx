@@ -145,8 +145,8 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     onClick={handleWordsAdd}
                     disabled={ 
                         remain === 0 || 
-                        engField.length === 0 || 
-                        japField.length === 0 ||
+                        engField === "" || 
+                        japField === "" ||
                         TextFieldLimit(engField, /^[a-zA-Z]*$/) ||
                         TextFieldLimit(japField, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々〜]*$/)
                         ? true : false 

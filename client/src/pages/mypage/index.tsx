@@ -66,7 +66,7 @@ const Mypage = ({ words, todayWords }: Props) => {
             width: { xs: "100vw", md: "calc(100vw - 248px)" }
           }}
           >
-              <Box className={styles.home_container}>
+              <Box sx={{ maxWidth: "80%", margin: "auto" }}>
                 <WordRegisterInput dbWords={words}/>
                 <RegisterList dbWords={words} />
                 <TodayList dbWords={todayWords} />

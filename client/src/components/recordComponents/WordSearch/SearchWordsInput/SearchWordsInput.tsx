@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 
-//recoil
-import { useRecoilValue } from 'recoil';
-import { dbWordsState } from '@/store/mypageState';
-
 //MUI
 import { 
     Box,
@@ -19,7 +15,7 @@ import { notoSansJP } from '@/utils/font';
 import WordList from '../WordList/WordList';
 
 //type
-import { UserInputType, WordDBType, WordDataType } from '@/types/globaltype';
+import { UserInputType, WordDBType } from '@/types/globaltype';
 type Props = {
     recordWords: WordDBType[]
 }

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+//lib
+import apiClient from '@/lib/apiClient';
+
 //MUI
 import {
     Box,
@@ -17,10 +20,14 @@ import { notoSansJP } from '@/utils/font';
 //type
 import { WordDBType } from '@/types/globaltype';
 
+//Component
+import AlertComponent from '../alert/alert';
+
 const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
     const [word, setWord] = useState<WordDBType | null>(null);
     const [english, setEnglish] = useState<string>("");
     const [japanese, setJapanese] = useState<string>("");
+    const [alert, setAlert] = useState<string>("");
 
     //×ボタンを押した時の処理
     const handleClose = () => {
@@ -28,9 +35,44 @@ const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
         setJapanese("");
         
         setWord(null);
+        setAlert("");
     };
 
     //登録するボタンの無効化判定
+    const TextFieldLimit = (text: string, regular: RegExp) => {
+        if (!text.match(regular)) return true;
+        return false;
+    };
+
+    //単語を編集するボタンの処理
+    const handleEditingWord = async () => {
+        try {
+            const response = await apiClient.post("/posts/edit_word", { editWord: {
+                ...wordData,
+                english: english,
+                japanese: japanese
+            }});
+
+            setAlert("成功");
+
+            return response.data;
+        } catch (err) {
+            console.error(err);
+            
+            setAlert("失敗");
+        };
+    };
+
+    //単語を削除するボタンの処理
+    const handleDeleteWord = async () => {
+        try {
+            await apiClient.post("/posts/delete_word", { deleteWord: word });
+            setAlert("成功");
+        } catch (err) {
+            console.error(err);
+            setAlert("失敗");
+        };
+    };
 
     useEffect(() => {
         if (wordData !== null) {
@@ -45,14 +87,16 @@ const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
         <>
         <Box className={styles.editing_wordDetail}>
             <Box className={styles.editing_wordDetailContainer}>
+                <AlertComponent alertFlag={alert} />
                 <Box 
                 sx={{ 
                     display: "flex", 
-                    justifyContent: "space-between"
+                    justifyContent: "space-between",
+                    marginBottom: 2
                 }}>
                     <Typography 
                     className={notoSansJP.className} 
-                    sx={{ fontSize: "18px", fontWeight: 600, marginBottom: 2}}
+                    sx={{ fontSize: "18px", fontWeight: 600 }}
                     >
                         単語の編集
                     </Typography>
@@ -69,7 +113,7 @@ const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
                     <Typography
                     className={`${notoSansJP.className} ${styles.editing_targetTitle}`}
                     >
-                        対象
+                        対象の単語
                     </Typography>
                     <Typography
                     className={`${notoSansJP.className} ${styles.editing_targetWord}`}
@@ -101,12 +145,21 @@ const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
                     <Button
                     className={`${notoSansJP.className} ${styles.editing_register}`}
                     sx={{ width: { xs: "136px", md: "160px" } }}
+                    disabled={
+                        english === "" || 
+                        japanese === "" ||
+                        TextFieldLimit(english, /^[a-zA-Z]*$/) ||
+                        TextFieldLimit(japanese, /^[ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠、々〜]*$/)
+                        ? true : false 
+                    }
+                    onClick={handleEditingWord}
                     >
                         登録する
                     </Button>
                     <Button
                     className={`${notoSansJP.className} ${styles.editing_delete}`}
                     sx={{ width: { xs: "136px", md: "160px" } }}
+                    onClick={handleDeleteWord}
                     >
                         単語を削除
                     </Button>

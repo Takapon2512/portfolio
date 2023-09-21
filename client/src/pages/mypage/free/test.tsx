@@ -56,7 +56,7 @@ const Test = ({ timeConstraint, freeWords }: { timeConstraint: number, freeWords
   return (
     <Layout>
         <Box className={styles.free}>
-            <Box className={styles.free_container}>
+            <Box sx={{ maxWidth: "900px", margin: "auto" }}>
                 <WordTest timeConstraint={timeConstraint} freeWords={freeWords} />
             </Box>
         </Box>

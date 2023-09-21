@@ -45,7 +45,7 @@ const WordCardPage = ({ freeWords }: { freeWords: WordDBType[] }) => {
   return (
     <Layout>
       <Box className={styles.free}>
-        <Box className={styles.free_container}>
+        <Box sx={{ maxWidth: "900px", margin: "auto" }}>
           <WordCard freeWords={freeWords} />
         </Box>
       </Box>
