@@ -34,13 +34,19 @@ import { notoSansJP } from '../../utils/font';
 import styles from './layout.module.scss';
 
 //type
-import { ResUserType, SidebarType } from '@/types/globaltype';
+import { ResUserType, SidebarType, WordDBType } from '@/types/globaltype';
+
+//Components
+import AlertComponent from './alert/alert';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const { user, logout } = useAuth();
     const [userData, setUserData] = useState<ResUserType | null>(null);
     const [sideOn, setSideOn] = useState<boolean>(false);
+    const [userWords, setUserWords] = useState<WordDBType[]>([]);
+    const [alertFlag, setAlertFlag] = useState<string>("");
+    const registerMin = 10;
 
     const sidebarArr: Array<SidebarType> = [
         {
@@ -88,21 +94,45 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleAction = async (value: SidebarType) => {
-        //ユーザーがテスト画面や満点でないまま結果画面を離れたときに対処する処理
+        //ユーザーがテスト画面を離れたときに対処する処理
         await apiClient.post("/posts/db_reset");
+
+        if (value.link === "/mypage/memorization" && userWords.length < registerMin) {
+            setAlertFlag("失敗");
+            return
+        };
 
         if (value.link === "/login") logout();
         router.push(value.link);
+    };
+
+    const getUserWords = async () => {
+        try {
+            const token: string | undefined = document.cookie?.split('=')[1];
+            const response = await apiClient.get("/posts/db_search_memorize", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            setUserWords(response.data);
+        } catch(err) {
+            console.error(err);
+        };
     };
 
     useEffect(() => {
         setUserData(user);
     }, [user]);
 
+    useEffect(() => {
+        getUserWords();
+    }, []);
+
     return (
         <Box 
         className={styles.layout}
         >
+            <AlertComponent alertFlag={alertFlag} />
             <Box 
             className={styles.layout_container}
             >

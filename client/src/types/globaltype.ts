@@ -44,7 +44,7 @@ export interface WordDBType {
     question_count: number
     correct_rate: number;
     user_word_id: number;
-    user_id: number;
+    user_id: string;
 }
 
 
@@ -65,6 +65,7 @@ export type ResUserType = {
     id: number,
     email: string,
     username: string
+    uid: string;
 };
 
 export type SettingType = {

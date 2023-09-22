@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //Recoil
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -33,6 +33,9 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
     const [engField, setEngField] = useState('');
     const [japField, setJapField] = useState('');
 
+    //現在のDB登録されている単語を管理
+    const [registered, setRegistered] = useState<WordDBType[]>([]);
+
     //入力を検知
     const [composing, setComposing] = useState<boolean>(false);
 
@@ -57,8 +60,8 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
             question_count: 0,
             correct_rate: 0,
             last_time_at: null,
-            user_word_id: dbWords.length + registerWords.length + 1, 
-            user_id: 1
+            user_word_id: registered.length + registerWords.length + 1, 
+            user_id: ""
         };
 
         //words配列に追加の単語を格納
@@ -97,6 +100,24 @@ const WordRegisterInput = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 handleWordsAdd();
         }
     };
+
+    const getUserWords = async () => {
+        try {
+            const token: string | undefined = document.cookie?.split('=')[1];
+            const response = await apiClient.get("/posts/db_search", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            setRegistered(response.data);
+        } catch(err) {
+            console.error(err);
+        };
+    };
+
+    useEffect(() => {
+        getUserWords();
+    }, [registerWords]);
 
     return (
         <Box className={styles.home_firstContents}>

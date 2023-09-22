@@ -87,7 +87,7 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
         deleted_at: null, 
         last_time_at: null, 
         user_word_id: 0, 
-        user_id: 0
+        user_id: ""
     });
     const [editWordIndex, setEditWordIndex] = useState<number>(0);
     
@@ -98,6 +98,9 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
     //編集テキストの制御
     const [editEngText, setEditEngText] = useState<string>('');
     const [editJapText, setEditJapText] = useState<string>('');
+
+    //登録した単語を格納
+    const [registered, setRegistered] = useState<WordDBType[]>([]);
 
     //ユーザー情報を取得
     const { user } = useAuth();
@@ -110,6 +113,8 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //アラート発報管理
     const [alertFlag, setAlertFlag] = useState<string>("");
+    console.log(registered);
+
 
     //編集モードにする 
     const handleWordEditing = (word: WordDataType, index: number) => {
@@ -199,15 +204,18 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 correct_count: 0,
                 question_count: 0,
                 correct_rate: 0,
-                user_word_id: dbWords.length + index + 1,
-                user_id: user.id
+                user_word_id: registered.length + (index + 1),
+                user_id: user.uid
             }));
+
+            console.log(dbRegisterWords);
     
             try {
                 await apiClient.post("/posts/db_register", { dbRegisterWords: dbRegisterWords});
     
                 setRegisterWords([]);
                 setAlertFlag("成功");
+
             } catch (err) {
                 console.error(err);
                 setAlertFlag("失敗");
@@ -216,11 +224,29 @@ const RegisterList = ({ dbWords }: { dbWords: WordDBType[] }) => {
             router.push("/login");
         }
     };
+
+    const getUserWords = async () => {
+        try {
+            const token: string | undefined = document.cookie?.split('=')[1];
+            const response = await apiClient.get("/posts/db_search", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            setRegistered(response.data);
+        } catch(err) {
+            console.error(err);
+        };
+    };
     
     useEffect(() => {
         setRemainNum(remain);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [remain]);
+
+    useEffect(() => {
+        getUserWords();
+    }, [registerWords]);
 
     useEffect(() => {
         setAlertFlag("");

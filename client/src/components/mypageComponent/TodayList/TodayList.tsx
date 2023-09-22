@@ -186,6 +186,8 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                 ) : (
                     <Typography className={notoSansJP.className}>
                         本日の英単語を取得できませんでした。
+                        <br />
+                        単語登録していない場合は、登録後の翌日0時以降に再度ログインしてください。
                     </Typography>
                 )
             }
