@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
+import { v4 as uuidv4 } from "uuid";
 
 //type
 import { LoginType, UserType } from '../types/ApiTypes';
@@ -19,6 +20,9 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     //入力されたパスワードをハッシュ化する
     const hashedPassword: string = await hash(password, 10);
 
+    //uuidを生成
+    const randomUUID: string = uuidv4();
+
     //DBに同じメールアドレスのユーザーが存在するかどうかを確認
     const sameUser: UserType | null = await prisma.user.findUnique({ where: { email: email } });
     if (sameUser) {
@@ -29,7 +33,8 @@ authRouter.post("/register", async (req: Request, res: Response) => {
         data: {
             username: name,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            uid: randomUUID
         }
     });
 
@@ -39,12 +44,12 @@ authRouter.post("/register", async (req: Request, res: Response) => {
             work_on_count: 100,
             time_constraint: 10,
             icon_url: "/images/noImage.png",
-            user_id: user.id,
+            user_id: randomUUID
         }
     });
 
     //クライアントへJWTの発行
-    const token: string = sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
+    const token: string = sign({ user_id: user.uid }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
 
     return res.json({ user: user, token: token });
 });
@@ -67,7 +72,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     };
 
     //クライアントへJWTの発行
-    const token: string = sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
+    const token: string = sign({ user_id: user.uid }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
 
-    return res.json({ token: token });
+    return res.json({ user: user, token: token });
 });

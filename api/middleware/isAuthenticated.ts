@@ -11,7 +11,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     verify(token, process.env.SECRET_KEY || "", 
     (err: VerifyErrors | null, decoded: string | JwtPayload | undefined) => {
         if (err || decoded === undefined) return res.status(Unauthorized).json({ message: "権限がありません。" });
-        if (typeof decoded !== "string") req.body.user_id = decoded.id;
+        if (typeof decoded !== "string") req.body.user_id = decoded.user_id;
 
         next();
     });

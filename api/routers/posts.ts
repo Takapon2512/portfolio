@@ -19,11 +19,16 @@ scheduleJob('55 23 * * *', async () => {
     try {
         let i = 1;
         while (true) {
-            const words: Array<WordDBType> = await prisma.wordData.findMany({ 
-                where: { user_id: i, today_learning: true } 
+            //ユーザー情報を持ってくる
+            const userData = await prisma.user.findUnique({
+                where: { id: i }
             });
             //データが取れなくなったら、While文を抜ける
-            if (words.length === 0) break;
+            if (userData === null) break;
+
+            const words: Array<WordDBType> = await prisma.wordData.findMany({ 
+                where: { user_id: userData.uid, today_learning: true } 
+            });
         
             //サボり判定
             const slackingJudge = (word: WordDBType) => {
@@ -74,10 +79,18 @@ scheduleJob('0 0 * * *', async () => {
     try {
         let i = 1;
         while (true) {
-            const words: Array<WordDBType> = await prisma.wordData.findMany({ where: { user_id: i, deleted_at: null } });
-            const setting: SettingType | null = await prisma.setting.findUnique({ where: { user_id: i } });
-            //データが取れなくなったら、While文を抜ける
-            if (words.length === 0) break;
+            //ユーザー情報を持ってくる
+            const userData = await prisma.user.findUnique({
+                where: { id: i }
+            });
+            //ユーザー情報が取れない場合はループを抜ける
+            if (userData === null) break;
+            const words: Array<WordDBType> = await prisma.wordData.findMany({ 
+                where: { user_id: userData.uid, deleted_at: null } 
+            });
+            const setting: SettingType | null = await prisma.setting.findUnique({
+                where: { user_id: userData.uid } 
+            });
             if (setting === null) break;
 
             //単語を絞る（優先度S：未学習の単語）
@@ -154,10 +167,15 @@ const hasDuplicateEnglish = (userWords: Array<WordDBType>, wordsArr: Array<WordD
 postsRouter.post("/db_register", isAuthenticated, async (req: Request, res: Response) => {
     const WordsArr: Array<WordDBType> = req.body.dbRegisterWords;
 
+    //uid情報を追加
+    const userWordsArr: Array<WordDBType> = WordsArr.map((word) => (
+        { ...word, user_id: req.body.user_id }
+    ))
+
     //ログインしているユーザーの単語を取得する
     const userWords = await prisma.wordData.findMany({ where: { user_id: req.body.user_id } });
     if (!userWords) return res.status(ServerError).json({ error: "そのユーザーの単語を取得できませんでした。" });
-    if (hasDuplicateEnglish(userWords, WordsArr)) return res.status(ServerError).json({ error: "すでに登録されている単語が存在します。" });
+    if (hasDuplicateEnglish(userWords, userWordsArr)) return res.status(ServerError).json({ error: "すでに登録されている単語が存在します。" });
 
     try {
         const newRegisterWords = await prisma.wordData.createMany({

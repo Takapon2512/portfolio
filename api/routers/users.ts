@@ -12,6 +12,7 @@ interface LoginType {
     email: string;
     username: string;
     password: string;
+    uid: string;
 }
 
 interface UserInfoType extends LoginType {
@@ -26,11 +27,11 @@ const prisma: PrismaClient = new PrismaClient();
 //ユーザーを検索するAPI
 usersRouter.get("/find", isAuthenticated, async (req: Request, res: Response) => {
     try {
-        const user: UserInfoType | null = await prisma.user.findUnique({ where: { id: req.body.user_id } });
+        const user: UserInfoType | null = await prisma.user.findUnique({ where: { uid: req.body.user_id } });
 
         if (!user) res.status(NotFound).json({ message: "ユーザーが見つかりませんでした。" });
 
-        return res.status(OK).json({ user: { id: user?.id, email: user?.email, username: user?.username } });
+        return res.status(OK).json({ user: { id: user?.id, email: user?.email, username: user?.username, uid: user?.uid } });
     } catch (err) {
         return res.status(ServerError).json({ message: serverErrorMsg });
     }

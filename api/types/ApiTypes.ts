@@ -11,6 +11,7 @@ export type UserType = {
     password: string;
     created_at: Date;
     deleted_at: Date | null;
+    uid: string;
 };
 
 export type WordDBType = {
@@ -29,7 +30,7 @@ export type WordDBType = {
     question_count: number;
     correct_rate: number;
     user_word_id: number;
-    user_id: number;
+    user_id: string;
 };
 
 export type SettingType = {
@@ -40,5 +41,5 @@ export type SettingType = {
     created_at: Date;
     updated_at: Date | null;
     deleted_at: Date | null;
-    user_id: number;
+    user_id: string;
 };
