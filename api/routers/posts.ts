@@ -342,23 +342,30 @@ postsRouter.post("/db_finish", async (req: Request, res: Response) => {
     };
 });
 
-//学習を中断した単語の状態をリセットするAPI
-postsRouter.post("/db_reset", isAuthenticated, async (req: Request, res: Response) => {
-    try {
-        await prisma.wordData.updateMany({
-            where: { user_id: req.body.user_id, complete: true },
-            data: { 
-                complete: false,
-                user_answer: "",
-                right_or_wrong: false,
-                free_learning: false
-            }
-        });
+//出題状態を初期化するAPI
+postsRouter.post("/freelearning_reset", async (req: Request, res: Response) => {
+    const wordsArr: Array<WordDBType> = req.body.resetWordsArr;
+    const updatePromises = wordsArr.map(async (word) => {
+        const {
+            id,
+            user_id,
+            free_learning
+        } = word;
 
-        return res.status(OK).json({ message: "初期化が完了しました" });
+        return await prisma.wordData.updateMany({
+            where: {
+                id,
+                user_id
+            },
+            data: { free_learning }
+        });
+    });
+
+    try {
+        const updateResults = await Promise.all(updatePromises);
+        return res.status(OK).json(updateResults);
     } catch (err) {
         console.error(err);
-        return res.status(ServerError).json({ error: serverErrorMsg });
     };
 });
 
