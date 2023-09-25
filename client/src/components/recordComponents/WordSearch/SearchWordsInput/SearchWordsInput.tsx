@@ -35,22 +35,33 @@ const SearchWordsInput = ({recordWords}: Props) => {
     const changeWordText = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUserInput({...prevUserInput, wordText: e.target.value}); 
 
     return (
-        <Box className={styles.inputs}>
-            <Box className={styles.inputs_searchNumber}>
+        <Box 
+        className={styles.inputs}
+        sx={{ padding: { xs: "24px 16px", md: "32px 24px" } }}
+        >
+            <Box 
+            className={styles.inputs_searchNumber}
+            sx={{ display: { xs: "block", md: "flex" } }}
+            >
                 <TextField 
                 label="最初の単語番号"
                 type='number'
                 className={styles.inputs_searchNumMin}
+                sx={{ width: { xs: "100%", md: "calc(50% - 48px)" }, marginBottom: { xs: "16px"} }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => changeMinText(e)}
                 value={userInput.minText}
                 />
-                <Typography className={`${styles.inputs_searchNumberMiddle} ${notoSansJP.className}`}>
+                <Typography 
+                className={`${styles.inputs_searchNumberMiddle} ${notoSansJP.className}`}
+                sx={{ display: { xs: "none", md: "block" } }}
+                >
                     〜
                 </Typography>
                 <TextField 
                 label="最後の単語番号"
                 type='number'
                 className={styles.inputs_searchNumMax}
+                sx={{ width: { xs: "100%", md: "calc(50% - 48px)" } }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => changeMaxText(e)}
                 value={userInput.maxText}
                 />

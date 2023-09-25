@@ -74,8 +74,14 @@ const Address = () => {
                 ユーザー情報
             </Typography>
             <Box className={styles.address_container}>
-                <Box className={styles.address_name}>
-                    <Typography className={`${notoSansJP.className} ${styles.address_nameTitle}`}>
+                <Box 
+                className={styles.address_name}
+                sx={{ display: { xs: "block", md: "flex" } }}
+                >
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.address_nameTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         新しいユーザー名
                     </Typography>
                     <TextField 
@@ -84,8 +90,14 @@ const Address = () => {
                     value={name}
                     label="ユーザー名を入力" />
                 </Box>
-                <Box className={styles.address_mail}>
-                    <Typography className={`${notoSansJP.className} ${styles.address_mailTitle}`}>
+                <Box 
+                className={styles.address_mail}
+                sx={{ display: { xs: "block", md: "flex" } }}
+                >
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.address_mailTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         新しいメールアドレス
                     </Typography>
                     <TextField 
@@ -96,8 +108,14 @@ const Address = () => {
                     label="メールアドレスを入力"
                     />
                 </Box>
-                <Box className={styles.address_password}>
-                    <Typography className={`${notoSansJP.className} ${styles.address_passwordTitle}`}>
+                <Box 
+                className={styles.address_password}
+                sx={{ display: { xs: "block", md: "flex" } }}
+                >
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.address_passwordTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         現在のパスワード
                     </Typography>
                     <TextField 
@@ -108,8 +126,14 @@ const Address = () => {
                     label="現在のパスワードを入力"
                     />
                 </Box>
-                <Box className={styles.address_password}>
-                    <Typography className={`${notoSansJP.className} ${styles.address_passwordTitle}`}>
+                <Box 
+                className={styles.address_password}
+                sx={{ display: { xs: "block", md: "flex" } }}
+                >
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.address_passwordTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         新しいパスワード
                     </Typography>
                     <TextField 
@@ -120,8 +144,14 @@ const Address = () => {
                     label="新しいパスワードを入力"
                     />
                 </Box>
-                <Box className={styles.address_password}>
-                    <Typography className={`${notoSansJP.className} ${styles.address_passwordTitle}`}>
+                <Box 
+                className={styles.address_password}
+                sx={{ display: { xs: "block", md: "flex" } }}
+                >
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.address_passwordTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         パスワード確認
                     </Typography>
                     <TextField 

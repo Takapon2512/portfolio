@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-import { GetServerSideProps, GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
-
+import React from 'react';
+import { GetServerSideProps } from 'next';
 //context
 import { useAuth } from '@/context/auth';
 

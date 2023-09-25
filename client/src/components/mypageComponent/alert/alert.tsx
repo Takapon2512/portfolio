@@ -31,7 +31,7 @@ const AlertComponent = ({ alertFlag }: { alertFlag: string }) => {
                 <Box 
                 className={styles.alert}
                 id="alertBox"
-                sx={{ opacity: 0 }}
+                sx={{ opacity: 0, top: "12px", right: { sx: "0px", md: "24px" } }}
                 >
                     {
                         alertFlag === "失敗" ? (

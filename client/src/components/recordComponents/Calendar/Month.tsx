@@ -37,18 +37,23 @@ const Month = ({ calendars }: { calendars: CalendarType[] }) => {
                     </Button>
                 </Box>
             </Box>
-            <Box className={styles.calendar_container}>
-                {
-                    getMonth(monthNum).map((row: Dayjs[], i: number) => (
-                        <React.Fragment key={i}>
-                            {
-                                row.map((day: Dayjs, index: number) => (
-                                    <Day day={day} key={index} rowIndex={i} calendars={calendars} />
-                                ))
-                            }
-                        </React.Fragment>
-                    ))
-                }
+            <Box sx={{ overflow: { xs: "auto" } }}>
+                <Box 
+                className={styles.calendar_container} 
+                sx={{ minWidth: { xs: "720px" } }}
+                >
+                    {
+                        getMonth(monthNum).map((row: Dayjs[], i: number) => (
+                            <React.Fragment key={i}>
+                                {
+                                    row.map((day: Dayjs, index: number) => (
+                                        <Day day={day} key={index} rowIndex={i} calendars={calendars} />
+                                    ))
+                                }
+                            </React.Fragment>
+                        ))
+                    }
+                </Box>
             </Box>
         </Box>
     );

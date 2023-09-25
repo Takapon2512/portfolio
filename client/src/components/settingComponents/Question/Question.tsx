@@ -70,8 +70,14 @@ const Question = ({ setting }: { setting: SettingType }) => {
         モード設定
       </Typography>
       <Box className={styles.question_container}>
-        <Box className={styles.question_time}>
-          <Typography className={`${notoSansJP.className} ${styles.question_timeTitle}`}>
+        <Box 
+        className={styles.question_time}
+        sx={{ display: { xs: "block", md: "flex" } }}
+        >
+          <Typography 
+          className={`${notoSansJP.className} ${styles.question_timeTitle}`}
+          sx={{ fontSize: { xs: "14px", md: "16px" } }}
+          >
             制限時間
           </Typography>
           <TextField 
@@ -82,8 +88,14 @@ const Question = ({ setting }: { setting: SettingType }) => {
           label="5〜15の値を入力してください"
           />
         </Box>
-        <Box className={styles.question_amount}>
-          <Typography className={`${notoSansJP.className} ${styles.question_amountTitle}`}>
+        <Box 
+        className={styles.question_amount}
+        sx={{ display: { xs: "block", md: "flex" } }}
+        >
+          <Typography 
+          className={`${notoSansJP.className} ${styles.question_amountTitle}`}
+          sx={{ fontSize: { xs: "14px", md: "16px" } }}
+          >
             取り組む問題数
           </Typography>
           <Box sx={{ width: "100%" }}>

@@ -38,6 +38,8 @@
         @extend .text-color;
         font-weight: 600;
         z-index: 15;
+        cursor: pointer;
+        text-decoration: none;
     }
 
     &_buttons {

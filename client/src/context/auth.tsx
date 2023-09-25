@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 //type
 import { ResUserType } from "@/types/globaltype";
@@ -28,6 +29,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<ResUserType | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const cookie: string = document.cookie;
@@ -39,6 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 setUser(res.data.user);
             }).catch((err) => {
                 console.error(err);
+                router.push("/login");
             });
 
             apiClient.get("/posts/db_search");

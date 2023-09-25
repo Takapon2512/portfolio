@@ -184,7 +184,10 @@ const TodayList = ({ dbWords }: { dbWords: WordDBType[] }) => {
                     </Box>
                     </>
                 ) : (
-                    <Typography className={notoSansJP.className}>
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.home_info}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         本日の英単語を取得できませんでした。
                         <br />
                         単語登録していない場合は、登録後の翌日0時以降に再度ログインしてください。

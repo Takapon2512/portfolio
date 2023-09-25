@@ -112,17 +112,22 @@ const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
                 <Box className={styles.editing_targetBox}>
                     <Typography
                     className={`${notoSansJP.className} ${styles.editing_targetTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                     >
                         対象の単語
                     </Typography>
                     <Typography
                     className={`${notoSansJP.className} ${styles.editing_targetWord}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                     >
                         { word.english }
                     </Typography>
                 </Box>
                 <Box className={styles.editing_English}>
-                    <Typography className={`${notoSansJP.className} ${styles.editing_EnglishTitle}`}>
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.editing_EnglishTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         英単語
                     </Typography>
                     <TextField 
@@ -132,7 +137,10 @@ const WordEditing = ({ wordData }: { wordData: WordDBType | null }) => {
                     />
                 </Box>
                 <Box className={styles.editing_Japanese}>
-                    <Typography className={`${notoSansJP.className} ${styles.editing_JapaneseTitle}`}>
+                    <Typography 
+                    className={`${notoSansJP.className} ${styles.editing_JapaneseTitle}`}
+                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                    >
                         日本語訳
                     </Typography>
                     <TextField 

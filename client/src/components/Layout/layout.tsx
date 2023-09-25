@@ -94,8 +94,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleAction = async (value: SidebarType) => {
-        //ユーザーがテスト画面を離れたときに対処する処理
-        await apiClient.post("/posts/db_reset");
 
         if (value.link === "/mypage/memorization" && userWords.length < registerMin) {
             setAlertFlag("失敗");
@@ -109,11 +107,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const getUserWords = async () => {
         try {
             const token: string | undefined = document.cookie?.split('=')[1];
+            if (token === undefined) router.push("/login");
             const response = await apiClient.get("/posts/db_search_memorize", {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             });
+            
             setUserWords(response.data);
         } catch(err) {
             console.error(err);
@@ -148,9 +148,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         <Image 
                         //Imageタグのレスポンシブはscssファイルに記入
                         className={styles.layout_image}
-                        src={`/images/noImage.png`}
-                        width={104}
-                        height={104}
+                        src={`/svg/RakuMaNE.svg`}
+                        width={200}
+                        height={200}
                         alt='ユーザー画像'
                         />
                     </Box>

@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, NextRouter } from 'next/router';
 
 //lib
 import apiClient from '@/lib/apiClient';
-
-//recoil
-import { useSetRecoilState } from 'recoil';
-import { fleeWordsState } from '@/store/freePageState';
 
 //MUI
 import { 
@@ -27,6 +23,10 @@ import {
 //MUIIcon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+
+//context
+import { useAuth } from '@/context/auth';
+
   
 //CSS
 import styles from './SearchWords.module.scss';
@@ -207,6 +207,25 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
         setCurrentPage(1);
     };
 
+    const handleFreeLeaningReset = async () => {
+        const wordsArr: Array<WordDBType> = [...dbWords];
+        const resetWordsArr: Array<WordDBType> = wordsArr.map((word) => (
+            {
+                ...word,
+                free_learning: false
+            }
+        ))
+        try {
+            await apiClient.post("/posts/freelearning_reset", { resetWordsArr: resetWordsArr });
+        } catch (err) {
+            console.error(err);
+        };
+    };
+
+    useEffect(() => {
+        handleFreeLeaningReset();
+    }, []);
+
     return (
         <>        
         <Box className={styles.free_firstContents}>
@@ -218,7 +237,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
             </Typography>
             <Box 
             className={styles.free_searchInputs}
-            sx={{ padding: { xs: "24px 16px", md: "24px 32px" } }}
+            sx={{ padding: { xs: "24px 16px", md: "32px 24px" } }}
             >
                 <Box 
                 className={styles.free_searchNumber}

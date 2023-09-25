@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 
 //lib
 import apiClient from '@/lib/apiClient';
@@ -15,6 +16,7 @@ import { WordDBType } from '@/types/globaltype';
 type Props = {
   words: WordDBType[];
   todayWords: WordDBType[];
+  token: string | undefined;
 };
 
 //Component
@@ -57,6 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const Mypage = ({ words, todayWords }: Props) => {
+
   return (
       <>
       <Layout>
@@ -66,7 +69,7 @@ const Mypage = ({ words, todayWords }: Props) => {
             width: { xs: "100vw", md: "calc(100vw - 248px)" }
           }}
           >
-              <Box sx={{ maxWidth: "80%", margin: "auto" }}>
+              <Box sx={{ maxWidth: { xs: "100%", md: "80%" }, margin: "auto" }}>
                 <WordRegisterInput dbWords={words}/>
                 <RegisterList dbWords={words} />
                 <TodayList dbWords={todayWords} />

@@ -36,13 +36,11 @@
     }
 
     &_name, &_mail {
-        display: flex;
         align-items: center;
         margin-bottom: 32px;
     }
 
     &_password {
-        display: flex;
         align-items: center;
         margin-bottom: 16px;
     }
@@ -54,6 +52,10 @@
     &_nameTitle ,&_mailTitle, &_passwordTitle {
         min-width: 28%;
         @extend .text-color;
+
+        @media screen and (max-width: 900px) {
+            margin-bottom: 8px;
+        }
     }
 
     &_button {

@@ -29,7 +29,6 @@
     &_sidebar {
         background-color: rgb(240, 119, 49);
         min-height: 100vh;
-        padding: 40px 0;
         z-index: 10;
         transition: all 0.2s ease;
     }
@@ -85,7 +84,6 @@
     &_imageWrapper {
         display: flex;
         justify-content: center;
-        margin-bottom: 16px;
     }
 
     &_image {

@@ -34,12 +34,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: 'rgb(240, 119, 49)',
         color: theme.palette.common.white,
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12
     }
@@ -102,16 +100,58 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
         <>        
         <Box className={styles.list}>
             <TableContainer sx={{ borderRadius: "4px" }}>
-                <Table>
+                <Table sx={{ minWidth: "900px" }}>
                     <TableHead sx={{border: "1px solid rgb(240, 119, 49)"}}>
                         <TableRow>
-                            <StyledTableCell className={notoSansJP.className} align='center'>番号</StyledTableCell>
-                            <StyledTableCell className={notoSansJP.className} align='center'>英単語</StyledTableCell>
-                            <StyledTableCell className={notoSansJP.className} align='center'>日本語訳</StyledTableCell>
-                            <StyledTableCell className={notoSansJP.className} align='center'>出題回数</StyledTableCell>
-                            <StyledTableCell className={notoSansJP.className} align='center'>正答率</StyledTableCell>
-                            <StyledTableCell className={notoSansJP.className} align='center'>前回学習日</StyledTableCell>
-                            <StyledTableCell className={notoSansJP.className} align='center'>登録日</StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                番号
+                            </StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                英単語
+                            </StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                日本語訳
+                            </StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                出題回数
+                            </StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                正答率
+                            </StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                前回学習日
+                            </StyledTableCell>
+                            <StyledTableCell 
+                            className={notoSansJP.className} 
+                            align='center'
+                            sx={{ fontSize: { xs: "14px", md: "16px" } }}
+                            >
+                                登録日
+                            </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody sx={{border: "1px solid rgb(217, 217, 217)"}}>
@@ -122,6 +162,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         {word.user_word_id}
                                     </StyledTableCell>
@@ -129,6 +170,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         {word.english}
                                     </StyledTableCell>
@@ -136,6 +178,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         {word.japanese}
                                     </StyledTableCell>
@@ -143,6 +186,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         {`${word.question_count} 回`}
                                     </StyledTableCell>
@@ -150,6 +194,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         {`${word.correct_rate} %`}
                                     </StyledTableCell>
@@ -157,6 +202,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         {
                                             word.last_time_at === null 
@@ -168,6 +214,7 @@ const WordList = ({ minText, maxText, wordText, recordWords }: {
                                     className={notoSansJP.className}
                                     align='center'
                                     onClick={() => handleWordDisplay(word)}
+                                    sx={{ fontSize: { xs: "14px", md: "16px" } }}
                                     >
                                         { new Date(word.created_at).toLocaleDateString() }
                                     </StyledTableCell>

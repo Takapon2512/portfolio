@@ -1,38 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ラクマネイングリッシュ
+本アプリは、英単語の暗記に特化した学習管理アプリです。昨今、グローバル化が進んでいるため、海外とのやりとりや海外の資料を参照する機会が増えています。グローバル化が進む現在では英語の会話力や読解力等が求められます。
+英語学習の第一歩として英単語の暗記から始めますが、なかなか覚えられないことが多いでしょう。このアプリは、ユーザーが覚えた単語とそうでない単語を自動で分ける機能があるため、効率よく学習を進めることができます。
 
-## Getting Started
+# アプリURL
+（URLを記載）
 
-First, run the development server:
+# 使用技術
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 環境構築　〜　ローカル実行方法
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+#　ターゲット
+このアプリのターゲットは以下を想定しています。
+* 英語学習が苦手な人
+* 学習管理が苦手な人
+* 解答はキーボードで入力したい人
+* 手書きよりもPCやスマホなどのデジタル端末を使いたい人
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 英語学習が苦手な人
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 学習管理が苦手な人
 
-## Learn More
+## 解答はキーボードで入力したい人
 
-To learn more about Next.js, take a look at the following resources:
+## 手書きよりもPCやスマホなどのデジタル端末を使いたい人
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# アプリ機能一覧
+本アプリで実装した機能は以下の通りです。
+* ユーザー登録/退会
+* ログイン/ログアウト
+* 単語の登録/編集/削除
+* 単語検索（単語番号、英単語、苦手度）
+* 学習忘れの検知
+* 1日ごとに取り組む単語の登録（バッチ処理）
+* 結果表示
+* カウントダウン
+* 自由に単語学習ができるフリーモード
+* ユーザー名、パスワード、単語数、カウントダウンの設定
+以上の中で説明が必要な機能を以下に追記します。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 単語検索（単語番号、英単語、苦手度）
 
-## Deploy on Vercel
+## 学習忘れの検知
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 1日ごとに取り組む単語の登録（バッチ処理）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 自由に単語学習ができるフリーモード
+
+
+# 今後の実装予定機能
+実装したい機能は以下の通りです。
+* LINEで学習通知する機能
+* 英語音声の登録
+* カレンダーに予定を追加する機能
+

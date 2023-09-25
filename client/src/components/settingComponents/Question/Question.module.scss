@@ -36,7 +36,6 @@
     }
 
     &_time, &_amount {
-        display: flex;
         align-items: center;
         margin-bottom: 16px;
     }
@@ -44,6 +43,10 @@
     &_timeTitle, &_amountTitle {
         min-width: 28%;
         @extend .text-color;
+
+        @media screen and (max-width: 900px) {
+            margin-bottom: 8px;
+        }
     }
 
     &_amountCoutionTitle {
