@@ -17,17 +17,27 @@ const prisma: PrismaClient = new PrismaClient();
 authRouter.post("/register", async (req: Request, res: Response) => {
     const { name, email, password }: LoginType = req.body;
 
+    //DBに同じメールアドレスのユーザーが存在するかどうかを確認
+    const sameUser: UserType | null = await prisma.user.findUnique({ where: { email: email, deleted_at: null } });
+    if (sameUser) {
+        return res.status(ServerError).json({ error: "すでに同じメールアドレスのユーザーが存在します。" });
+    };
+
+    const sameEmailUser: UserType | null = await prisma.user.findUnique({
+        where: { email: email } 
+    });
+
+    //退会したユーザーと同じメールアドレスを持つときの処理
+    if (sameEmailUser && sameEmailUser.deleted_at !== null) {        
+        //前のユーザーデータを消去する
+        await prisma.user.delete({ where: { email: email } });
+    };
+
     //入力されたパスワードをハッシュ化する
     const hashedPassword: string = await hash(password, 10);
 
     //uuidを生成
     const randomUUID: string = uuidv4();
-
-    //DBに同じメールアドレスのユーザーが存在するかどうかを確認
-    const sameUser: UserType | null = await prisma.user.findUnique({ where: { email: email } });
-    if (sameUser) {
-        return res.status(ServerError).json({ error: "すでに同じメールアドレスのユーザーが存在します。" });
-    };
 
     const user: UserType = await prisma.user.create({
         data: {

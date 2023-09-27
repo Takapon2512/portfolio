@@ -154,3 +154,21 @@ usersRouter.get("/get_learning_record", isAuthenticated, async (req: Request, re
         return res.status(ServerError).json({ error: serverErrorMsg });
     };
 });
+
+//退会機能
+usersRouter.post("/unsubscribe", isAuthenticated, async (req: Request, res: Response) => {
+    //現在の時刻を取得
+    const now = new Date(Date.now());
+
+    await prisma.user.update({
+        where: { uid: req.body.user_id },
+        data: { deleted_at: now }
+    });
+
+    try {
+        return res.status(OK).json({ message: "退会処理が完了しました。" });
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: serverErrorMsg });
+    };
+});

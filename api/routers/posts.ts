@@ -29,7 +29,7 @@ scheduleJob('55 23 * * *', async () => {
             const words: Array<WordDBType> = await prisma.wordData.findMany({ 
                 where: { user_id: userData.uid, today_learning: true } 
             });
-        
+
             //サボり判定
             const slackingJudge = (word: WordDBType) => {
                 const now: Date = new Date(Date.now());
