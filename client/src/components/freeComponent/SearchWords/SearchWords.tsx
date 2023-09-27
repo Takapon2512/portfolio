@@ -106,7 +106,7 @@ const SearchWords = ({ dbWords }: { dbWords: WordDBType[] }) => {
 
     //正答率の基準
     const normalBorder = 60;
-    const goodBorder = 80;
+    const goodBorder = 90;
 
     //単語番号で絞った後、苦手度で絞る
     const weakWordsArr: Array<WordDBType> = numWordsArr.filter((word: WordDBType, index: number) => {

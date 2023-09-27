@@ -22,6 +22,7 @@ type Props = {
 import Layout from '@/components/Layout/layout';
 import Question from '@/components/settingComponents/Question/Question';
 import Address from '@/components/settingComponents/Address/Address';
+import Unsubscribe from '@/components/settingComponents/Unsubscribe/Unsubscribe';
 
 //SSRでDBにある設定情報を取得
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -55,6 +56,7 @@ const Setting = ({ setting }: Props) => {
         <Box className={styles.setting_container}>
           <Address />
           <Question setting={setting} />
+          <Unsubscribe />
         </Box>
       </Box>
     </Layout>
