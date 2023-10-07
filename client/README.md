@@ -45,9 +45,12 @@
 1. git cloneでローカルにソースコードをダウンロードする
 2. clientディレクトリとapiディレクトリにcdコマンドで移動
 3. 2の各ディレクトリでnpm install（もしくはyarn add）を実行
-4. MySQLとWebサーバーを起動する
-5. 2の各ディレクトリでnpm run devを実行
-6. clientディレクトリで実行すると、http://localhost:3000 が表示されるのでアクセスする
+4. apiディレクトリに.envファイルを作成し、「DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"」を貼り付ける
+5. 4のUSER、PASSWORD、HOST、PORT、DATABASEを適切な形に修正（PORTは3306、DATABASEはportfolio）
+6. .envファイルにSECRET_KEY="(任意の文字列)"を入力
+7. MySQLとWebサーバーを起動する
+8. 2の各ディレクトリでnpm run devを実行
+9. clientディレクトリで実行すると、http://localhost:3000 が表示されるのでアクセスする
 
 # ターゲット
 このアプリのターゲットは以下を想定しています。
