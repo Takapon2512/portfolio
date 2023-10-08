@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { LoginType, UserType } from '../types/ApiTypes';
 
 //utils
-import { Unauthorized, ServerError } from '../utils/StatusCode';
+import { Unauthorized, ServerError, OK, NotFound } from '../utils/StatusCode';
 
 export const authRouter: Router = Router();
 const prisma: PrismaClient = new PrismaClient();
@@ -85,4 +85,36 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     const token: string = sign({ user_id: user.uid }, process.env.SECRET_KEY || "", { expiresIn: "3h" });
 
     return res.json({ user: user, token: token });
+});
+
+//パスワードリセット機能
+authRouter.post("/reset-password", async (req: Request, res: Response) => {
+    //メールアドレスでユーザー検索
+    const getEmail: string = req.body.email;
+    const user: UserType | null = await prisma.user.findUnique({ where: { email: getEmail } });
+    
+    if (!user) return res.status(NotFound).json({ error: "そのユーザーは存在しません" });
+
+    const resetToken: string = uuidv4();
+    const createDate: Date = new Date();
+    const expireDate: Date = new Date(createDate.getTime() + 5 * 60 * 1000);
+
+    //メール送信の処理（Amazon SESを利用）
+
+
+    try {
+        await prisma.user.update({ 
+            where: { email: getEmail },
+            data: {
+                reset_token: resetToken,
+                create_token: createDate,
+                expire_token: expireDate
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(ServerError).json({ error: "パスワードリセットができませんでした" });
+    };
+
+    return res.status(OK).json({ resetToken, createDate, expireDate });
 });

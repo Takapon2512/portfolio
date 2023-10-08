@@ -21,6 +21,9 @@ model User {
   created_at   DateTime   @default(now())
   deleted_at   DateTime?
   uid          String     @unique
+  reset_token  String?
+  create_token DateTime?
+  expire_token DateTime?
 }
 
 model WordData {

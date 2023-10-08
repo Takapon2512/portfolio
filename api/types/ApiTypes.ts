@@ -12,6 +12,9 @@ export type UserType = {
     created_at: Date;
     deleted_at: Date | null;
     uid: string;
+    reset_token: string | null;
+    create_token: Date | null;
+    expire_token: Date | null;
 };
 
 export type WordDBType = {
