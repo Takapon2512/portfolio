@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 
 //react-hook-form
@@ -27,9 +26,6 @@ import { notoSansJP } from "@/utils/font";
 
 //Type
 import { LoginType } from "@/types/globaltype";
-
-//Image
-import googleBtn from '../../../public/google_btn.png';
 
 //lib
 import apiClient from "@/lib/apiClient";
@@ -84,7 +80,6 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
     //ボタンを押したときの処理
     const onSubmit: SubmitHandler<LoginType> = async (data) => {
         console.log(data);
-
         if (router.pathname === "/register") {
             registerAndLogin("/auth/register");
         } else if (router.pathname === "/login") {
@@ -118,10 +113,10 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
     };
 
     const handleFormChange = () => {
-        if (changeTitle === 'アカウントをお持ちでない方はこちら') {
-            router.push("./register");
-        } else if (changeTitle === 'アカウントをお持ちの方はこちら') {
-            router.push("./login");
+        if (router.pathname === "/login") {
+            router.push("/register");
+        } else if (router.pathname === "/register") {
+            router.push("/login");
         };
     };
 
@@ -153,7 +148,7 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
                     helperText={errors.email?.message}
                     onChange={handleEmailChange}
                     value={formText.email}
-                    />
+                    />  
                     <TextField 
                     className={`${notoSansJP.className} ${styles.form_nameText}`}
                     required
@@ -187,8 +182,19 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
                     >
                         {changeTitle}
                     </Button>
+                    {
+                        router.pathname === "/login" ? (
+                            <Button
+                            className={`${notoSansJP.className} ${styles.form_forgot}`}
+                            onClick={() => router.push("/forgot")}
+                            >
+                                パスワードを忘れた方はこちら
+                            </Button>
+
+                        ) : (<></>) 
+                    }
                 </Stack>
-                <Typography
+                {/* <Typography
                 className={`${notoSansJP.className} ${styles.form_another}`}
                 >
                     Googleアカウントをお持ちの方はこちら
@@ -203,7 +209,7 @@ const Form = ({formTitle, buttonTitle, changeTitle}: {formTitle: string, buttonT
                     alt='Googleボタン'
                     id='googleBtn'
                     />
-                </Button>
+                </Button> */}
             </Box>
         </Box>
         </>

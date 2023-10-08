@@ -62,7 +62,7 @@
 
     
     &_change {
-        margin-bottom: 16px;
+        margin-bottom: 8px;
         background-color: rgb(247, 247, 247);
 
         &:hover {
@@ -107,6 +107,14 @@
 
         &:hover {
             opacity: 0.9;
+        }
+    }
+
+    &_forgot {
+
+        &:hover {
+            opacity: 0.9;
+            background-color: rgb(247, 247, 247);
         }
     }
 }

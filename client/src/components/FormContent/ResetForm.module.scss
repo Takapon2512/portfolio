@@ -1,0 +1,67 @@
+.text-color {
+    color: rgb(48, 48, 48);
+}
+
+.font-s {
+    font-size: 14px;
+}
+
+.font-m {
+    font-size: 18px;
+}
+
+.font-l {
+    font-size: 32px;
+}
+
+.font-xl {
+    font-size: 48px;
+}
+
+.resetform {
+    display: flex;
+    align-items: center;
+    background-color: rgb(214, 212, 209);
+    min-height: 100vh;
+
+    &_container {
+        width: 56%;
+        max-width: 488px;
+        margin: auto;
+        padding: 40px 24px 32px;
+        border-radius: 8px;
+        background-color: rgb(247, 247, 247);
+    }
+
+    &_title {
+        font-weight: 600;
+        margin-bottom: 32px;
+        @extend .font-m;
+        @extend .text-color;
+    }
+
+    &_emailText {
+        margin-bottom: 16px;
+    }
+
+    &_button {
+        color: rgb(243, 235, 235);
+        background-color: rgb(248, 142, 21);
+        transition: all 0.2s;
+        margin-bottom: 12px;
+        @extend .font-m;
+
+        &:hover {
+            background-color: rgb(252, 158, 51);
+        }
+    }
+
+    &_change {
+        background-color: rgb(247, 247, 247);
+
+        &:hover {
+            opacity: 0.9;
+            background-color: rgb(247, 247, 247);
+        }
+    }
+}
