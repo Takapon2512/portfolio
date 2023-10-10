@@ -12,7 +12,7 @@ import { isAuthenticated } from "../middleware/isAuthenticated";
 import { normalBorder, goodBorder } from "../utils/border";
 
 export const postsRouter: Router = Router();
-const prisma: PrismaClient = new PrismaClient();
+const prisma = new PrismaClient();
 
 //毎日23時55分に学習対象になっている単語の「today_learning」をfalseにする
 scheduleJob('55 23 * * *', async () => {

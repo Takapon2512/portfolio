@@ -11,7 +11,7 @@ import { LoginType, UserType } from '../types/ApiTypes';
 import { Unauthorized, ServerError, OK, NotFound } from '../utils/StatusCode';
 
 export const authRouter: Router = Router();
-const prisma: PrismaClient = new PrismaClient();
+const prisma = new PrismaClient();
 
 //新規ユーザー登録API
 authRouter.post("/register", async (req: Request, res: Response) => {

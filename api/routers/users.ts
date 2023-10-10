@@ -22,7 +22,7 @@ interface UserInfoType extends LoginType {
 }
 
 export const usersRouter: Router = Router();
-const prisma: PrismaClient = new PrismaClient();
+const prisma = new PrismaClient();
 
 //ユーザーを検索するAPI
 usersRouter.get("/find", isAuthenticated, async (req: Request, res: Response) => {

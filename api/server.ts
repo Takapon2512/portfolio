@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Express } from 'express';
 import "dotenv/config";
 import cors from "cors";
 
@@ -7,8 +7,8 @@ import { authRouter } from './routers/auth';
 import { postsRouter } from './routers/posts';
 import { usersRouter } from './routers/users';
 
-const app: Application = express();
-const PORT = 5000;
+const app: Express = express();
+const PORT = 80;
 
 //異なるオリジンへのアクセスを許可する
 app.use(cors());
