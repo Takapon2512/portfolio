@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { hash, compare } from 'bcrypt';
+import { hashSync, compareSync, genSaltSync } from "bcryptjs";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 
 //utils
@@ -91,11 +91,11 @@ usersRouter.post("/user_upload", isAuthenticated, async (req: Request, res: Resp
         if (newPassWord !== confirmPassword) return res.status(Unauthorized).json({ error: "パスワードが違います。" });
 
         //現在のパスワードが正しいかを確認
-        const isCurrentPasswordValid: boolean = await compare(currentPassword, user.password);
+        const isCurrentPasswordValid: boolean = compareSync(currentPassword, user.password);
         if (!isCurrentPasswordValid) return res.status(Unauthorized).json({ error: "パスワードが違います。" });
 
         //新しいパスワードをハッシュ化
-        const hashedNewPassword: string = await hash(newPassWord, 10);
+        const hashedNewPassword: string = hashSync(newPassWord, genSaltSync(10));
 
         await prisma.user.update({
             where: { id: req.body.user_id },

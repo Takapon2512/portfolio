@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { hash, compare } from 'bcrypt';
+import { hashSync, compareSync } from "bcryptjs";
 import { sign } from 'jsonwebtoken';
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,6 +9,7 @@ import { LoginType, UserType } from '../types/ApiTypes';
 
 //utils
 import { Unauthorized, ServerError, OK, NotFound } from '../utils/StatusCode';
+import { genSaltSync } from "bcrypt";
 
 export const authRouter: Router = Router();
 const prisma = new PrismaClient();
@@ -34,7 +35,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     };
 
     //入力されたパスワードをハッシュ化する
-    const hashedPassword: string = await hash(password, 10);
+    const hashedPassword: string = hashSync(password, genSaltSync(10));
 
     //uuidを生成
     const randomUUID: string = uuidv4();
@@ -74,7 +75,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
         return res.status(Unauthorized).json({ error: "メールアドレスかパスワードが間違っています。" });
     };
 
-    const isPassWord: boolean = await compare(password, user.password);
+    const isPassWord: boolean = compareSync(password, user.password);
 
     //パスワードに間違いがないかどうかを確認
     if (!isPassWord) {
